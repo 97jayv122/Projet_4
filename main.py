@@ -1,5 +1,5 @@
-from controller import Controller
-from view import View
+from controllers.maincontroller import Controller
+from view.view import View
 
 def main():
     view = View()
@@ -8,4 +8,3 @@ def main():
     
 if __name__=="__main__":
     main()
-

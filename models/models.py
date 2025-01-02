@@ -47,10 +47,11 @@ class Players:
         with open(FOLDER + "/players.json", "w") as file:
             json.dump([player.to_dict() for player in self.list_of_player], file)
 
-    def load_data_player(self,):
+    @classmethod
+    def load_data_player(cls):
         with open(FOLDER + "/players.json", "r") as file:
             data = json.load(file)
-            self.list_of_player = []
+            return [Players.from_dict(player) for player in data]
             
         
     @classmethod
