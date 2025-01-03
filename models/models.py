@@ -33,6 +33,7 @@ class Players:
 
     @classmethod
     def load_data_player(cls):
+<<<<<<< HEAD
         try:
             with open(FOLDER + "/players.json", "r") as file:
                 data = json.load(file)
@@ -43,6 +44,13 @@ class Players:
             print("pas de fichier a charger")
         return []
     
+=======
+        with open(FOLDER + "/players.json", "r") as file:
+            data = json.load(file)
+            return [Players.from_dict(player) for player in data]
+            
+        
+>>>>>>> c2ce1e66595171b76cc82fe7ea370da7f47edc92
     @classmethod
     def from_dict(cls, data):
         return cls(

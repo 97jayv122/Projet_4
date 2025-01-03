@@ -12,6 +12,7 @@ class View:
         print("Bienvenue dans le gestionnaire de joueur")
         print("1 pour entrer un joueur")
         print("2 pour lister les joueurs")
+<<<<<<< HEAD
         print("3 pour charger les joueurs.")
         print("x pour quitter le programme.")
         return input("Entrer uvotre choix : ")
@@ -23,6 +24,9 @@ class View:
         print("3 Terminer un tour")
         print("4 Sauvegarder le tournoi")
         print("5 Charger le tournoi")
+=======
+        print("3 pour entrer dans le menu tournois.")
+>>>>>>> c2ce1e66595171b76cc82fe7ea370da7f47edc92
         print("x pour quitter le programme.")
         return input("Entrer uvotre choix : ")
 
