@@ -5,22 +5,7 @@ import time
 import uuid 
 
 FOLDER = "data/tournaments"
-
-class Tournament:
-    def __init__(self, name, place, date_start, date_end,
-                 number_of_turns=4):
-        self.name = name
-        self.place = place
-        self.date_start = date_start
-        self.date_end = date_end
-        self.number_of_turns = number_of_turns
-        self.list_player = []
-        self.list_of_tours = []
-        self.current_tour = 0
-        self.description = ""
-
-    
-
+        
 class Players:
     list_of_player = []
     def __init__(self, first_name, name, date_of_birth,
@@ -31,7 +16,6 @@ class Players:
         self.national_chess_identifier = national_chess_identifier
         self.id = str(uuid.uuid4())
         Players.list_of_player.append(self)
-
 
     def __repr__(self):
         return str(self.first_name) + "." + str(self.name)
@@ -47,12 +31,18 @@ class Players:
         with open(FOLDER + "/players.json", "w") as file:
             json.dump([player.to_dict() for player in self.list_of_player], file)
 
-    def load_data_player(self,):
-        with open(FOLDER + "/players.json", "r") as file:
-            data = json.load(file)
-            self.list_of_player = []
-            
-        
+    @classmethod
+    def load_data_player(cls):
+        try:
+            with open(FOLDER + "/players.json", "r") as file:
+                data = json.load(file)
+                return [Players.from_dict(player) for player in data]
+        except json.JSONDecodeError:
+            print("pas de données a charger")
+        except FileNotFoundError:
+            print("pas de fichier a charger")
+        return []
+    
     @classmethod
     def from_dict(cls, data):
         return cls(
@@ -61,6 +51,32 @@ class Players:
             date_of_birth=data.get("date_of_birth"),
             national_chess_identifier=data.get("national_chess_identifier")
         )
+    
+
+class Tournament:
+    def __init__(self, name, place, date_start, date_end,
+                 number_of_turns=4):
+        self.name = name
+        self.place = place
+        self.date_start = date_start
+        self.date_end = date_end
+        self.number_of_turns = number_of_turns
+        self.list_player = []
+        self.list_of_tours = []
+        self.current_tour = 0
+        self.description = ""
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            name=data.get("name"),
+            place=data.get("place"),
+            date_start=data.get("date_start"),
+            date_end=data.get("date_end")
+        )
+    def player_recovery(self):
+        self.list_player = Players.load_data_player()
+        return self.list_player
     
 class Matchs:
     def __init__(self, player_1, player_2):
