@@ -19,9 +19,12 @@ class ControllerTournament:
                     tournament = Tournament.from_dict(info_tournament)
                     tournament.save_tournament()
                     tournament.list_player = self.view.select_player(tournament.list_player)
-            
+                    tournament.save_tournament()
+
                 case "2":                   
                     tours = Tours(tournament.list_player)
+                    tours.make_first_tour()
+                    self.view.display_tours(tours.group_by_two) 
                     
                 case "x":
                     break

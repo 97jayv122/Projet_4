@@ -1,3 +1,4 @@
+import json
 from models.players import Players
 class Tournament:
     def __init__(self, name, place, date_start, date_end,
@@ -20,6 +21,6 @@ class Tournament:
             date_start=data.get("date_start"),
             date_end=data.get("date_end")
         )
-    
-    def player_retrieve(self):
-        self.list_player = Players.load_data_player()
+    def save_tournament(self):
+        with open("data/tournaments/tournament.json", "w") as file:
+            json.dump(self.to_dict(), file)

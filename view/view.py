@@ -22,7 +22,6 @@ class View:
         print("x pour quitter le programme.")
         return input("Entrer uvotre choix : ")
         
-    
     def tournament_menu(self):
         print("")
         print("Bienvenue dans le gestionnaire de tournoi")

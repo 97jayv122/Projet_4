@@ -1,5 +1,6 @@
 import random
 import time
+from models.tournament import Tournament
 class Tours:
     def __init__(self, list_player_of_tournament):
         self.list_player_of_tournament = list_player_of_tournament
@@ -18,5 +19,6 @@ class Tours:
         if len(self.list_player_of_tournament) % 2 == 0 :
             self.group_by_two.append([self.list_player_of_tournament[-1], "Sans adversaire"])
         return self.group_by_two
+        
     def add_a_round(self):
         pass
