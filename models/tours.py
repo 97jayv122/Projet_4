@@ -1,14 +1,15 @@
 import random
 import time
-from models.tournament import Tournament
+
 class Tours:
     def __init__(self, list_player_of_tournament):
         self.list_player_of_tournament = list_player_of_tournament
-        self.time_start = time()
-        self.time_end = time()
+        self.duration = 0
+        self.time_start = None
+        self.time_end = None
         self.group_by_two = []
         self.match_list_by_round = []
-
+        self.etat = "not started"
     
 
     def make_first_tour(self):
@@ -20,5 +21,16 @@ class Tours:
             self.group_by_two.append([self.list_player_of_tournament[-1], "Sans adversaire"])
         return self.group_by_two
         
+    def start_tour(self):
+        self.time_start = time.time()
+        self.etat = "started"
+    
+    def end_tour(self):
+        self.time_end = time.time()
+        self.duration = self.time_end - self.time_start
+        self.etat = "finished"
+
+    def make_next_tour(self):
+        pass
     def add_a_round(self):
         pass
