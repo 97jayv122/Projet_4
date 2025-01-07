@@ -1,6 +1,8 @@
 import json
 from models.players import Players
 from models.tours import Tours
+
+
 class Tournament:
     def __init__(self, name, place, date_start, date_end,
                  number_of_turns=4, **kwargs):
@@ -16,40 +18,62 @@ class Tournament:
 
     @classmethod
     def from_dict(cls, data):
+        list_player = [
+            Players.from_dict(player) if isinstance(player, dict)
+            else player for player in data.get("list_player", [])
+            ]
+        list_of_tours = [
+            Tours.from_dict(tour) if isinstance(tour, dict)
+            else tour for tour in data.get("list_of_tours", [])
+            ]
         return cls(
             name=data.get("name"),
             place=data.get("place"),
             date_start=data.get("date_start"),
             date_end=data.get("date_end"),
-            list_player=data.get("list_player"),
-            list_of_tours=data.get("list_of_tours"),
+            list_player=list_player,
+            list_of_tours=list_of_tours,
             current_tour=data.get("current_tour"),
             description=data.get("description")
         )
 
     def to_dict(self):
-        return {"name": self.name,
-                "place": self.place,
-                "date_start": self.date_start,
-                "date_end": self.date_end,
-                "number_of_turns": self.number_of_turns,
-                "list_player": [player.to_dict() for player in self.list_player],
-                "list_of_tours": [tour.to_dict() for tour in self.list_of_tours],
-                "current_tour": self.current_tour,
-                "description": self.description}
-    
+        return {
+            "name": self.name,
+            "place": self.place,
+            "date_start": self.date_start,
+            "date_end": self.date_end,
+            "number_of_turns": self.number_of_turns,
+            "list_player": [
+                player.to_dict() if isinstance(player, Players)
+                else player for player in self.list_player
+                ],
+            "list_of_tours": [
+                tour.to_dict() if isinstance(tour, Tours)
+                else tour for tour in self.list_of_tours
+                ],
+            "current_tour": self.current_tour,
+            "description": self.description
+        }
+
     def save_tournament(self):
         with open("data/tournaments/tournament.json", "w") as file:
             json.dump(self.to_dict(), file)
+
     @classmethod
     def load_tournament(cls):
         try:
             with open("data/tournaments/tournament.json", "r") as file:
                 data = json.load(file)
-                return Tournament.from_dict(data)
-        except json.JSONDecodeError:
-            print("pas de données a charger")
+                return cls.from_dict(data)
+        except json.JSONDecodeError as e:
+            print(f"Erreur de décodage JSON : {e}")
         except FileNotFoundError:
-            print("pas de fichier a charger")
+            print("Fichier introuvable : data/tournaments/tournament.json")
+        except Exception as e:
+            print(f"Erreur inattendue : {e}")
         return None
-        
+
+    def add_1_to_current_tour(self):
+        self.current_tour += 1
+        self.save_tournament()

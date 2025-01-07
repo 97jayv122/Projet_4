@@ -1,14 +1,15 @@
 import os
-from models.players import Players, FOLDER
-from view.view import View
+from models.players import FOLDER
 from controllers.controllerplayer import ControllerPlayer
 from controllers.controllertournament import ControllerTournament
+
+
 class Controller:
 
     def make_folder_data(self):
         if not os.path.exists(FOLDER):
             os.makedirs(FOLDER)
-        
+
     def __init__(self, view):
         self.view = view
         self.make_folder_data()
@@ -20,8 +21,8 @@ class Controller:
                 case "1":
                     controllerplayer = ControllerPlayer(self.view)
                     controllerplayer.run()
-                    
-                case "2":                   
+
+                case "2":
                     controllertournament = ControllerTournament(self.view)
                     controllertournament.run()
 
@@ -33,5 +34,3 @@ class Controller:
 
                 case _:
                     print("Choix inconnue.")
-
-
