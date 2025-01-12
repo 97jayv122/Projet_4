@@ -2,7 +2,7 @@
 import json
 import uuid
 FOLDER = "data/tournaments"
-
+FOLDER_PLAYER = FOLDER + "/players.json"
 
 class Players:
     list_of_player = []
@@ -27,22 +27,25 @@ class Players:
                 "id": self.id}
 
     def save_player(self):
-        with open(FOLDER + "/players.json", "w") as file:
+        with open(FOLDER + FOLDER_PLAYER, "w") as file:
             json.dump(
                 [player.to_dict() for player in self.list_of_player], file
                 )
-
-    @classmethod
-    def load_data_player(cls):
+    @staticmethod
+    def load_file():
         try:
-            with open(FOLDER + "/players.json", "r") as file:
+            with open(FOLDER_PLAYER, "r") as file:
                 data = json.load(file)
-                return [Players.from_dict(player) for player in data]
+                return data
         except json.JSONDecodeError:
             print("pas de données a charger")
         except FileNotFoundError:
             print("pas de fichier a charger")
         return []
+    @classmethod
+    def load_data_player(cls):
+        data = Players.load_file()
+        return [Players.from_dict(player) for player in data]
 
     @classmethod
     def from_dict(cls, data):

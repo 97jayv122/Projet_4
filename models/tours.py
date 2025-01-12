@@ -12,7 +12,7 @@ class Tours:
         self.time_start = None
         self.time_end = None
         self.group_by_two = []
-        self.match_list_by_round = []
+        self.matchs_list_by_round = []
         self.stat = "not started"
         Tours.list_of_tours.append(self)
 
@@ -25,7 +25,7 @@ class Tours:
             "group_by_two": self.group_by_two,
             "match_list_by_round": [
                 match.to_dict() if isinstance(match, Matchs)
-                else match for match in self.match_list_by_round
+                else match for match in self.matchs_list_by_round
                 ],
             "stat": self.stat}
 
@@ -58,3 +58,7 @@ class Tours:
 
     def add_a_round(self):
         pass
+
+    def recovery_list_of_matchs(self, matchs):
+        list_matchs = list(matchs.__dict__.items())
+        self.match_list_by_round.append(list_matchs)

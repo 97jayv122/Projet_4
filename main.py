@@ -7,9 +7,15 @@ from view.view import View
 
 
 def main():
+    """
+    
+    """    
     view = View()
     administrator = Controller(view)
-    administrator.run()
+    try:
+        administrator.run()
+    except KeyboardInterrupt:
+        print("\nProgramme arrêté par l'utilisateur. Au revoir !")
 
 
 if __name__ == "__main__":

@@ -16,6 +16,7 @@ class Matchs:
         Matchs.list_of_matchs.append(self)
 
     def score_update(self):
+        print(f"{self.player_1} VS {self.player_2}")
         score_player_1 = int(input(f"Entrer le score {self.player_1} : "))
         self.score_1.append(score_player_1)
         self.score_1.insert(0, self.player_1)

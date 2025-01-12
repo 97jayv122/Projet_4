@@ -1,7 +1,7 @@
 import json
 from models.players import Players
 from models.tours import Tours
-
+FOLDER_TOOURNAMENT = "data/tournaments/tournament.json"
 
 class Tournament:
     def __init__(self, name, place, date_start, date_end,
@@ -63,11 +63,11 @@ class Tournament:
     @classmethod
     def load_tournament(cls):
         try:
-            with open("data/tournaments/tournament.json", "r") as file:
+            with open(FOLDER_TOOURNAMENT, "r") as file:
                 data = json.load(file)
                 return cls.from_dict(data)
         except json.JSONDecodeError as e:
-            print(f"Erreur de décodage JSON : {e}")
+            print(f"pas de données a charger: {e}")
         except FileNotFoundError:
             print("Fichier introuvable : data/tournaments/tournament.json")
         except Exception as e:
@@ -77,3 +77,7 @@ class Tournament:
     def add_1_to_current_tour(self):
         self.current_tour += 1
         self.save_tournament()
+
+    def recovery_list_of_tour(self, tour):
+        list_tour = list(tour.__dict__.items())
+        self.list_of_tours.append(list_tour)

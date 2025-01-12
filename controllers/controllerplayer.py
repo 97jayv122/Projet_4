@@ -18,7 +18,7 @@ class ControllerPlayer:
                     player.save_player()
 
                 case "2":
-                    self.view.display_player(Players.list_of_player)
+                    self.view.display(Players.list_of_player)
 
                 case "3":
                     player = Players.load_data_player()
