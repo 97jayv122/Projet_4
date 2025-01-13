@@ -1,7 +1,7 @@
 
 import os
 import re
-import datetime
+from datetime import datetime
 from models.players import Players
 
 
@@ -12,7 +12,7 @@ class Utils:
         return bool(re.match(pattern, identifier))
     
     @staticmethod
-    def valide_date(date, date_format="%d/%m/%y"):
+    def valide_date(date, date_format="%d/%m/%Y"):
         while True:
             try:
                 datetime.strptime(date, date_format)

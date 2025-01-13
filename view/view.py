@@ -1,6 +1,7 @@
 
 from controllers.maincontroller import Controller
 from view.utils import Utils
+import json
 WRONG_DATE = "Veuillez entrer un bon format de date"
 
 
@@ -8,10 +9,10 @@ class View:
     def home_menu(self):
         print("gestionnaire de tournoi d'échec")
         print("-" * 10)
-        print(Controller.PLAYER_MENU + " pour entrer dans le menu joueur.")
-        print(Controller.TOURNAMENT_MENU + " pour entrer dans le menu tournois.")
-        print("3. pour voir les rapports.")
-        print(Controller.EXIT_MENU + " pour quitter le programme.")
+        print(Controller.PLAYER_MENU + ". pour entrer dans le menu joueur.")
+        print(Controller.TOURNAMENT_MENU + ". pour entrer dans le menu tournois.")
+        print(Controller.DISPLAY_REPORTS + ". pour voir les rapports.")
+        print(Controller.EXIT_MENU + ". pour quitter le programme.")
         return input("Entrer votre choix : ")
 
     def player_menu(self):
@@ -92,5 +93,9 @@ class View:
 
     def display(self, datas):
         for data in datas:
-            print(data)
-        exit
+            print(json.dumps(datas, indent=4))
+        input("Appuyer sur une touche pour continuer...")
+
+    def display_json(self, datas):
+        print(json.dumps(datas, indent=4))
+        input("Appuyer sur une touche pour continuer...")

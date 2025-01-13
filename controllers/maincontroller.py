@@ -14,6 +14,7 @@ class Controller:
     # Définition des numéros d'action comme variables de classe
     PLAYER_MENU = "1"
     TOURNAMENT_MENU = "2"
+    DISPLAY_REPORTS = "3"
     EXIT_MENU = "x"
 
     def make_folder_data(self):
@@ -49,7 +50,7 @@ class Controller:
                     Utils.clear()
                     self.run_controller_tournament()
 
-                case "3":
+                case self.DISPLAY_REPORTS:
                     pass
 
                 case self.EXIT_MENU:

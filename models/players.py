@@ -27,7 +27,7 @@ class Players:
                 "id": self.id}
 
     def save_player(self):
-        with open(FOLDER + FOLDER_PLAYER, "w") as file:
+        with open(FOLDER_PLAYER, "w") as file:
             json.dump(
                 [player.to_dict() for player in self.list_of_player], file
                 )
