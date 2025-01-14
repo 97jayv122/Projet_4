@@ -15,7 +15,7 @@ class Controller:
     PLAYER_MENU = "1"
     TOURNAMENT_MENU = "2"
     DISPLAY_REPORTS = "3"
-    EXIT_MENU = "x"
+    EXIT_PROGRAM = "x"
 
     def make_folder_data(self):
         """
@@ -40,20 +40,19 @@ class Controller:
         the user to navigate between the different menus.
         """        
         while True:
+            Utils.clear()
             action = self.view.home_menu()
             match action:
                 case self.PLAYER_MENU:
-                    Utils.clear()
                     self.run_controller_player()
 
                 case self.TOURNAMENT_MENU:
-                    Utils.clear()
                     self.run_controller_tournament()
 
                 case self.DISPLAY_REPORTS:
                     pass
 
-                case self.EXIT_MENU:
+                case self.EXIT_PROGRAM:
                     self.exit_program()
 
                 case _:

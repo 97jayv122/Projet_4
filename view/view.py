@@ -7,32 +7,35 @@ WRONG_DATE = "Veuillez entrer un bon format de date"
 
 class View:
     def home_menu(self):
-        print("gestionnaire de tournoi d'échec")
-        print("-" * 10)
-        print(Controller.PLAYER_MENU + ". pour entrer dans le menu joueur.")
+        print("-" * 10 + " Menu principal " + "-" * 10)
+        print()
+        print(Controller.PLAYER_MENU + ". pour entrer dans le menu joueurs.")
         print(Controller.TOURNAMENT_MENU + ". pour entrer dans le menu tournois.")
         print(Controller.DISPLAY_REPORTS + ". pour voir les rapports.")
-        print(Controller.EXIT_MENU + ". pour quitter le programme.")
+        print(Controller.EXIT_PROGRAM + ". pour quitter le programme.")
+        print()
         return input("Entrer votre choix : ")
 
     def player_menu(self):
-        print("gestionnaire des joueur")
-        print("-" * 10)
+        print("-" * 10 + " Menu Joueurs " + "-" * 10)
+        print()
         print("1 pour entrer des joueur")
         print("2 pour lister les joueurs")
         print("3 pour charger les joueurs.")
-        print("x pour quitter le programme.")
+        print("x pour retourner au menu principal.")
+        print()
         return input("Entrer votre choix : ")
 
     def tournament_menu(self):
-        print("gestionnaire de tournoi")
-        print("-" * 10)
+        print("-" * 10 + " Menu Tournois " + "-" * 10)
+        print()
         print("1 créer un tournoi")
         print("2 Commencer un tour")
         print("3 Rentrer les scores des joueurs")
         print("4 Sauvegarder le tournoi")
         print("5 Charger le tournoi")
-        print("x pour quitter le programme.")
+        print("x pour retourner au menu principal.")
+        print()
         return input("Entrer votre choix : ")
 
     def select_player(self, players):
@@ -65,18 +68,27 @@ class View:
         return file_tournament
 
     def number_add_player(self):
-        print("")
-        while True:  # Boucle pour continuer à demander une entrée valide
+        """
+        Prompts the user to enter the number of participants to add.
+
+        Returns:
+            int: _The number of participants entered by the user,
+              which must be a positive integer.
+        """        
+        while True:
+            Utils.clear()
             try:
                 number = int(input(
                     "Entrez le nombre de participants en chiffre : "
                     ))
-                if number <= 0:  # Vérification si le nombre est positif
+                if number <= 0:
                     print("Veuillez entrer un nombre supérieur à 0")
+                    input("Appuyer sur une touche pour continuer...")
                     continue
-                return number  # Retourne le nombre valide
+                return number
             except ValueError:
-                print("Entrée invalide. Veuillez entrer un chiffre valide.")
+                print("Entrée invalide. Veuillez entrer un chiffre.")
+                input("Appuyer sur une touche pour continuer...")
 
     def request_add_player(self):
         file_player = {}
@@ -93,7 +105,7 @@ class View:
 
     def display(self, datas):
         for data in datas:
-            print(json.dumps(datas, indent=4))
+            print(data)
         input("Appuyer sur une touche pour continuer...")
 
     def display_json(self, datas):

@@ -16,15 +16,14 @@ class ControllerPlayer:
 
     def run(self):
         while True:
+            Utils.clear()
             action = self.view.player_menu()
             match action:
                 case self.ADD_PLAYER:
-                    Utils.clear()
                     self.add_player()
 
                 case self.DISPLAY_PLAYER:
-                    Utils.clear()
-                    self.display_player
+                    self.display_player()
                 case self.MODIFY_PLAYER:
                     pass
 
@@ -32,20 +31,22 @@ class ControllerPlayer:
                     pass
 
                 case self.RETURN_MAIN_MENU:
-                    Utils.clear()
                     break
 
                 case _:
                     print("Choix inconnue.")
 
     def add_player(self):
+        """
+        
+        """        
         number_player_add = self.view.number_add_player()
         for i in range(1, number_player_add + 1):
             info_player = self.view.request_add_player()
             player = Players.from_dict(info_player)
-        player.save_player()
+        player.save()
         
 
     def display_player(self):
         data_players = Players.load_file()
-        self.view.display(data_players)
+        self.view.display_json(data_players)

@@ -1,6 +1,7 @@
 
 import json
 import uuid
+from datetime import datetime
 FOLDER = "data/tournaments"
 FOLDER_PLAYER = FOLDER + "/players.json"
 
@@ -14,23 +15,30 @@ class Players:
         self.date_of_birth = date_of_birth
         self.national_chess_identifier = national_chess_identifier
         self.id = str(uuid.uuid4())
+        self.create_at = datetime.now().isoformat()
+        self.update_at = None
         Players.list_of_player.append(self)
 
     def __repr__(self):
-        return str(self.first_name) + "." + str(self.name)
+        return str(self.first_name) + "." + str(
+            self.name
+            ) + " chess ID : " + str(self.national_chess_identifier)
 
     def to_dict(self):
         return {"first_name": self.first_name,
                 "name": self.name,
                 "date_of_birth": self.date_of_birth,
                 "national_chess_identifier": self.national_chess_identifier,
-                "id": self.id}
+                "id": self.id,
+                "create_at": self.create_at,
+                "update_at": self.update_at}
 
-    def save_player(self):
-        with open(FOLDER_PLAYER, "w") as file:
+    def save(self):
+        with open(FOLDER_PLAYER, "a") as file:
             json.dump(
                 [player.to_dict() for player in self.list_of_player], file
                 )
+
     @staticmethod
     def load_file():
         try:
@@ -42,8 +50,9 @@ class Players:
         except FileNotFoundError:
             print("pas de fichier a charger")
         return []
+
     @classmethod
-    def load_data_player(cls):
+    def load_data(cls):
         data = Players.load_file()
         return [Players.from_dict(player) for player in data]
 
@@ -55,3 +64,7 @@ class Players:
             date_of_birth=data.get("date_of_birth"),
             national_chess_identifier=data.get("national_chess_identifier")
         )
+
+    @classmethod
+    def clear_instance(cls):
+        cls.list_of_player = []

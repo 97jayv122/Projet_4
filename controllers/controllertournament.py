@@ -2,6 +2,7 @@ from models.players import Players
 from models.tournament import Tournament
 from models.tours import Tours
 from models.matchs import Matchs
+from view.utils import Utils
 
 
 class ControllerTournament:
@@ -10,10 +11,11 @@ class ControllerTournament:
   
     def run(self):
         while True:
+            Utils.clear()
             action = self.view.tournament_menu()
             match action:
                 case "1":
-                    player = Players.load_data_player()
+                    player = Players.load_data()
                     info_tournament = self.view.request_create_tournament()
                     tournament = Tournament.from_dict(info_tournament)
                     tournament.save_tournament()
@@ -56,7 +58,7 @@ class ControllerTournament:
                     tournament.save_tournament()
 
                 case "5":
-                    player = Players.load_data_player()
+                    player = Players.load_data()
                     tournament = Tournament.load_tournament()
                 case "x":
                     break
