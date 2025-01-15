@@ -21,7 +21,8 @@ class View:
         print()
         print("1 pour entrer des joueur")
         print("2 pour lister les joueurs")
-        print("3 pour charger les joueurs.")
+        print("3 pour modifier un joueur.")
+        print("4 pour supprimer un joueur.")
         print("x pour retourner au menu principal.")
         print()
         return input("Entrer votre choix : ")
@@ -102,6 +103,33 @@ class View:
             "Enter l'identiant national d' échecs : "
         )
         return file_player
+    
+    def request_player_id(self, action):
+        Utils.clear()
+        chess_id = input(
+            f"Entrer l'identiant national d' échecs du joueur à {action} : "
+            )
+        if Utils.valide_national_chess_identifier(chess_id):
+            return chess_id
+        else:
+            print("Identifiant est invalide")
+            input("Appuyer sur une touche pour continuer...")
+
+    def request_modify_player(self):
+        player_data = {}
+        Utils.clear()
+        player_data["first_name"] = input("Entrer le prénom du joueur : ")
+        player_data["name"] = input("Entrer le nom du joueur : ")
+        player_data["date_of_birth"] = Utils.get_valid_date(
+            "Entrer la date de naissance du joueur(01/12/2003) : ",
+            WRONG_DATE
+        )
+        player_data["national_chess_identifier"] = Utils.get_chess_identifier(
+            "Enter l'identiant national d' échecs : ",
+            False
+        )
+        return player_data
+
 
     def display(self, datas):
         for data in datas:

@@ -15,6 +15,7 @@ class ControllerPlayer:
         self.view = view
 
     def run(self):
+        Players.instances_load()
         while True:
             Utils.clear()
             action = self.view.player_menu()
@@ -25,10 +26,10 @@ class ControllerPlayer:
                 case self.DISPLAY_PLAYER:
                     self.display_player()
                 case self.MODIFY_PLAYER:
-                    pass
+                    self.mofify_player()
 
                 case self.SUPPRESS_PLAYER:
-                    pass
+                    self.suppress_player()
 
                 case self.RETURN_MAIN_MENU:
                     break
@@ -44,9 +45,34 @@ class ControllerPlayer:
         for i in range(1, number_player_add + 1):
             info_player = self.view.request_add_player()
             player = Players.from_dict(info_player)
-        player.save()
-        
+            Players.instances_save()
+        Players.clear_instances()
+        Players.instances_load()
 
+    def mofify_player(self):
+        self.display_player()
+        chess_id = self.view.request_player_id("modifier")
+        player = Players.get_player_by_id(chess_id)
+        data = self.view.request_modify_player()
+        player.update(**data)
+        Players.instances_save()
+        Players.clear_instances()
+        Players.instances_load()
+
+    def suppress_player(self):
+        self.display_player()
+        chess_id = self.view.request_player_id("supprimer")
+        player = Players.get_player_by_id(chess_id)
+        if player is None:
+            print("Joueur inexistant")
+        else:
+            player.delete()
+        Players.instances_save()
+        Players.clear_instances()
+        Players.instances_load()
+   
     def display_player(self):
         data_players = Players.load_file()
         self.view.display_json(data_players)
+
+

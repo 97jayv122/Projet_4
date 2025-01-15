@@ -44,11 +44,15 @@ class Utils:
         return False
     
     @staticmethod
-    def get_chess_identifier(prompt):
+    def get_chess_identifier(prompt, invert=True):
         while True:
             national_chess_identifier = input(prompt)
             if Utils.valide_national_chess_identifier(national_chess_identifier):
-                if not Utils.chess_identifier_existing(national_chess_identifier):
+                if (not Utils.chess_identifier_existing(
+                    national_chess_identifier
+                    ) if invert else Utils.chess_identifier_existing(
+                        national_chess_identifier)
+                        ):
                     return national_chess_identifier
                 print("Identifiant existe déjà")
             else:

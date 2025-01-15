@@ -33,8 +33,9 @@ class Players:
                 "create_at": self.create_at,
                 "update_at": self.update_at}
 
-    def save(self):
-        with open(FOLDER_PLAYER, "a") as file:
+    @classmethod
+    def instances_save(self):
+        with open(FOLDER_PLAYER, "w") as file:
             json.dump(
                 [player.to_dict() for player in self.list_of_player], file
                 )
@@ -52,7 +53,7 @@ class Players:
         return []
 
     @classmethod
-    def load_data(cls):
+    def instances_load(cls):
         data = Players.load_file()
         return [Players.from_dict(player) for player in data]
 
@@ -65,6 +66,23 @@ class Players:
             national_chess_identifier=data.get("national_chess_identifier")
         )
 
+    def update(self, **new_values):
+        allowed_keys = ["first_name", "name", "date_of_birth",
+                        "national_chess_identifier"]
+        for key, value in new_values.items():
+            if key in allowed_keys:
+                setattr(self, key, value)
+        self.update_at = datetime.now().isoformat()
+
+    def delete(self):
+        Players.list_of_player.remove(self)
+
     @classmethod
-    def clear_instance(cls):
+    def get_player_by_id(cls, chess_id):
+        for player in cls.list_of_player:
+            if player.national_chess_identifier == chess_id:
+                return player
+
+    @classmethod
+    def clear_instances(cls):
         cls.list_of_player = []

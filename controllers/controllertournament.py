@@ -15,7 +15,7 @@ class ControllerTournament:
             action = self.view.tournament_menu()
             match action:
                 case "1":
-                    player = Players.load_data()
+                    Players.instances_load()
                     info_tournament = self.view.request_create_tournament()
                     tournament = Tournament.from_dict(info_tournament)
                     tournament.save_tournament()
@@ -58,7 +58,7 @@ class ControllerTournament:
                     tournament.save_tournament()
 
                 case "5":
-                    player = Players.load_data()
+                    Players.load_data()
                     tournament = Tournament.load_tournament()
                 case "x":
                     break
