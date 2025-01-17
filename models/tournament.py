@@ -56,12 +56,12 @@ class Tournament:
             "description": self.description
         }
 
-    def save_tournament(self):
+    def save(self):
         with open("data/tournaments/tournament.json", "w") as file:
             json.dump(self.to_dict(), file)
 
     @classmethod
-    def load_tournament(cls):
+    def load(cls):
         try:
             with open(FOLDER_TOOURNAMENT, "r") as file:
                 data = json.load(file)

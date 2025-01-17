@@ -43,11 +43,11 @@ class Tours:
                 ])
         return self.group_by_two
 
-    def start_tour(self):
+    def start(self):
         self.time_start = time.time()
         self.etat = "started"
 
-    def end_tour(self):
+    def end(self):
         self.time_end = time.time()
         self.duration = self.time_end - self.time_start
         self.etat = "finished"

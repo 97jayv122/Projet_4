@@ -1,6 +1,6 @@
-
 from controllers.maincontroller import Controller
 from view.utils import Utils
+from tabulate import tabulate
 import json
 WRONG_DATE = "Veuillez entrer un bon format de date"
 
@@ -84,12 +84,12 @@ class View:
                     ))
                 if number <= 0:
                     print("Veuillez entrer un nombre supérieur à 0")
-                    input("Appuyer sur une touche pour continuer...")
+                    input("Appuyer sur entrée pour continuer...")
                     continue
                 return number
             except ValueError:
                 print("Entrée invalide. Veuillez entrer un chiffre.")
-                input("Appuyer sur une touche pour continuer...")
+                input("Appuyer sur entrée pour continuer...")
 
     def request_add_player(self):
         file_player = {}
@@ -105,7 +105,6 @@ class View:
         return file_player
     
     def request_player_id(self, action):
-        Utils.clear()
         chess_id = input(
             f"Entrer l'identiant national d' échecs du joueur à {action} : "
             )
@@ -113,29 +112,32 @@ class View:
             return chess_id
         else:
             print("Identifiant est invalide")
-            input("Appuyer sur une touche pour continuer...")
+            input("Appuyer sur entrée pour continuer...")
 
     def request_modify_player(self):
         player_data = {}
-        Utils.clear()
         player_data["first_name"] = input("Entrer le prénom du joueur : ")
         player_data["name"] = input("Entrer le nom du joueur : ")
         player_data["date_of_birth"] = Utils.get_valid_date(
             "Entrer la date de naissance du joueur(01/12/2003) : ",
             WRONG_DATE
         )
-        player_data["national_chess_identifier"] = Utils.get_chess_identifier(
-            "Enter l'identiant national d' échecs : ",
-            False
-        )
+        # player_data["national_chess_identifier"] = Utils.get_chess_identifier(
+        #     "Enter l'identiant national d' échecs : ",
+        #     False
+        # )
         return player_data
 
 
     def display(self, datas):
         for data in datas:
             print(data)
-        input("Appuyer sur une touche pour continuer...")
+        input("Appuyer sur entrée pour continuer...")
 
     def display_json(self, datas):
         print(json.dumps(datas, indent=4))
-        input("Appuyer sur une touche pour continuer...")
+        input("Appuyer sur entrée pour continuer...")
+
+    def display_table(self, data):
+        print(tabulate(data, headers="keys", tablefmt="fancy_grid"))
+        input("Appuyer sur entrée pour continuer...")

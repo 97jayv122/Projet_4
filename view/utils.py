@@ -51,9 +51,9 @@ class Utils:
                 if (not Utils.chess_identifier_existing(
                     national_chess_identifier
                     ) if invert else Utils.chess_identifier_existing(
-                        national_chess_identifier)
-                        ):
+                        national_chess_identifier)):                        
                     return national_chess_identifier
-                print("Identifiant existe déjà")
+                else:
+                    print("Identifiant existe déjà")
             else:
                 print("Identifiant est invalide")

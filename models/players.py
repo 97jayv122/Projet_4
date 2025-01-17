@@ -31,7 +31,8 @@ class Players:
                 "national_chess_identifier": self.national_chess_identifier,
                 "id": self.id,
                 "create_at": self.create_at,
-                "update_at": self.update_at}
+                "update_at": self.update_at
+                }
 
     @classmethod
     def instances_save(self):
@@ -67,8 +68,7 @@ class Players:
         )
 
     def update(self, **new_values):
-        allowed_keys = ["first_name", "name", "date_of_birth",
-                        "national_chess_identifier"]
+        allowed_keys = ["first_name", "name", "date_of_birth"]
         for key, value in new_values.items():
             if key in allowed_keys:
                 setattr(self, key, value)
@@ -82,7 +82,11 @@ class Players:
         for player in cls.list_of_player:
             if player.national_chess_identifier == chess_id:
                 return player
+        print(f"Player with ID {chess_id} not found.")
+        return None
 
+            
     @classmethod
     def clear_instances(cls):
         cls.list_of_player = []
+

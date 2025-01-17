@@ -15,8 +15,9 @@ class ControllerPlayer:
         self.view = view
 
     def run(self):
-        Players.instances_load()
+        
         while True:
+            Players.instances_load()
             Utils.clear()
             action = self.view.player_menu()
             match action:
@@ -36,6 +37,7 @@ class ControllerPlayer:
 
                 case _:
                     print("Choix inconnue.")
+                    Players.clear_instances()
 
     def add_player(self):
         """
@@ -47,20 +49,25 @@ class ControllerPlayer:
             player = Players.from_dict(info_player)
             Players.instances_save()
         Players.clear_instances()
-        Players.instances_load()
 
     def mofify_player(self):
         self.display_player()
+        Players.instances_load()
         chess_id = self.view.request_player_id("modifier")
+        print(chess_id)
         player = Players.get_player_by_id(chess_id)
-        data = self.view.request_modify_player()
-        player.update(**data)
+        if player:
+            data = self.view.request_modify_player()
+            player.update(**data)
+        else:
+            print("Joueur inexistant")
+            input("Appuyer sur entrée pour continuer")
         Players.instances_save()
         Players.clear_instances()
-        Players.instances_load()
 
     def suppress_player(self):
         self.display_player()
+        Players.instances_load()
         chess_id = self.view.request_player_id("supprimer")
         player = Players.get_player_by_id(chess_id)
         if player is None:
@@ -69,10 +76,12 @@ class ControllerPlayer:
             player.delete()
         Players.instances_save()
         Players.clear_instances()
-        Players.instances_load()
    
+    # def display_player(self):
+    #     data_players = Players.load_file()
+    #     self.view.display_json(data_players)
+
     def display_player(self):
-        data_players = Players.load_file()
-        self.view.display_json(data_players)
-
-
+        data_players = [player.to_dict() for player in Players.list_of_player]
+        self.view.display_table(data_players)
+        Players.clear_instances()

@@ -18,18 +18,18 @@ class ControllerTournament:
                     Players.instances_load()
                     info_tournament = self.view.request_create_tournament()
                     tournament = Tournament.from_dict(info_tournament)
-                    tournament.save_tournament()
+                    tournament.save()
                     try:
                         tournament.list_player = self.view.select_player(
                             Players.list_of_player
                             )
                     except ValueError:
                         print("Veuillez entrer un bon format.")
-                    tournament.save_tournament()
+                    tournament.save()
 
                 case "2":
                     try:
-                        tournament = Tournament.load_tournament()
+                        tournament = Tournament.load()
                         tours = Tours(tournament.list_player)
                         tours.make_first_tour()
                         self.view.display(tours.group_by_two)
@@ -38,7 +38,7 @@ class ControllerTournament:
                             )
                             for player_1, player_2 in tours.group_by_two]
                         [match.random_color() for match in Matchs.list_of_matchs]
-                        tours.start_tour()
+                        tours.start()
                     except UnboundLocalError:
                         print("Pas de tournois créé")
                     except AttributeError:
@@ -48,18 +48,18 @@ class ControllerTournament:
                 case "3":
                     """  """
                     try:
-                        tours.end_tour()
+                        tours.end()
                         [match.score_update()
                          for match in Matchs.list_of_matchs]
                     except UnboundLocalError:
                         print("Pas de matchs commencé")
 
                 case "4":
-                    tournament.save_tournament()
+                    tournament.save()
 
                 case "5":
                     Players.load_data()
-                    tournament = Tournament.load_tournament()
+                    tournament = Tournament.load()
                 case "x":
                     break
 
