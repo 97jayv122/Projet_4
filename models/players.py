@@ -16,7 +16,7 @@ class Players:
         self.national_chess_identifier = national_chess_identifier
         self.id = str(uuid.uuid4())
         self.create_at = datetime.now().isoformat()
-        self.update_at = None
+        self.update_at = ""
         Players.list_of_player.append(self)
 
     def __repr__(self):
@@ -82,7 +82,6 @@ class Players:
         for player in cls.list_of_player:
             if player.national_chess_identifier == chess_id:
                 return player
-        print(f"Player with ID {chess_id} not found.")
         return None
 
             

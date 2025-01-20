@@ -4,7 +4,7 @@ from models.matchs import Matchs
 
 
 class Tours:
-    list_of_tours = []
+
 
     def __init__(self, list_player_of_tournament):
         self.list_player_of_tournament = list_player_of_tournament
@@ -14,7 +14,7 @@ class Tours:
         self.group_by_two = []
         self.matchs_list_by_round = []
         self.stat = "not started"
-        Tours.list_of_tours.append(self)
+
 
     def to_dict(self):
         return {

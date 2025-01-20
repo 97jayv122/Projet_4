@@ -58,16 +58,18 @@ class ControllerPlayer:
         self.display_player()
         Players.instances_load()
         chess_id = self.view.request_player_id("modifier")
-        print(chess_id)
         player = Players.get_player_by_id(chess_id)
-        if player:
+        if player != None:
             data = self.view.request_modify_player()
             player.update(**data)
+            Players.instances_save()
+            self.display_player()
         else:
-            print("Joueur inexistant")
+            print(f"Le joueur avecl'ID: {chess_id} n'as pas été trouvé.")
             input("Appuyer sur entrée pour continuer")
-        Players.instances_save()
         Players.clear_instances()
+            
+
 
     def suppress_player(self):
         self.display_player()
@@ -78,9 +80,9 @@ class ControllerPlayer:
             print("Joueur inexistant")
         else:
             player.delete()
-        Players.instances_save()
-        Players.clear_instances()
-   
+            Players.instances_save()
+            self.display_player()
+
     # def display_player(self):
     #     data_players = Players.load_file()
     #     self.view.display_json(data_players)

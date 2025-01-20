@@ -108,14 +108,19 @@ class View:
         return file_player
     
     def request_player_id(self, action):
-        chess_id = input(
-            f"Entrer l'identiant national d' échecs du joueur à {action} : "
-            )
-        if Utils.valide_national_chess_identifier(chess_id):
-            return chess_id
-        else:
-            print("Identifiant est invalide")
-            input("Appuyer sur entrée pour continuer...")
+        while True:
+            chess_id = input(
+                f"Entrez l'identifiant national d'échecs du joueur à {action}"
+                 " ou taper 'x' pour annuler : "
+                 )
+            if chess_id.lower() == "x":
+                print("action annulé")
+                return None
+            if Utils.valide_national_chess_identifier(chess_id):
+                return chess_id
+            else:
+                print("Identifiant est invalide")
+                input("Appuyer sur entrée pour continuer...")
 
     def request_modify_player(self):
         player_data = {}
@@ -125,12 +130,8 @@ class View:
             "Entrer la date de naissance du joueur(01/12/2003) : ",
             WRONG_DATE
         )
-        # player_data["national_chess_identifier"] = Utils.get_chess_identifier(
-        #     "Enter l'identiant national d' échecs : ",
-        #     False
-        # )
-        return player_data
 
+        return player_data
 
     def display(self, datas):
         for data in datas:
@@ -142,6 +143,7 @@ class View:
         input("Appuyer sur entrée pour continuer...")
 
     def display_table(self, data):
+        Utils.clear()
         print(tabulate(data, headers="keys", tablefmt="fancy_grid"))
         input("Appuyer sur entrée pour continuer...")
 
@@ -160,7 +162,7 @@ class View:
             Utils.clear()
             print(f"{player_1} VS {player_2}")
             try:
-                score_player_1 = int(input(f"Entrer le score {player_1} : "))
+                score_player_1 = float(input(f"Entrer le score {player_1} : "))
                 score_player_2 = Utils.check_score(score_player_1)
                 if score_player_2 != None:
                     return score_player_1, score_player_2
