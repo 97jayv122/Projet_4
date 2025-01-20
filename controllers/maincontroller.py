@@ -4,6 +4,12 @@ from view.utils import Utils
 from controllers.controllerplayer import ControllerPlayer
 from controllers.controllertournament import ControllerTournament
 
+class Constant:
+
+    PLAYER_MENU = "1"
+    TOURNAMENT_MENU = "2"
+    DISPLAY_REPORTS = "3"
+    EXIT_PROGRAM = "x"
 
 class Controller:
     """
@@ -12,10 +18,6 @@ class Controller:
     """
 
     # Définition des numéros d'action comme variables de classe
-    PLAYER_MENU = "1"
-    TOURNAMENT_MENU = "2"
-    DISPLAY_REPORTS = "3"
-    EXIT_PROGRAM = "x"
 
     def make_folder_data(self):
         """
@@ -43,16 +45,16 @@ class Controller:
             Utils.clear()
             action = self.view.home_menu()
             match action:
-                case self.PLAYER_MENU:
+                case Constant.PLAYER_MENU:
                     self.run_controller_player()
 
-                case self.TOURNAMENT_MENU:
+                case Constant.TOURNAMENT_MENU:
                     self.run_controller_tournament()
 
-                case self.DISPLAY_REPORTS:
+                case Constant.DISPLAY_REPORTS:
                     pass
 
-                case self.EXIT_PROGRAM:
+                case Constant.EXIT_PROGRAM:
                     self.exit_program()
 
                 case _:
@@ -84,3 +86,4 @@ class Controller:
         Display a message when the choice is unknown.
         """        
         print("Choix inconnue.")
+        input("Appuyer sur entrée pour continuer...")

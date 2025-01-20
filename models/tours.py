@@ -23,7 +23,7 @@ class Tours:
             "time_start": self.time_start,
             "time_end": self.time_end,
             "group_by_two": self.group_by_two,
-            "match_list_by_round": [
+            "matchs_list_by_round": [
                 match.to_dict() if isinstance(match, Matchs)
                 else match for match in self.matchs_list_by_round
                 ],
@@ -37,7 +37,7 @@ class Tours:
             ]
             for i in range(0, len(self.list_player_of_tournament) - 1, 2)
             ]
-        if len(self.list_player_of_tournament) % 2 == 0:
+        if len(self.list_player_of_tournament) % 2 != 0:
             self.group_by_two.append([
                 self.list_player_of_tournament[-1], "Sans adversaire"
                 ])
@@ -45,12 +45,12 @@ class Tours:
 
     def start(self):
         self.time_start = time.time()
-        self.etat = "started"
+        self.stat = "started"
 
     def end(self):
         self.time_end = time.time()
         self.duration = self.time_end - self.time_start
-        self.etat = "finished"
+        self.stat = "finished"
         self.duration = self.time_end - self.time_start
 
     def make_next_tour(self):
@@ -62,3 +62,6 @@ class Tours:
     def recovery_list_of_matchs(self, matchs):
         list_matchs = list(matchs.__dict__.items())
         self.match_list_by_round.append(list_matchs)
+
+    def __repr__(self):
+        pass

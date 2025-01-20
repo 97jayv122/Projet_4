@@ -2,15 +2,18 @@ from models.players import Players
 from view.utils import Utils
 
 
-class ControllerPlayer:
-    """
-    Controller of the player menu that allows to add, display, and load players.
-    """    
+class ConstantPlayer:
+
     ADD_PLAYER = "1"
     DISPLAY_PLAYER = "2"
     MODIFY_PLAYER = "3"
     SUPPRESS_PLAYER = "4"
     RETURN_MAIN_MENU = "x"
+
+class ControllerPlayer:
+    """
+    Controller of the player menu that allows to add, display, and load players.
+    """    
     def __init__(self, view):
         self.view = view
 
@@ -21,23 +24,24 @@ class ControllerPlayer:
             Utils.clear()
             action = self.view.player_menu()
             match action:
-                case self.ADD_PLAYER:
+                case ConstantPlayer.ADD_PLAYER:
                     self.add_player()
 
-                case self.DISPLAY_PLAYER:
+                case ConstantPlayer.DISPLAY_PLAYER:
                     self.display_player()
-                case self.MODIFY_PLAYER:
+
+                case ConstantPlayer.MODIFY_PLAYER:
                     self.mofify_player()
 
-                case self.SUPPRESS_PLAYER:
+                case ConstantPlayer.SUPPRESS_PLAYER:
                     self.suppress_player()
 
-                case self.RETURN_MAIN_MENU:
+                case ConstantPlayer.RETURN_MAIN_MENU:
                     break
 
                 case _:
                     print("Choix inconnue.")
-                    Players.clear_instances()
+                    input("Appuyer sur entrée pour continuer...")
 
     def add_player(self):
         """

@@ -1,7 +1,7 @@
 import json
 from models.players import Players
 from models.tours import Tours
-FOLDER_TOOURNAMENT = "data/tournaments/tournament.json"
+FOLDER_TOURNAMENT = "data/tournaments/tournament.json"
 
 class Tournament:
     def __init__(self, name, place, date_start, date_end,
@@ -57,13 +57,13 @@ class Tournament:
         }
 
     def save(self):
-        with open("data/tournaments/tournament.json", "w") as file:
+        with open(FOLDER_TOURNAMENT, "w") as file:
             json.dump(self.to_dict(), file)
 
     @classmethod
     def load(cls):
         try:
-            with open(FOLDER_TOOURNAMENT, "r") as file:
+            with open(FOLDER_TOURNAMENT, "r") as file:
                 data = json.load(file)
                 return cls.from_dict(data)
         except json.JSONDecodeError as e:
@@ -72,12 +72,28 @@ class Tournament:
             print("Fichier introuvable : data/tournaments/tournament.json")
         except Exception as e:
             print(f"Erreur inattendue : {e}")
+            raise
         return None
 
     def add_1_to_current_tour(self):
         self.current_tour += 1
-        self.save_tournament()
+        self.save()
 
     def recovery_list_of_tour(self, tour):
-        list_tour = list(tour.__dict__.items())
-        self.list_of_tours.append(list_tour)
+        # list_tour = list(tour.__dict__.items())
+        # self.list_of_tours.append(list_tour)
+        self.list_of_tours.append(tour.to_dict() if isinstance(tour, Tours) else tour)
+
+    def instance_clear(self):
+        """
+        Réinitialise tous les attributs de l'instance aux valeurs par défaut.
+        """
+        self.name = ""
+        self.place = ""
+        self.date_start = ""
+        self.date_end = ""
+        self.number_of_turns = 4
+        self.list_player = []
+        self.list_of_tours = []
+        self.current_tour = 0
+        self.description = ""

@@ -57,3 +57,20 @@ class Utils:
                     print("Identifiant existe déjà")
             else:
                 print("Identifiant est invalide")
+
+    @staticmethod
+    def check_score(score_1):
+        if score_1 == 1:
+            score_2 = 0
+            return score_2
+        elif score_1 == 0.5:
+            score_2 = 0.5
+            return score_2
+        
+        elif score_1 == 0:
+            score_2 = 1
+            return score_2
+
+        else:
+            return None
+        

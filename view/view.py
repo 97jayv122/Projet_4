@@ -1,7 +1,9 @@
-from controllers.maincontroller import Controller
-from view.utils import Utils
-from tabulate import tabulate
 import json
+from tabulate import tabulate
+from controllers.maincontroller import Constant
+from controllers.controllertournament import ControllerTournament
+from controllers.controllerplayer import ConstantPlayer
+from view.utils import Utils
 WRONG_DATE = "Veuillez entrer un bon format de date"
 
 
@@ -9,33 +11,34 @@ class View:
     def home_menu(self):
         print("-" * 10 + " Menu principal " + "-" * 10)
         print()
-        print(Controller.PLAYER_MENU + ". pour entrer dans le menu joueurs.")
-        print(Controller.TOURNAMENT_MENU + ". pour entrer dans le menu tournois.")
-        print(Controller.DISPLAY_REPORTS + ". pour voir les rapports.")
-        print(Controller.EXIT_PROGRAM + ". pour quitter le programme.")
+        print(Constant.PLAYER_MENU + ". pour entrer dans le menu joueurs.")
+        print(Constant.TOURNAMENT_MENU + ". pour entrer dans le menu tournois.")
+        print(Constant.DISPLAY_REPORTS + ". pour voir les rapports.")
+        print(Constant.EXIT_PROGRAM + ". pour quitter le programme.")
         print()
         return input("Entrer votre choix : ")
 
     def player_menu(self):
         print("-" * 10 + " Menu Joueurs " + "-" * 10)
         print()
-        print("1 pour entrer des joueur")
-        print("2 pour lister les joueurs")
-        print("3 pour modifier un joueur.")
-        print("4 pour supprimer un joueur.")
-        print("x pour retourner au menu principal.")
+        print(ConstantPlayer.ADD_PLAYER + ". pour entrer des joueur")
+        print(ConstantPlayer.DISPLAY_PLAYER + ". pour lister les joueurs")
+        print(ConstantPlayer.MODIFY_PLAYER + ". pour modifier un joueur.")
+        print(ConstantPlayer.SUPPRESS_PLAYER + ". pour supprimer un joueur.")
+        print(ConstantPlayer.RETURN_MAIN_MENU + ". pour retourner au menu principal.")
         print()
         return input("Entrer votre choix : ")
 
     def tournament_menu(self):
         print("-" * 10 + " Menu Tournois " + "-" * 10)
         print()
-        print("1 créer un tournoi")
-        print("2 Commencer un tour")
-        print("3 Rentrer les scores des joueurs")
-        print("4 Sauvegarder le tournoi")
-        print("5 Charger le tournoi")
-        print("x pour retourner au menu principal.")
+        print(ControllerTournament.CREATE_A_TOURNAMENT + ". créer un tournoi")
+        print(ControllerTournament.SELECT_PLAYER + ". Sélectionner des joueurs")
+        print(ControllerTournament.START_A_TOUR + ". Commencer un tour")
+        print(ControllerTournament.END_A_TOUR + ". Terminer un tour")
+        print("5. Sauvegarder le tournoi")
+        print("6. Charger le tournoi")
+        print(ControllerTournament.RETURN_MAIN_MENU + ". pour retourner au menu principal.")
         print()
         return input("Entrer votre choix : ")
 
@@ -141,3 +144,35 @@ class View:
     def display_table(self, data):
         print(tabulate(data, headers="keys", tablefmt="fancy_grid"))
         input("Appuyer sur entrée pour continuer...")
+
+    def requests_score(self, player_1, player_2):
+        """
+        Requests the scores for a match between two players with validation.
+        
+        Args:
+            player_1 (str): The name of the first player 
+            player_2 (str): The name of the second player 
+
+        Returns:
+            tuple: The scores of player_1 and player_2
+        """        
+        while True:
+            Utils.clear()
+            print(f"{player_1} VS {player_2}")
+            try:
+                score_player_1 = int(input(f"Entrer le score {player_1} : "))
+                score_player_2 = Utils.check_score(score_player_1)
+                if score_player_2 != None:
+                    return score_player_1, score_player_2
+                else:
+                    print("Score invalide. Veuillez entrer 1, 0.5 ou 0.")
+                    input("Appuyer sur entrée pour continuer...")
+            except ValueError:
+                print("Veuillez entrer un chiffre")
+                input("Appuyer sur entrer pour continuer...")
+
+    def display_choice_color(self):
+        pass
+
+
+        
