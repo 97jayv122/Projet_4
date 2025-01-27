@@ -42,7 +42,7 @@ class TournamentManagement:
                     self.tournament = self.view.select_of_list_file(formated_list_files)
 
                 case ConstantTournamentManagement.SELECT_PLAYER:
-                    pass
+                    self.player_selection()
 
                 case ConstantTournamentManagement.START_TOURNAMENT:
                     self.run_controller_tournament()
