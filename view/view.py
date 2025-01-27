@@ -195,7 +195,7 @@ class View:
                 if 1 <= user_input < len(datas):
                     return datas[user_input - 1][1]
                 else:
-                    print(f"Index invalide. Veuillez entrer un nombre entre 1 et {len(datas) - 1}.")
+                    print(f"Index invalide. Veuillez entrer un nombre entre 1 et {len(datas)}.")
             except ValueError:
                 print("Veuillez entrer un nombre valide.")
     

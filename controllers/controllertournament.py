@@ -36,6 +36,7 @@ class ControllerTournament:
                 case "6":
                     tournament = Tournament.load(self.name_tournament)
                 case ConstantTournament.RETURN_MAIN_MENU:
+                    
                     break
 
                 case _:
@@ -49,12 +50,32 @@ class ControllerTournament:
             )
         match.score_update(score_player_1, score_player_2)
 
+    def generate_first_matchs(self, tour):
+        """
+        Génère des paires de joueurs pour le tour et crée les matchs.
+        """
+        print(tour.list_player_of_tournament)
+        shuffle(tour.list_player_of_tournament)  # Mélange aléatoire des joueurs
+        tour.matchs_list_by_round = []
+
+        for i in range(0, len(tour.list_player_of_tournament), 2):
+            if i + 1 < len(tour.list_player_of_tournament):
+                player_1 = tour.list_player_of_tournament[i]
+                player_2 = tour.list_player_of_tournament[i + 1]
+                match = Matchs(player_1, player_2)
+                match.assign_colors()
+                self.view.display_string(match.color_of_player)
+                self.view.display_string(match.color_of_player)
+                tour.matchs_list_by_round.append(match.to_dict())
+
     def start_tour(self):
         try:
             tournament = Tournament.load(self.name_tournament)
             self.view.display_string(tournament)
             tour = Tours(tournament.list_player)
+            print("tourgénéré", tour)
             self.generate_first_matchs(tour)
+            
             # tour.start()
         except UnboundLocalError:
             print("Pas de tournois créé")
@@ -73,23 +94,6 @@ class ControllerTournament:
         tour.recovery_list_of_matchs(Matchs.list_of_matchs)
         tournament.add_tour(tour)
 
-    def generate_first_matchs(self, tour):
-        """
-        Génère des paires de joueurs pour le tour et crée les matchs.
-        """
-        shuffle(tour.list_player_of_tournament)  # Mélange aléatoire des joueurs
-        tour.matchs_list_by_round = []
-
-        for i in range(0, len(tour.list_player_of_tournament), 2):
-            if i + 1 < len(tour.list_player_of_tournament):
-                player_1 = tour.list_player_of_tournament[i]
-                player_2 = tour.list_player_of_tournament[i + 1]
-                match = Matchs(player_1, player_2)
-                match.assign_colors()
-                self.view.display_string(match.color_of_player)
-                tour.matchs_list_by_round.append(match.to_dict())
-        print(tour.matchs_list_by_round)
-        input()
 
     def generate_pairs(players):
         players = sorted(players, key=lambda x: x.points, reverse=True)

@@ -1,6 +1,7 @@
 import json
 from models.players import Players
 from models.tours import Tours
+from models.tours import Matchs                                                                                                      
 FOLDER_TOURNAMENT = "data/tournaments/"
 
 class Tournament:
@@ -66,13 +67,13 @@ class Tournament:
     @classmethod
     def load(cls, name):
         try:
-            with open(FOLDER_TOURNAMENT + name + ".json", "r") as file:
+            with open(FOLDER_TOURNAMENT + name, "r") as file:
                 data = json.load(file)
                 return cls.from_dict(data)
         except json.JSONDecodeError as e:
             print(f"pas de données a charger: {e}")
         except FileNotFoundError:
-            print("Fichier introuvable : data/tournaments/tournament.json")
+            print(f"Fichier introuvable : data/tournaments/{name}")
         except Exception as e:
             print(f"Erreur inattendue : {e}")
             raise
@@ -119,7 +120,7 @@ class Tournament:
         Ajoute un tour à la liste des tours du tournoi.
 
         Args:
-            tour (Tours): Instance de la classe Tours.
+            tour (Tours): Instance de la classe Tours. 
         """
         self.list_of_tours.append(tour.to_dict())
         self.save()
@@ -131,3 +132,9 @@ class Tournament:
         if self.current_tour:
             self.current_matchs.append(match)
             self.current_tour.recovery_list_of_matchs(self.current_matchs)
+
+    def __repr__(self):
+        tr = f"Nom du tournoi : {self.name}, player: "  
+        for player in self.list_player:
+            tr = tr + f"\n{player}"
+        return tr 

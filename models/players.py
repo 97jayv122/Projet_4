@@ -24,7 +24,7 @@ class Players:
     def __repr__(self):
         return str(self.first_name) + "." + str(
             self.name
-            ) + " chess ID : " + str(self.national_chess_identifier)
+            ) + " ID : " + str(self.id)
 
     def to_dict(self):
         return self.__dict__
