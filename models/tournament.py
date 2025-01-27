@@ -1,7 +1,7 @@
 import json
 from models.players import Players
 from models.tours import Tours
-FOLDER_TOURNAMENT = "data/tournaments/tournament.json"
+FOLDER_TOURNAMENT = "data/tournaments/"
 
 class Tournament:
     def __init__(self, name, place, date_start, date_end,
@@ -14,6 +14,7 @@ class Tournament:
         self.list_player = kwargs.get("list_player", [])
         self.list_of_tours = kwargs.get("list_of_tours", [])
         self.current_tour = kwargs.get("current_tour", 0)
+        self.current_matchs = kwargs.get("current_matchs", [])
         self.description = kwargs.get("description", "")
 
     @classmethod
@@ -34,6 +35,7 @@ class Tournament:
             list_player=list_player,
             list_of_tours=list_of_tours,
             current_tour=data.get("current_tour"),
+            current_matchs=data.get("current_matchs"),
             description=data.get("description")
         )
 
@@ -53,17 +55,18 @@ class Tournament:
                 else tour for tour in self.list_of_tours
                 ],
             "current_tour": self.current_tour,
+            "current_matchs": self.current_matchs,
             "description": self.description
         }
 
     def save(self):
-        with open(FOLDER_TOURNAMENT, "w") as file:
+        with open(FOLDER_TOURNAMENT + self.name + ".json", "w") as file:
             json.dump(self.to_dict(), file)
 
     @classmethod
-    def load(cls):
+    def load(cls, name):
         try:
-            with open(FOLDER_TOURNAMENT, "r") as file:
+            with open(FOLDER_TOURNAMENT + name + ".json", "r") as file:
                 data = json.load(file)
                 return cls.from_dict(data)
         except json.JSONDecodeError as e:
@@ -74,15 +77,18 @@ class Tournament:
             print(f"Erreur inattendue : {e}")
             raise
         return None
+    
+    def start_new_tour(self):
+        """
+        Démarre un nouveau tour et initialise les matchs.
+        """
+        self.current_tour = Tours(self.list_player)
+        self.current_matchs = []  # Réinitialise les matchs pour le nouveau tour
+        self.list_of_tours.append(self.current_tour)
 
     def add_1_to_current_tour(self):
         self.current_tour += 1
         self.save()
-
-    def recovery_list_of_tour(self, tour):
-        # list_tour = list(tour.__dict__.items())
-        # self.list_of_tours.append(list_tour)
-        self.list_of_tours.append(tour.to_dict() if isinstance(tour, Tours) else tour)
 
     def instance_clear(self):
         """
@@ -96,4 +102,32 @@ class Tournament:
         self.list_player = []
         self.list_of_tours = []
         self.current_tour = 0
+        self.current_matchs = []
         self.description = ""
+
+    def recovery_list_of_matchs(self, matchs):
+        """
+        Ajoute une liste de matchs au tour.
+
+        Args:
+            matchs (list): Liste d'instances de la classe Matchs.
+        """
+        self.matchs_list_by_round = [match.to_dict() for match in matchs]
+
+    def add_tour(self, tour):
+        """
+        Ajoute un tour à la liste des tours du tournoi.
+
+        Args:
+            tour (Tours): Instance de la classe Tours.
+        """
+        self.list_of_tours.append(tour.to_dict())
+        self.save()
+
+    def add_match_to_current_tour(self, match):
+        """
+        Ajoute un match au tour actuel.
+        """
+        if self.current_tour:
+            self.current_matchs.append(match)
+            self.current_tour.recovery_list_of_matchs(self.current_matchs)

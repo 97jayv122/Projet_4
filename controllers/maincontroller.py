@@ -1,8 +1,8 @@
 import os
-from models.players import FOLDER
+from models.tournament import FOLDER_TOURNAMENT
 from view.utils import Utils
 from controllers.controllerplayer import ControllerPlayer
-from controllers.controllertournament import ControllerTournament
+from controllers.tournamentmanagement import TournamentManagement
 
 class Constant:
 
@@ -23,8 +23,8 @@ class Controller:
         """
         Create the data folder if it does not exist.
         """        
-        if not os.path.exists(FOLDER):
-            os.makedirs(FOLDER)
+        if not os.path.exists(FOLDER_TOURNAMENT):
+            os.makedirs(FOLDER_TOURNAMENT)
 
     def __init__(self, view):
         """
@@ -34,7 +34,7 @@ class Controller:
             view (_type_): _description_
         """        
         self.view = view
-        self.make_folder_data()
+        self.make_folder_data() 
 
     def run(self):
         """
@@ -49,7 +49,7 @@ class Controller:
                     self.run_controller_player()
 
                 case Constant.TOURNAMENT_MENU:
-                    self.run_controller_tournament()
+                    self.run_tournament_management()
 
                 case Constant.DISPLAY_REPORTS:
                     pass
@@ -67,12 +67,12 @@ class Controller:
         controllerplayer = ControllerPlayer(self.view)
         controllerplayer.run()
 
-    def run_controller_tournament(self):
+    def run_tournament_management(self):
         """
-        Run the tournament controller.
-        """        
-        controllertournament = ControllerTournament(self.view)
-        controllertournament.run()
+        Run the tournamment management controller.
+        """
+        tounamentmanagement = TournamentManagement(self.view)
+        tounamentmanagement.run()
 
     def exit_program(self):
         """

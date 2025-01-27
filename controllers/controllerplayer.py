@@ -67,7 +67,8 @@ class ControllerPlayer:
         else:
             print(f"Le joueur avecl'ID: {chess_id} n'as pas été trouvé.")
             input("Appuyer sur entrée pour continuer")
-        Players.clear_instances()
+            self.display_player()
+            
             
 
 
@@ -78,10 +79,13 @@ class ControllerPlayer:
         player = Players.get_player_by_id(chess_id)
         if player is None:
             print("Joueur inexistant")
+            self.display_player()
+
         else:
             player.delete()
             Players.instances_save()
             self.display_player()
+            Players.clear_instances()
 
     # def display_player(self):
     #     data_players = Players.load_file()

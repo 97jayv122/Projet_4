@@ -9,10 +9,10 @@ class Matchs:
     def __init__(self, player_1, player_2):
         self.player_1 = player_1
         self.player_2 = player_2
-        self.info_match = {}
+        self.info_match = ()
         self.color_of_player = {}
-        self.score_player_1 = []
-        self.score_player_2 = []
+        self.score_player_1 = 0
+        self.score_player_2 = 0
         Matchs.list_of_matchs.append(self)
         
     def score_update(self, score_player_1, score_player_2):
@@ -24,23 +24,13 @@ class Matchs:
             score_player_2 (int): Score du joueur 2.
 
         Returns:
-            dict: Dictionnaire contenant les informations du match.
+            tuple: deux listes contenant lchacune le joueur et son score.
         """
-        self.info_match = {
-            self.player_1: score_player_1,
-            self.player_2: score_player_2
-        }
+        self.info_match = (
+            [self.player_1, score_player_1],
+            [self.player_2, score_player_2]
+        )
         return self.info_match
-    # def score_update(self):
-    #     print(f"{self.player_1} VS {self.player_2}")
-    #     score_player_1 = int(input(f"Entrer le score {self.player_1} : "))
-    #     self.score_player_1.append(score_player_1)
-    #     self.score_player_1.insert(0, self.player_1)
-    #     score_player_2 = int(input(f"Entrer le score {self.player_2} : "))
-    #     self.score_player_2.append(score_player_2)
-    #     self.score_player_2.insert(0, self.player_2)
-    #     self.info_match = (self.score_player_1, self.score_player_2)
-    #     return self.info_match
 
     def assign_random_colors(self):
         """
@@ -49,16 +39,30 @@ class Matchs:
         Returns:
             dict: Dictionnaire associant chaque joueur à une couleur.
         """
-        players = [self.player_1, self.player_2]
-        random.shuffle(players)
-        self.color_of_player = {
-            players[0]: COLOR_WHITE,
-            players[1]: COLOR_BLACK
+        if random.choice([True, False]):
+            self.color_of_player = {self.player_1: COLOR_WHITE, self.player_2: COLOR_BLACK}
+        else:
+            self.color_of_player = {self.player_1: COLOR_BLACK, self.player_2: COLOR_WHITE}
+
+    def to_dict(self):
+        return {
+            "info_match": self.info_match,
+            "color_of_player": self.color_of_player
         }
-        return self.color_of_player
+    @classmethod
+    def from_dict(cls, data):
+        """
+        Recrée un objet Matchs à partir d'un dictionnaire.
+        """
+        player_1, score_1 = data["info_match"][0]
+        player_2, score_2 = data["info_match"][1]
+        match = cls(player_1, player_2)
+        match.info_match = data["info_match"]
+        match.color_of_player = data["color_of_player"]
+        return match
 
     def __repr__(self):
-        return f"{self.player_1} VS {self.player_2}"
+        return f"Match: {self.player_1} vs {self.player_2} - Scores: {self.info_match}"
 
 # match = Matchs("jérémie", "pierre")
 

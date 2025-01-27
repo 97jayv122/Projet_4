@@ -1,7 +1,8 @@
 import json
 from tabulate import tabulate
 from controllers.maincontroller import Constant
-from controllers.controllertournament import ControllerTournament
+from controllers.tournamentmanagement import ConstantTournamentManagement
+from controllers.controllertournament import ConstantTournament
 from controllers.controllerplayer import ConstantPlayer
 from view.utils import Utils
 WRONG_DATE = "Veuillez entrer un bon format de date"
@@ -12,7 +13,7 @@ class View:
         print("-" * 10 + " Menu principal " + "-" * 10)
         print()
         print(Constant.PLAYER_MENU + ". pour entrer dans le menu joueurs.")
-        print(Constant.TOURNAMENT_MENU + ". pour entrer dans le menu tournois.")
+        print(Constant.TOURNAMENT_MENU + ". pour entrer dans le gestionnaire de tournoi.")
         print(Constant.DISPLAY_REPORTS + ". pour voir les rapports.")
         print(Constant.EXIT_PROGRAM + ". pour quitter le programme.")
         print()
@@ -28,17 +29,26 @@ class View:
         print(ConstantPlayer.RETURN_MAIN_MENU + ". pour retourner au menu principal.")
         print()
         return input("Entrer votre choix : ")
+    
+    def tournamament_management_menu(self):
+        print("-" * 10 + " Menu Tournois " + "-" * 10)
+        print()
+        print(ConstantTournamentManagement.CREATE_A_TOURNAMENT + ". Nouveau tournoi")
+        print(ConstantTournamentManagement.SELECT_TOURNAMENT + ". Sélectionner un tournoi")
+        print(ConstantTournamentManagement.SELECT_PLAYER + ". Sélection des joueurs")
+        print(ConstantTournamentManagement.START_TOURNAMENT + ". Commencé le tournoi")
+        print(ConstantTournamentManagement.RETURN_MAIN_MENU + ". pour retourner au menu principal.")
+        print()
+        return input("Entrer votre choix : ")
 
     def tournament_menu(self):
         print("-" * 10 + " Menu Tournois " + "-" * 10)
         print()
-        print(ControllerTournament.CREATE_A_TOURNAMENT + ". créer un tournoi")
-        print(ControllerTournament.SELECT_PLAYER + ". Sélectionner des joueurs")
-        print(ControllerTournament.START_A_TOUR + ". Commencer un tour")
-        print(ControllerTournament.END_A_TOUR + ". Terminer un tour")
+        print(ConstantTournament.START_A_TOUR + ". Commencer un tour")
+        print(ConstantTournament.END_A_TOUR + ". Terminer un tour")
         print("5. Sauvegarder le tournoi")
         print("6. Charger le tournoi")
-        print(ControllerTournament.RETURN_MAIN_MENU + ". pour retourner au menu principal.")
+        print(ConstantTournament.RETURN_MAIN_MENU + ". pour retourner au menu gestionnaire de tournoi.")
         print()
         return input("Entrer votre choix : ")
 
@@ -142,9 +152,9 @@ class View:
         print(json.dumps(datas, indent=4))
         input("Appuyer sur entrée pour continuer...")
 
-    def display_table(self, data):
+    def display_table(self, datas):
         Utils.clear()
-        print(tabulate(data, headers="keys", tablefmt="fancy_grid"))
+        print(tabulate(datas, headers="keys", tablefmt="fancy_grid"))
         input("Appuyer sur entrée pour continuer...")
 
     def requests_score(self, player_1, player_2):
@@ -175,6 +185,23 @@ class View:
 
     def display_choice_color(self):
         pass
-
+    
+    def select_of_list_file(self, datas):
+        headers = ['Index', 'File']
+        print(tabulate(datas, headers=headers, tablefmt='grid'))
+        while True:
+            try:
+                user_input = int(input("\nEntrez l'index de l'élément que vous souhaitez sélectionner : "))
+                if 1 <= user_input < len(datas):
+                    return datas[user_input - 1][1]
+                else:
+                    print(f"Index invalide. Veuillez entrer un nombre entre 1 et {len(datas) - 1}.")
+            except ValueError:
+                print("Veuillez entrer un nombre valide.")
+    
+    def display_string(self, datas):
+        print(datas)
+        print("Le tournoi à été correctement chargé.")
+        input("Appuyé sur une touche pour continuer")
 
         
