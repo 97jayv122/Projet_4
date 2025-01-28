@@ -67,10 +67,7 @@ class ControllerPlayer:
         else:
             print(f"Le joueur avecl'ID: {chess_id} n'as pas été trouvé.")
             input("Appuyer sur entrée pour continuer")
-            self.display_player()
-            
-            
-
+            self.display_player() 
 
     def suppress_player(self):
         self.display_player()

@@ -55,16 +55,13 @@ class View:
     def select_player(self, players):
         player_tournament = []
         print("")
-        print("Sélectionnez les joueurs pour le tournoi")
-        for i, player in enumerate(players):
-            print(f"{i + 1}. {player}")
-            print("=" * 10)
+        print("Sélectionnez les joueurs pour le tournoi\n")
         players_enter = input(
             "Entrer les numéros des joueurs séparés par une virgule : "
             )
         split_players = players_enter.split(",")
         for player in split_players:
-            player_tournament.append(players[int(player) - 1])
+            player_tournament.append(players[int(player)])
         return player_tournament
 
     def request_create_tournament(self):
@@ -72,11 +69,11 @@ class View:
         file_tournament["name"] = input("Entrer le nom du tournoi : ")
         file_tournament["location"] = input("Entrer le lieu du tournoi : ")
         file_tournament["date_start"] = Utils.get_valid_date(
-            "Entrer la date de début du tournoi : ",
+            "Entrer la date de début du tournoi(ex:01/02/2022) : ",
             WRONG_DATE
         )
         file_tournament["date_end"] = Utils.get_valid_date(
-            "Entrer la date de fin du tournoi : ",
+            "Entrer la date de fin du tournoi(ex:01/02/2022) : ",
             WRONG_DATE
         )
         return file_tournament
@@ -154,8 +151,8 @@ class View:
 
     def display_table(self, datas):
         Utils.clear()
-        print(tabulate(datas, headers="keys", tablefmt="fancy_grid"))
-        input("Appuyer sur entrée pour continuer...")
+        print(tabulate(datas, headers="keys", tablefmt="fancy_grid", showindex='always'))
+        input("\nAppuyer sur entrée pour continuer...")
 
     def requests_score(self, player_1, player_2):
         """
@@ -192,7 +189,7 @@ class View:
         while True:
             try:
                 user_input = int(input("\nEntrez l'index de l'élément que vous souhaitez sélectionner : "))
-                if 1 <= user_input < len(datas):
+                if 1 <= user_input <= len(datas):
                     return datas[user_input - 1][1]
                 else:
                     print(f"Index invalide. Veuillez entrer un nombre entre 1 et {len(datas)}.")
@@ -200,8 +197,10 @@ class View:
                 print("Veuillez entrer un nombre valide.")
     
     def display_string(self, datas):
+        Utils.clear()
         print(datas)
         print("Le tournoi à été correctement chargé.")
         input("Appuyé sur une touche pour continuer")
 
-        
+    def choose_player_to_remove(self, players):
+        pass

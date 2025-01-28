@@ -35,6 +35,7 @@ class TournamentManagement:
             match action:
                 case ConstantTournamentManagement.CREATE_A_TOURNAMENT:
                     self.create_tournament()
+                    self.player_selection()
 
                 case ConstantTournamentManagement.SELECT_TOURNAMENT:
                     list_files = self.list_files_in_directory(FOLDER_TOURNAMENT)
@@ -63,27 +64,56 @@ class TournamentManagement:
         info_tournament = self.view.request_create_tournament()
         tournament = Tournament.from_dict(info_tournament)
         tournament.save()
+        self.tournament = tournament.name
         tournament.instance_clear()
 
     def player_selection(self):
         tournament = Tournament.load(self.tournament)
         Players.instances_load()
+        data_players = [player.to_dict() for player in Players.list_of_player]
+        self.view.display_table(data_players)
         try:
-            tournament.list_player = self.view.select_player(
-                Players.list_of_player
-                )
+            tournament.list_player = self.view.select_player(Players.list_of_player)
             Players.clear_instances()
         except ValueError:
             print("Veuillez entrer un bon format.")
+        print('cei est un test')
         tournament.save()
         tournament.instance_clear()
         Players.clear_instances()
 
+    def check_player_number(self):
+        tournament = Tournament.load(self.tournament)
+        if len(tournament.list_player) == 4:
+            return True
+        
+        elif len(tournament.list_player) < 4:
+            missing = 4 - len(tournament.list_player)
+            self.view.display_string(f"Veuillez ajouter {missing} joueurs")
+            return False
+        
+        elif len(tournament.list_player) > 4:
+            extra = len(tournament.list_player) - 4
+            self.view.display_string(f"Veuillez retirer {extra} joueurs")
+            return False
+        else:
+            return False
+
+    def remove_players_from_tournament(self):
+        tournament = Tournament.load(self.tournament)
+        self.view.display_table(tournament.list_player)
+        user_input = self.view.choose_player_to_remove()
+        tournament.list_player.pop(user_input)
+        
     def run_controller_tournament(self):
         """
         Run the tournament controller.
-        """        
-        controllertournament = ControllerTournament(self.view, self.tournament)
-        controllertournament.run()
-
-    
+        """
+        if self.tournament:
+            if self.check_player_number():
+                controllertournament = ControllerTournament(self.view, self.tournament)
+                controllertournament.run()
+        else:
+            self.view.display_string(
+                "Veuillez sélectiionner ou créer un nouveau tournoi"
+                )

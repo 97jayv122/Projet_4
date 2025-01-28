@@ -50,20 +50,14 @@ class Tours:
         self.stat = "finished"
         self.duration = self.time_end - self.time_start
 
-    def make_next_tour(self):
-        pass
+    def recovery_list_of_matchs(self, matchs):
+        """
+        Ajoute une liste de matchs au tour.
 
-    def add_a_round(self):
-        pass
-
-def recovery_list_of_matchs(self, matchs):
-    """
-    Ajoute une liste de matchs au tour.
-
-    Args:
-        matchs (list): Liste d'instances de la classe Matchs.
-    """
-    self.matchs_list_by_round = [match.to_dict() for match in matchs]
+        Args:
+            matchs (list): Liste d'instances de la classe Matchs.
+        """
+        self.matchs_list_by_round = [match.to_dict() for match in matchs]
 
     def __repr__(self):
         pass
