@@ -1,6 +1,6 @@
 import random
 import time
-from models.matchs import Matchs
+from matchs import Matchs
 
 
 class Tours:
@@ -50,21 +50,19 @@ class Tours:
         self.stat = "finished"
         self.duration = self.time_end - self.time_start
 
-    def recovery_list_of_matchs(self, matchs):
-        """
-        Ajoute une liste de matchs au tour.
-
-        Args:
-            matchs (list): Liste d'instances de la classe Matchs.
-        """
-        self.matchs_list_by_round = [match.to_dict() for match in matchs]
-
     def __repr__(self):
         pass
 
-    @classmethod
-    def recovery_list_of_tour(self):
-        # list_tour = list(tour.__dict__.items())
-        # self.list_of_tours.append(list_tour)
-        self.list_of_tours.append(tour.to_dict() if isinstance(tour, Tours) else tour)
     
+
+# round1 = Tours(["jay", "kérinah", "némi", "léti"])
+# round1.start()
+# round1.end()
+# print(round1.duration)
+# data = round1.to_dict()
+# print(data)
+# round2 = Tours.from_dict(data)
+# print(round2.to_dict())
+# round1.recovery_list_of_matchs()
+# print(round1.matchs_list_by_round)
+

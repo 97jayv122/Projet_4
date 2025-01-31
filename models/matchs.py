@@ -65,6 +65,12 @@ class Matchs:
         return f"Match: {self.player_1} vs {self.player_2} - Scores: {self.info_match}"
 
 # match = Matchs("jérémie", "pierre")
-
-# match = match.score_update()
-# print(match)
+# match.assign_random_colors()
+# match.score_update(0, 0)
+# # print(match.color_of_player)
+# # print(match.info_match)
+# # print(match)
+# data = (match.to_dict())
+# print(data)
+# match1 = Matchs.from_dict(data)
+# print(match1.to_dict())

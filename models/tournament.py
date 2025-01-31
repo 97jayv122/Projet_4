@@ -1,8 +1,8 @@
 import json
 from models.players import Players
 from models.tours import Tours
-from models.tours import Matchs                                                                                                      
-FOLDER_TOURNAMENT = "data/tournaments/"
+from models.matchs import Matchs                                                                                                      
+FOLDER_TOURNAMENT = "data/tournaments/tournament.json"
 
 class Tournament:
     def __init__(self, name, place, date_start, date_end,
@@ -60,20 +60,24 @@ class Tournament:
             "description": self.description
         }
 
+    def save_new(self):
+        with open(FOLDER_TOURNAMENT, "a") as file:
+            json.dump(self.to_dict(), file)
+
     def save(self):
-        with open(FOLDER_TOURNAMENT + self.name + ".json", "w") as file:
+        with open(FOLDER_TOURNAMENT, "w") as file:
             json.dump(self.to_dict(), file)
 
     @classmethod
-    def load(cls, name):
+    def load(cls):
         try:
-            with open(FOLDER_TOURNAMENT + name, "r") as file:
+            with open(FOLDER_TOURNAMENT, "r") as file:
                 data = json.load(file)
                 return cls.from_dict(data)
         except json.JSONDecodeError as e:
             print(f"pas de données a charger: {e}")
         except FileNotFoundError:
-            print(f"Fichier introuvable : data/tournaments/{name}")
+            print(f"Fichier introuvable : data/tournaments/tournaments")
         except Exception as e:
             print(f"Erreur inattendue : {e}")
             raise
