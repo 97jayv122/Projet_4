@@ -1,6 +1,6 @@
 import random
 import time
-from matchs import Matchs
+from models.matchs import Matchs
 
 
 class Tours:
