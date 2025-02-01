@@ -60,28 +60,15 @@ class Tournament:
             "description": self.description
         }
 
-    def save_new(self):
-        with open(FOLDER_TOURNAMENT, "a") as file:
-            json.dump(self.to_dict(), file)
-
     def save(self):
-        with open(FOLDER_TOURNAMENT, "w") as file:
-            json.dump(self.to_dict(), file)
+        with open(FOLDER_TOURNAMENT, "w") as data:
+            json.dumps(self.to_dict(), data)
+            return data
 
     @classmethod
-    def load(cls):
-        try:
-            with open(FOLDER_TOURNAMENT, "r") as file:
-                data = json.load(file)
-                return cls.from_dict(data)
-        except json.JSONDecodeError as e:
-            print(f"pas de données a charger: {e}")
-        except FileNotFoundError:
-            print(f"Fichier introuvable : data/tournaments/tournaments")
-        except Exception as e:
-            print(f"Erreur inattendue : {e}")
-            raise
-        return None
+    def load(cls, data):
+        return cls.from_dict(data)
+
     
     def start_new_tour(self):
         """
@@ -93,7 +80,7 @@ class Tournament:
 
     def add_1_to_current_tour(self):
         self.current_tour += 1
-        self.save()
+        
 
     def instance_clear(self):
         """

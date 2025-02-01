@@ -72,6 +72,7 @@ class ControllerTournament:
             self.view.display_string(tournament)
             tour = Tours(tournament.list_player)
             self.generate_first_matchs(tour)
+            tournament.add_tour()
             tournament.save()
             
             # tour.start()
@@ -89,8 +90,8 @@ class ControllerTournament:
         except UnboundLocalError:
             print("Pas de matchs commencé")
 
-        tour.recovery_list_of_matchs(Matchs.list_of_matchs)
-        tournament.add_tour(tour)
+        # tour.recovery_list_of_matchs(Matchs.list_of_matchs)
+        # tournament.add_tour(tour)
 
 
     def generate_pairs(players):

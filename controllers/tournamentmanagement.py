@@ -1,5 +1,6 @@
 from models.players import Players
 from controllers.controllertournament import ControllerTournament
+from models.management import Management
 from models.tournament import Tournament, FOLDER_TOURNAMENT
 from view.utils import Utils
 import os
@@ -13,20 +14,19 @@ class ConstantTournamentManagement:
     RETURN_MAIN_MENU = "x"
 
 class TournamentManagement:
-    def __init__(self, view):
+    def __init__(self, view, management):
         self.view = view
-        self.tournament = ""
+        management = Management()
+        self.management = management 
 
-    def list_files_in_directory(self, directory):
-        try:
-            if not os.path.isdir(directory):
-                print(f"Erreur : '{directory}' n'est pas un répertoire vzlide.")
-                return[]
-            files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
-            return files
-        except Exception as e:
-            print(f"Erreur lors de la lecture du répertoire : {e}")
-            return []
+    def get_tournament_name(self):
+        tournament_name = [
+            tournament["name"] for tournament in self.management.list_tournaments
+        ]
+        return tournament_name
+    
+    def select_tournament(self, index):
+        return self.management.list_tournaments[index]
   
     def run(self):
         while True:
