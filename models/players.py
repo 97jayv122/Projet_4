@@ -2,7 +2,7 @@
 import json
 import uuid
 from datetime import datetime
-FOLDER_PLAYER = "data/players.json"
+FILE_PLAYER = "data/tournaments/players.json"
 
 
 class Players:
@@ -31,15 +31,16 @@ class Players:
 
     @classmethod
     def instances_save(self):
-        with open(FOLDER_PLAYER, "w") as file:
+        with open(FILE_PLAYER, "w") as file:
             json.dump(
-                [player.to_dict() for player in self.list_of_player], file
+                [player.to_dict() for player in self.list_of_player],
+                  file, indent=4
                 )
 
     @staticmethod
     def load_file():
         try:
-            with open(FOLDER_PLAYER, "r") as file:
+            with open(FILE_PLAYER, "r") as file:
                 data = json.load(file)
                 return data
         except json.JSONDecodeError:

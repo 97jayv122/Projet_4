@@ -5,49 +5,51 @@ from controllers.tournamentmanagement import ConstantTournamentManagement
 from controllers.controllertournament import ConstantTournament
 from controllers.controllerplayer import ConstantPlayer
 from view.utils import Utils
-WRONG_DATE = "Veuillez entrer un bon format de date"
+VALIDATE_CHOICE = "\nEntrer votre choix : "
+WRONG_DATE = "\nVeuillez entrer un bon format de date"
+PRESS_ENTER =  "\nAppuyer sur entrée pour continuer..."
 
 
 class View:
     def home_menu(self):
         print("-" * 10 + " Menu principal " + "-" * 10)
         print()
-        print(Constant.PLAYER_MENU + ". pour entrer dans le menu joueurs.")
-        print(Constant.TOURNAMENT_MENU + ". pour entrer dans le gestionnaire de tournoi.")
-        print(Constant.DISPLAY_REPORTS + ". pour voir les rapports.")
-        print(Constant.EXIT_PROGRAM + ". pour quitter le programme.")
+        print("\n" + Constant.PLAYER_MENU + ". pour entrer dans le menu joueurs.")
+        print("\n" + Constant.TOURNAMENT_MENU + ". pour entrer dans le gestionnaire de tournoi.")
+        print("\n" + Constant.DISPLAY_REPORTS + ". pour voir les rapports.")
+        print("\n" + Constant.EXIT_PROGRAM + ". pour quitter le programme.")
         print()
-        return input("Entrer votre choix : ")
+        return input(VALIDATE_CHOICE)
 
     def player_menu(self):
         print("-" * 10 + " Menu Joueurs " + "-" * 10)
         print()
-        print(ConstantPlayer.ADD_PLAYER + ". pour entrer des joueur")
-        print(ConstantPlayer.DISPLAY_PLAYER + ". pour lister les joueurs")
-        print(ConstantPlayer.MODIFY_PLAYER + ". pour modifier un joueur.")
-        print(ConstantPlayer.SUPPRESS_PLAYER + ". pour supprimer un joueur.")
-        print(ConstantPlayer.RETURN_MAIN_MENU + ". pour retourner au menu principal.")
+        print("\n" + ConstantPlayer.ADD_PLAYER + ". pour entrer des joueur")
+        print("\n" + ConstantPlayer.DISPLAY_PLAYER + ". pour lister les joueurs")
+        print("\n" + ConstantPlayer.MODIFY_PLAYER + ". pour modifier un joueur.")
+        print("\n" + ConstantPlayer.SUPPRESS_PLAYER + ". pour supprimer un joueur.")
+        print("\n" + ConstantPlayer.RETURN_MAIN_MENU + ". pour retourner au menu principal.")
         print()
-        return input("Entrer votre choix : ")
+        return input(VALIDATE_CHOICE)
     
     def tournamament_management_menu(self):
         print("-" * 10 + " Menu Tournois " + "-" * 10)
         print()
-        print(ConstantTournamentManagement.CREATE_A_TOURNAMENT + ". Nouveau tournoi")
-        print(ConstantTournamentManagement.SELECT_TOURNAMENT + ". Sélectionner un tournoi")
-        print(ConstantTournamentManagement.SELECT_PLAYER + ". Sélection des joueurs")
-        print(ConstantTournamentManagement.START_TOURNAMENT + ". Commencé le tournoi")
-        print(ConstantTournamentManagement.RETURN_MAIN_MENU + ". pour retourner au menu principal.")
+        print("\n" + ConstantTournamentManagement.CREATE_A_TOURNAMENT + ". Nouveau tournoi")
+        print("\n" + ConstantTournamentManagement.SELECT_TOURNAMENT + ". Sélectionner un tournoi")
+        print("\n" + ConstantTournamentManagement.SELECT_PLAYER + ". Sélection des joueurs")
+        print("\n" + ConstantTournamentManagement.START_TOURNAMENT + ". Commencé le tournoi")
+        print("\n" + ConstantTournamentManagement.DELETE_TOURNAMENT + ". Supprimer un tournoi")
+        print("\n" + ConstantTournamentManagement.RETURN_MAIN_MENU + ". pour retourner au menu principal.")
+        print("\n" + ConstantTournamentManagement.RETURN_MAIN_MENU + ". pour retourner au menu principal.")
         print()
-        return input("Entrer votre choix : ")
+        return input(VALIDATE_CHOICE)
 
     def tournament_menu(self):
         print("-" * 10 + " Menu Tournois " + "-" * 10)
         print()
         print(ConstantTournament.START_A_TOUR + ". Commencer un tour")
         print(ConstantTournament.END_A_TOUR + ". Terminer un tour")
-        print("5. Sauvegarder le tournoi")
-        print("6. Charger le tournoi")
         print(ConstantTournament.RETURN_MAIN_MENU + ". pour retourner au menu gestionnaire de tournoi.")
         print()
         return input("Entrer votre choix : ")
@@ -65,15 +67,16 @@ class View:
         return player_tournament
 
     def request_create_tournament(self):
+        Utils.clear()
         file_tournament = {}
         file_tournament["name"] = input("Entrer le nom du tournoi : ")
-        file_tournament["location"] = input("Entrer le lieu du tournoi : ")
+        file_tournament["location"] = input("\nEntrer le lieu du tournoi : ")
         file_tournament["date_start"] = Utils.get_valid_date(
-            "Entrer la date de début du tournoi(ex:01/02/2022) : ",
+            "\nEntrer la date de début du tournoi(ex:01/02/2022) : ",
             WRONG_DATE
         )
         file_tournament["date_end"] = Utils.get_valid_date(
-            "Entrer la date de fin du tournoi(ex:01/02/2022) : ",
+            "\nEntrer la date de fin du tournoi(ex:01/02/2022) : ",
             WRONG_DATE
         )
         return file_tournament
@@ -92,14 +95,14 @@ class View:
                 number = int(input(
                     "Entrez le nombre de participants en chiffre : "
                     ))
-                if number <= 0:
+                if number < 0:
                     print("Veuillez entrer un nombre supérieur à 0")
-                    input("Appuyer sur entrée pour continuer...")
+                    input(PRESS_ENTER)
                     continue
                 return number
             except ValueError:
                 print("Entrée invalide. Veuillez entrer un chiffre.")
-                input("Appuyer sur entrée pour continuer...")
+                input(PRESS_ENTER)
 
     def request_add_player(self):
         file_player = {}
@@ -117,17 +120,17 @@ class View:
     def request_player_id(self, action):
         while True:
             chess_id = input(
-                f"Entrez l'identifiant national d'échecs du joueur à {action}"
+                f"\nEntrez l'identifiant national d'échecs du joueur à {action}"
                  " ou taper 'x' pour annuler : "
                  )
             if chess_id.lower() == "x":
-                print("action annulé")
+                print("\naction annulé")
                 return None
             if Utils.valide_national_chess_identifier(chess_id):
                 return chess_id
             else:
-                print("Identifiant est invalide")
-                input("Appuyer sur entrée pour continuer...")
+                print("\nIdentifiant est invalide")
+                input(PRESS_ENTER)
 
     def request_modify_player(self):
         player_data = {}
@@ -143,16 +146,17 @@ class View:
     def display(self, datas):
         for data in datas:
             print(data)
-        input("Appuyer sur entrée pour continuer...")
+        input(PRESS_ENTER)
 
     def display_json(self, datas):
         print(json.dumps(datas, indent=4))
-        input("Appuyer sur entrée pour continuer...")
+        input(PRESS_ENTER)
 
-    def display_table(self, datas):
+    def display_table(self, datas, prompt):
         Utils.clear()
         print(tabulate(datas, headers="keys", tablefmt="fancy_grid", showindex='always'))
-        input("\nAppuyer sur entrée pour continuer...")
+        print(prompt)
+        input(PRESS_ENTER)
 
     def requests_score(self, player_1, player_2):
         """
@@ -175,22 +179,21 @@ class View:
                     return score_player_1, score_player_2
                 else:
                     print("Score invalide. Veuillez entrer 1, 0.5 ou 0.")
-                    input("Appuyer sur entrée pour continuer...")
+                    input(PRESS_ENTER)
             except ValueError:
                 print("Veuillez entrer un chiffre")
-                input("Appuyer sur entrer pour continuer...")
+                input(PRESS_ENTER)
 
     def display_choice_color(self):
         pass
     
-    def select_of_list_file(self, datas):
-        headers = ['Index', 'File']
-        print(tabulate(datas, headers=headers, tablefmt='grid'))
+    def select_tournament(self, datas):
+        print(tabulate(datas, showindex='always', tablefmt='grid'))
         while True:
             try:
                 user_input = int(input("\nEntrez l'index de l'élément que vous souhaitez sélectionner : "))
-                if 1 <= user_input <= len(datas):
-                    return datas[user_input - 1][1]
+                if 0 <= user_input <= len(datas) - 1:
+                    return user_input
                 else:
                     print(f"Index invalide. Veuillez entrer un nombre entre 1 et {len(datas)}.")
             except ValueError:
@@ -199,8 +202,7 @@ class View:
     def display_string(self, datas):
         Utils.clear()
         print(datas)
-        print("Le tournoi à été correctement chargé.")
-        input("Appuyé sur une touche pour continuer")
+        input(PRESS_ENTER)
 
     def choose_player_to_remove(self, players):
         pass

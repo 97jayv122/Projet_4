@@ -11,36 +11,48 @@ class ConstantTournamentManagement:
     SELECT_TOURNAMENT = "2"
     SELECT_PLAYER = "3"
     START_TOURNAMENT = "4"
+    DELETE_TOURNAMENT = "5"
     RETURN_MAIN_MENU = "x"
 
 class TournamentManagement:
-    def __init__(self, view, management):
+    def __init__(self, view):
         self.view = view
         management = Management()
         self.management = management 
+        self.tournament = ''
 
     def get_tournament_name(self):
-        tournament_name = [
-            tournament["name"] for tournament in self.management.list_tournaments
-        ]
-        return tournament_name
-    
+        if len(self.management.list_tournaments) > 1:    
+            return [[tournament["name"]] for tournament in self.management.list_tournaments]
+        elif len(self.management.list_tournaments) == 1:
+            return [[self.management.list_tournaments[0]["name"]]]
+        else:
+            self.view.display_string("Vous n'avez pas de tournoi enregistré")
+            breakpoint
+
     def select_tournament(self, index):
         return self.management.list_tournaments[index]
+
+    def delete_tournament(self, index):
+        tournament_deleted = self.management.list_tournaments.pop(index)
+        self.view.display_string(
+            f"Le tournoi: {tournament_deleted["name"]}, à été supprimé."
+            )
   
     def run(self):
         while True:
             Utils.clear()
             action = self.view.tournamament_management_menu()
+            self.management.load()
             match action:
                 case ConstantTournamentManagement.CREATE_A_TOURNAMENT:
                     self.create_tournament()
-                    self.player_selection()
+                    # self.player_selection()
 
                 case ConstantTournamentManagement.SELECT_TOURNAMENT:
-                    list_files = self.list_files_in_directory(FOLDER_TOURNAMENT)
-                    formated_list_files = [[index + 1, file] for index, file in enumerate(list_files)]
-                    self.tournament = self.view.select_of_list_file(formated_list_files)
+                    names_tournaments = self.get_tournament_name()
+                    index = self.view.select_tournament(names_tournaments)
+                    self.tournament = self.select_tournament(index)
 
                 case ConstantTournamentManagement.SELECT_PLAYER:
                     self.player_selection()
@@ -48,11 +60,12 @@ class TournamentManagement:
                 case ConstantTournamentManagement.START_TOURNAMENT:
                     self.run_controller_tournament()
 
-                # case "5":
-                #     tournament.save()
+                case ConstantTournamentManagement.DELETE_TOURNAMENT:
+                    names_tournaments = self.get_tournament_name()
+                    index = self.view.select_tournament(names_tournaments)
+                    self.delete_tournament(index)
+                    self.management.save()
 
-                # case "6":
-                #     tournament = Tournament.load()
                 case ConstantTournamentManagement.RETURN_MAIN_MENU:
                     break
 
@@ -63,8 +76,10 @@ class TournamentManagement:
     def create_tournament(self):
         info_tournament = self.view.request_create_tournament()
         tournament = Tournament.from_dict(info_tournament)
-        tournament.save()
-        self.tournament = tournament.name
+        tournament_dict = tournament.to_dict()
+        self.management.create_or_update(tournament.name, tournament_dict)
+        self.management.save()
+        self.management.instance_clear()
         tournament.instance_clear()
 
     def player_selection(self):
@@ -76,9 +91,11 @@ class TournamentManagement:
             tournament.list_player = self.view.select_player(Players.list_of_player)
             Players.clear_instances()
         except ValueError:
-            print("Veuillez entrer un bon format.")
-        print('cei est un test')
-        tournament.save()
+            self.view.display_string("Veuillez entrer un bon format.")
+        tournament_dict = tournament.to_dict()
+        self.management.create_or_update(tournament.name, tournament_dict)
+        self.management.save()
+        self.management.instance_clear()
         tournament.instance_clear()
         Players.clear_instances()
 
@@ -104,14 +121,14 @@ class TournamentManagement:
         self.view.display_table(tournament.list_player)
         user_input = self.view.choose_player_to_remove()
         tournament.list_player.pop(user_input)
-        
+
     def run_controller_tournament(self):
         """
         Run the tournament controller.
         """
         if self.tournament:
             if self.check_player_number():
-                controllertournament = ControllerTournament(self.view, self.tournament)
+                controllertournament = ControllerTournament(self.view, self.tournament, self.management)
                 controllertournament.run()
         else:
             self.view.display_string(

@@ -85,5 +85,5 @@ class Controller:
         """
         Display a message when the choice is unknown.
         """        
-        print("Choix inconnue.")
-        input("Appuyer sur entrée pour continuer...")
+        self.view.display_string("Choix inconnue.")
+        

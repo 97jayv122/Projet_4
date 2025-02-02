@@ -14,9 +14,10 @@ class ConstantTournament:
 
 class ControllerTournament:
 
-    def __init__(self, view, name_tournament):
+    def __init__(self, view, tournament_dict, management):
         self.view = view
-        self.name_tournament = name_tournament
+        self.tournament_dict = tournament_dict
+        self.management = management
 
     def run(self):
         while True:
@@ -34,7 +35,7 @@ class ControllerTournament:
                     tournament.save()
 
                 case "6":
-                    tournament = Tournament.load(self.name_tournament)
+                    tournament = Tournament.from_dict(self.tournament_dict)
                 case ConstantTournament.RETURN_MAIN_MENU:
                     
                     break
@@ -92,7 +93,6 @@ class ControllerTournament:
 
         # tour.recovery_list_of_matchs(Matchs.list_of_matchs)
         # tournament.add_tour(tour)
-
 
     def generate_pairs(players):
         players = sorted(players, key=lambda x: x.points, reverse=True)
