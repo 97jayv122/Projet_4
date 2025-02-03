@@ -10,7 +10,7 @@ class ConstantTournament:
 
     START_A_TOUR = "1"
     END_A_TOUR = "2"
-    RETURN_MAIN_MENU = "x"
+    RETURN_TOURNAMENT_MANAGEMENT_MENU = "x"
 
 class ControllerTournament:
 
@@ -32,11 +32,12 @@ class ControllerTournament:
                     self.end_tour()
 
                 case "5":
-                    tournament.save()
+                    pass
 
                 case "6":
                     tournament = Tournament.from_dict(self.tournament_dict)
-                case ConstantTournament.RETURN_MAIN_MENU:
+
+                case ConstantTournament.RETURN_TOURNAMENT_MANAGEMENT_MENU:
                     
                     break
 

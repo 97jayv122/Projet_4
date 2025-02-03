@@ -93,8 +93,9 @@ class TournamentManagement:
             tournament = Tournament.from_dict(self.tournament)
             Players.instances_load()
             if Players.list_of_player:
+                prompt = "Liste des joueurs de la base de donnée"
                 data_players = [player.to_dict() for player in Players.list_of_player]
-                self.view.display_table(data_players)
+                self.view.display_table(data_players, prompt)
                 try:
                     tournament.list_player = self.view.select_player(Players.list_of_player)
                     Players.clear_instances()

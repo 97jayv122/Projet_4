@@ -5,7 +5,7 @@ from controllers.tournamentmanagement import ConstantTournamentManagement
 from controllers.controllertournament import ConstantTournament
 from controllers.controllerplayer import ConstantPlayer
 from view.utils import Utils
-VALIDATE_CHOICE = "\nEntrer votre choix : "
+VALIDATE_CHOICE = "\nEntré votre choix : "
 WRONG_DATE = "\nVeuillez entrer un bon format de date"
 PRESS_ENTER =  "\nAppuyer sur entrée pour continuer..."
 
@@ -49,7 +49,7 @@ class View:
         print()
         print(ConstantTournament.START_A_TOUR + ". Commencer un tour")
         print(ConstantTournament.END_A_TOUR + ". Terminer un tour")
-        print(ConstantTournament.RETURN_MAIN_MENU + ". pour retourner au menu gestionnaire de tournoi.")
+        print(ConstantTournament.RETURN_TOURNAMENT_MANAGEMENT_MENU + ". pour retourner au menu gestionnaire de tournoi.")
         print()
         return input("Entrer votre choix : ")
 
