@@ -41,7 +41,6 @@ class View:
         print("\n" + ConstantTournamentManagement.START_TOURNAMENT + ". Commencé le tournoi")
         print("\n" + ConstantTournamentManagement.DELETE_TOURNAMENT + ". Supprimer un tournoi")
         print("\n" + ConstantTournamentManagement.RETURN_MAIN_MENU + ". pour retourner au menu principal.")
-        print("\n" + ConstantTournamentManagement.RETURN_MAIN_MENU + ". pour retourner au menu principal.")
         print()
         return input(VALIDATE_CHOICE)
 

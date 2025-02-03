@@ -28,7 +28,7 @@ class TournamentManagement:
             return [[self.management.list_tournaments[0]["name"]]]
         else:
             self.view.display_string("Vous n'avez pas de tournoi enregistré")
-            breakpoint
+            return None
 
     def select_tournament(self, index):
         return self.management.list_tournaments[index]
@@ -51,8 +51,11 @@ class TournamentManagement:
 
                 case ConstantTournamentManagement.SELECT_TOURNAMENT:
                     names_tournaments = self.get_tournament_name()
-                    index = self.view.select_tournament(names_tournaments)
-                    self.tournament = self.select_tournament(index)
+                    if names_tournaments is not None:
+                        index = self.view.select_tournament(names_tournaments)
+                        self.tournament = self.select_tournament(index)
+                    else:
+                        breakpoint
 
                 case ConstantTournamentManagement.SELECT_PLAYER:
                     self.player_selection()
@@ -62,9 +65,12 @@ class TournamentManagement:
 
                 case ConstantTournamentManagement.DELETE_TOURNAMENT:
                     names_tournaments = self.get_tournament_name()
-                    index = self.view.select_tournament(names_tournaments)
-                    self.delete_tournament(index)
-                    self.management.save()
+                    if names_tournaments is not None:
+                        index = self.view.select_tournament(names_tournaments)
+                        self.delete_tournament(index)
+                        self.management.save()
+                    else:
+                        breakpoint
 
                 case ConstantTournamentManagement.RETURN_MAIN_MENU:
                     break
@@ -83,21 +89,29 @@ class TournamentManagement:
         tournament.instance_clear()
 
     def player_selection(self):
-        tournament = Tournament.load(self.tournament)
-        Players.instances_load()
-        data_players = [player.to_dict() for player in Players.list_of_player]
-        self.view.display_table(data_players)
-        try:
-            tournament.list_player = self.view.select_player(Players.list_of_player)
-            Players.clear_instances()
-        except ValueError:
-            self.view.display_string("Veuillez entrer un bon format.")
-        tournament_dict = tournament.to_dict()
-        self.management.create_or_update(tournament.name, tournament_dict)
-        self.management.save()
-        self.management.instance_clear()
-        tournament.instance_clear()
-        Players.clear_instances()
+        if self.tournament:
+            tournament = Tournament.from_dict(self.tournament)
+            Players.instances_load()
+            if Players.list_of_player:
+                data_players = [player.to_dict() for player in Players.list_of_player]
+                self.view.display_table(data_players)
+                try:
+                    tournament.list_player = self.view.select_player(Players.list_of_player)
+                    Players.clear_instances()
+                except ValueError:
+                    self.view.display_string("Veuillez entrer un bon format.")
+                tournament_dict = tournament.to_dict()
+                self.management.create_or_update(tournament.name, tournament_dict)
+                self.management.save()
+                self.management.instance_clear()
+                tournament.instance_clear()
+                Players.clear_instances()
+            else:
+                self.view.display_string("Pas de joueur rentré dans la base de donnée")
+                breakpoint
+        else:
+            self.view.display_string("Pas de tournoi sélectionner")
+            breakpoint
 
     def check_player_number(self):
         tournament = Tournament.load(self.tournament)
