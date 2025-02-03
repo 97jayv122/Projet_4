@@ -2,7 +2,7 @@ import json
 from models.players import Players
 from models.tours import Tours
 from models.matchs import Matchs                                                                                                      
-FOLDER_TOURNAMENT = "data/tournaments/tournament.json"
+
 
 class Tournament:
     def __init__(self, name, place, date_start, date_end,
@@ -59,11 +59,6 @@ class Tournament:
             "current_matchs": self.current_matchs,
             "description": self.description
         }
-
-    def save(self):
-        with open(FOLDER_TOURNAMENT, "w") as data:
-            json.dumps(self.to_dict(), data)
-            return data
 
     @classmethod
     def load(cls, data):

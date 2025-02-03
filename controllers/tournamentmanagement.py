@@ -1,7 +1,7 @@
 from models.players import Players
 from controllers.controllertournament import ControllerTournament
-from models.management import Management
-from models.tournament import Tournament, FOLDER_TOURNAMENT
+from models.management import Management, FOLDER_TOURNAMENT
+from models.tournament import Tournament
 from view.utils import Utils
 import os
 
