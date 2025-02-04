@@ -75,7 +75,7 @@ class ControllerTournament:
             tour = Tours(tournament.list_player)
             self.generate_first_matchs(tour)
             tournament.add_tour()
-            tournament.save()
+            tournament.save() 
             
             # tour.start()
         except UnboundLocalError:

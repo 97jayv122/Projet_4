@@ -38,6 +38,7 @@ class View:
         print("\n" + ConstantTournamentManagement.CREATE_A_TOURNAMENT + ". Nouveau tournoi")
         print("\n" + ConstantTournamentManagement.SELECT_TOURNAMENT + ". Sélectionner un tournoi")
         print("\n" + ConstantTournamentManagement.SELECT_PLAYER + ". Sélection des joueurs")
+        print("\n" + ConstantTournamentManagement.DELETE_PLAYER + ". Retirer des joueurs du tournoi")
         print("\n" + ConstantTournamentManagement.START_TOURNAMENT + ". Commencé le tournoi")
         print("\n" + ConstantTournamentManagement.DELETE_TOURNAMENT + ". Supprimer un tournoi")
         print("\n" + ConstantTournamentManagement.RETURN_MAIN_MENU + ". pour retourner au menu principal.")

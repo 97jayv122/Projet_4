@@ -6,16 +6,12 @@ class Management:
     def __init__(self):
         self.list_tournaments = []
 
-    def create_or_update(self, name, tournament_dict):
-        if len(self.list_tournaments) > 1:
+    def update(self, name, tournament_dict):
+        if len(self.list_tournaments) > 0:
             for index, tournament in enumerate(self.list_tournaments):
                 if tournament["name"] == name:
                     self.list_tournaments[index] = tournament_dict
                     break
-                else:
-                    self.list_tournaments.append(tournament_dict)
-        else:
-            self.list_tournaments.append(tournament_dict)
 
     def save(self):
         with open(FILE_TOURNAMENT, "w") as file:

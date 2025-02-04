@@ -10,8 +10,9 @@ class ConstantTournamentManagement:
     CREATE_A_TOURNAMENT = "1"
     SELECT_TOURNAMENT = "2"
     SELECT_PLAYER = "3"
-    START_TOURNAMENT = "4"
-    DELETE_TOURNAMENT = "5"
+    DELETE_PLAYER = "4"
+    START_TOURNAMENT = "5"
+    DELETE_TOURNAMENT = "6"
     RETURN_MAIN_MENU = "x"
 
 class TournamentManagement:
@@ -60,6 +61,9 @@ class TournamentManagement:
                 case ConstantTournamentManagement.SELECT_PLAYER:
                     self.player_selection()
 
+                case ConstantTournamentManagement.DELETE_PLAYER:
+                    self.remove_players_from_tournament()
+
                 case ConstantTournamentManagement.START_TOURNAMENT:
                     self.run_controller_tournament()
 
@@ -83,7 +87,7 @@ class TournamentManagement:
         info_tournament = self.view.request_create_tournament()
         tournament = Tournament.from_dict(info_tournament)
         tournament_dict = tournament.to_dict()
-        self.management.create_or_update(tournament.name, tournament_dict)
+        self.management.list_tournaments.append(tournament_dict)
         self.management.save()
         self.management.instance_clear()
         tournament.instance_clear()
@@ -102,7 +106,7 @@ class TournamentManagement:
                 except ValueError:
                     self.view.display_string("Veuillez entrer un bon format.")
                 tournament_dict = tournament.to_dict()
-                self.management.create_or_update(tournament.name, tournament_dict)
+                self.management.update(tournament.name, tournament_dict)
                 self.management.save()
                 self.management.instance_clear()
                 tournament.instance_clear()
@@ -132,10 +136,19 @@ class TournamentManagement:
             return False
 
     def remove_players_from_tournament(self):
-        tournament = Tournament.load(self.tournament)
-        self.view.display_table(tournament.list_player)
-        user_input = self.view.choose_player_to_remove()
-        tournament.list_player.pop(user_input)
+        if self.tournament:
+            tournament = Tournament.load(self.tournament)
+            if tournament.list_player:
+                prompt = "Liste des joueurs du tournoi"
+                self.view.display_table(tournament.list_player, prompt)
+                user_input = self.view.choose_player_to_remove()
+                tournament.list_player.pop(user_input)
+            else:
+                self.view.display_string("Pas de joueur dans la liste du tournoi.")
+                breakpoint
+        else:
+            self.view.display_string("Pas de tournoi sélectionner")
+            breakpoint
 
     def run_controller_tournament(self):
         """
