@@ -3,20 +3,19 @@ from models.players import Players
 from models.tours import Tours
 from models.matchs import Matchs                                                                                                      
 
-
 class Tournament:
     def __init__(self, name, place, date_start, date_end,
-                 number_of_turns=4, **kwargs):
+                 number_of_turns=4):
         self.name = name
         self.place = place
         self.date_start = date_start
         self.date_end = date_end
         self.number_of_turns = number_of_turns
-        self.list_player = kwargs.get("list_player", [])
-        self.list_of_tours = kwargs.get("list_of_tours", [])
-        self.current_tour = kwargs.get("current_tour", 0)
-        self.current_matchs = kwargs.get("current_matchs", [])
-        self.description = kwargs.get("description", "")
+        self.list_player = []
+        self.list_of_tours = []
+        self.current_tour = 0
+        self.current_matchs = []
+        self.description = ""
 
     @classmethod
     def from_dict(cls, data):
@@ -28,17 +27,20 @@ class Tournament:
             Tours.from_dict(tour) if isinstance(tour, dict)
             else tour for tour in data.get("list_of_tours", [])
             ]
-        return cls(
+        tournament = cls(
             name=data.get("name"),
             place=data.get("place"),
             date_start=data.get("date_start"),
-            date_end=data.get("date_end"),
-            list_player=list_player,
-            list_of_tours=list_of_tours,
-            current_tour=data.get("current_tour"),
-            current_matchs=data.get("current_matchs"),
-            description=data.get("description")
+            date_end=data.get("date_end")
         )
+        tournament.list_player=list_player
+        tournament.list_of_tours=list_of_tours
+        tournament.current_tour=data.get("current_tour", 0)
+        tournament.current_matchs=data.get("current_matchs", [])
+        tournament.description=data.get("description", "")
+
+        return tournament
+        
 
     def to_dict(self):
         return {
@@ -109,7 +111,6 @@ class Tournament:
             tour (Tours): Instance de la classe Tours. 
         """
         self.list_of_tours.append(tour.to_dict())
-        self.save()
 
     def add_match_to_current_tour(self, match):
         """

@@ -6,8 +6,8 @@ from models.matchs import Matchs
 class Tours:
 
 
-    def __init__(self, list_player_of_tournament):
-        self.list_player_of_tournament = list_player_of_tournament
+    def __init__(self, tour_number):
+        self.tour_number = tour_number
         self.duration = 0
         self.time_start = None
         self.time_end = None
@@ -19,7 +19,7 @@ class Tours:
         """
         Restaure un objet Tours depuis un dictionnaire.
         """
-        tour = cls(data["list_player_of_tournament"])
+        tour = cls(data["tour_number"])
         tour.time_start = data["time_start"]
         tour.time_end = data["time_end"]
         tour.matchs_list_by_round = [
@@ -30,7 +30,7 @@ class Tours:
     
     def to_dict(self):
         return {
-            "list_player_of_tournament": self.list_player_of_tournament,
+            "tour_name" : self.tour_number,
             "duration": self.duration,
             "time_start": self.time_start,
             "time_end": self.time_end,

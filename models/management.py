@@ -29,7 +29,7 @@ class Management:
         except Exception as e:
             print(f"Erreur inattendue : {e}")
             raise
-        return None
+        return self.list_tournaments
     
     def instance_clear(self):
         self.list_tournaments = []

@@ -24,7 +24,7 @@ class Matchs:
             score_player_2 (int): Score du joueur 2.
 
         Returns:
-            tuple: deux listes contenant lchacune le joueur et son score.
+            tuple: deux listes contenant chacune le joueur et son score.
         """
         self.info_match = (
             [self.player_1, score_player_1],
@@ -69,8 +69,14 @@ class Matchs:
 # match.score_update(0, 0)
 # # print(match.color_of_player)
 # # print(match.info_match)
-# # print(match)
+# print(match)
 # data = (match.to_dict())
 # print(data)
 # match1 = Matchs.from_dict(data)
+# print(match_2)
 # print(match1.to_dict())
+# # print(match.info_match)
+
+# data_2 = match1.__dict__
+# print(type(data_2))
+# match_2 = Matchs.from_dict(data_2)

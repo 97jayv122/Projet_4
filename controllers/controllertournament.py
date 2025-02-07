@@ -14,9 +14,9 @@ class ConstantTournament:
 
 class ControllerTournament:
 
-    def __init__(self, view, tournament_dict, management):
+    def __init__(self, view, tournament, management):
         self.view = view
-        self.tournament_dict = tournament_dict
+        self.tournament = tournament
         self.management = management
 
     def run(self):
@@ -30,12 +30,6 @@ class ControllerTournament:
 
                 case ConstantTournament.END_A_TOUR:
                     self.end_tour()
-
-                case "5":
-                    pass
-
-                case "6":
-                    tournament = Tournament.from_dict(self.tournament_dict)
 
                 case ConstantTournament.RETURN_TOURNAMENT_MANAGEMENT_MENU:
                     
@@ -56,32 +50,36 @@ class ControllerTournament:
         """
         Génère des paires de joueurs pour le tour et crée les matchs.
         """
-        shuffle(tour.list_player_of_tournament)  # Mélange aléatoire des joueurs
+        shuffle(self.tournament.list_player)  # Mélange aléatoire des joueurs
         tour.matchs_list_by_round = []
-        for i in range(0, len(tour.list_player_of_tournament), 2):
-            if i + 1 < len(tour.list_player_of_tournament):
-                player_1 = tour.list_player_of_tournament[i]
-                player_2 = tour.list_player_of_tournament[i + 1]
+        for i in range(0, len(self.tournament.list_player), 2):
+            if i + 1 < len(self.tournament.list_player):
+                player_1 = self.tournament.list_player[i]
+                player_2 = self.tournament.list_player[i + 1]
                 match = Matchs(player_1, player_2)
                 match.assign_random_colors()
                 match.score_update(0, 0)
                 self.view.display_string(match.color_of_player)
-                tour.matchs_list_by_round.append(match.to_dict())
+                tour.matchs_list_by_round.append(match.__dict__)
 
     def start_tour(self):
         try:
-            tournament = Tournament.load(self.name_tournament)
-            self.view.display_string(tournament)
-            tour = Tours(tournament.list_player)
+            self.view.display_string(self.tournament)
+            print(self.tournament.current_tour)
+            input()
+            self.tournament.add_1_to_current_tour()
+            tour = Tours(self.tournament.current_tour)
             self.generate_first_matchs(tour)
-            tournament.add_tour()
-            tournament.save() 
-            
+            self.tournament.list_of_tours.append(tour.__dict__)
+            tournament_dict = self.tournament.__dict__
+            self.management.update(self.tournament.name, tournament_dict)
+            print(tournament_dict)
+            self.management.save()
             # tour.start()
         except UnboundLocalError:
-            print("Pas de tournois créé")
+            self.view.display_string("Pas de tournois créé")
         except AttributeError:
-            print("pas de tournoi créé")
+            self.view.display_string("pas de tournoi créé")
 
     def end_tour(self):
         """  """

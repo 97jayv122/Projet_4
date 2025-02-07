@@ -20,7 +20,7 @@ class TournamentManagement:
         self.view = view
         management = Management()
         self.management = management 
-        self.tournament = ''
+        self.tournament = None
 
     def get_tournament_name(self):
         if len(self.management.list_tournaments) > 1:    
@@ -32,9 +32,11 @@ class TournamentManagement:
             return None
 
     def select_tournament(self, index):
-        return self.management.list_tournaments[index]
+        tournament_dict = self.management.list_tournaments[index]
+        return Tournament.from_dict(tournament_dict)
 
     def delete_tournament(self, index):
+        self.tournament = None
         tournament_deleted = self.management.list_tournaments.pop(index)
         self.view.display_string(
             f"Le tournoi: {tournament_deleted["name"]}, à été supprimé."
@@ -56,7 +58,7 @@ class TournamentManagement:
                         index = self.view.select_tournament(names_tournaments)
                         self.tournament = self.select_tournament(index)
                     else:
-                        breakpoint
+                        self.view.display_string("Aucun tournoi disponible.")
 
                 case ConstantTournamentManagement.SELECT_PLAYER:
                     self.player_selection()
@@ -86,6 +88,7 @@ class TournamentManagement:
     def create_tournament(self):
         info_tournament = self.view.request_create_tournament()
         tournament = Tournament.from_dict(info_tournament)
+        self.tournament = tournament
         tournament_dict = tournament.to_dict()
         self.management.list_tournaments.append(tournament_dict)
         self.management.save()
@@ -93,33 +96,30 @@ class TournamentManagement:
         tournament.instance_clear()
 
     def player_selection(self):
-        if self.tournament:
-            tournament = Tournament.from_dict(self.tournament)
+        if self.tournament is not None:
             Players.instances_load()
             if Players.list_of_player:
                 prompt = "Liste des joueurs de la base de donnée"
                 data_players = [player.to_dict() for player in Players.list_of_player]
                 self.view.display_table(data_players, prompt)
                 try:
-                    tournament.list_player = self.view.select_player(Players.list_of_player)
+                    self.tournament.list_player = self.view.select_player(Players.list_of_player)
                     Players.clear_instances()
                 except ValueError:
                     self.view.display_string("Veuillez entrer un bon format.")
-                tournament_dict = tournament.to_dict()
-                self.management.update(tournament.name, tournament_dict)
+                tournament_dict = self.tournament.to_dict()
+                self.management.update(self.tournament.name, tournament_dict)
                 self.management.save()
-                self.management.instance_clear()
-                tournament.instance_clear()
+                self.tournament = None
                 Players.clear_instances()
             else:
                 self.view.display_string("Pas de joueur rentré dans la base de donnée")
-                breakpoint
+                
         else:
             self.view.display_string("Pas de tournoi sélectionner")
-            breakpoint
 
     def check_player_number(self):
-        tournament = Tournament.load(self.tournament)
+        tournament = self.tournament
         if len(tournament.list_player) == 4:
             return True
         
@@ -136,8 +136,8 @@ class TournamentManagement:
             return False
 
     def remove_players_from_tournament(self):
-        if self.tournament:
-            tournament = Tournament.load(self.tournament)
+        if self.tournament is not None:
+            tournament = self.tournament
             if tournament.list_player:
                 prompt = "Liste des joueurs du tournoi"
                 self.view.display_table(tournament.list_player, prompt)
@@ -145,16 +145,15 @@ class TournamentManagement:
                 tournament.list_player.pop(user_input)
             else:
                 self.view.display_string("Pas de joueur dans la liste du tournoi.")
-                breakpoint
+                
         else:
-            self.view.display_string("Pas de tournoi sélectionner")
-            breakpoint
+            self.view.display_string("Pas de tournoi sélectionner")      
 
     def run_controller_tournament(self):
         """
         Run the tournament controller.
         """
-        if self.tournament:
+        if self.tournament is not None:
             if self.check_player_number():
                 controllertournament = ControllerTournament(self.view, self.tournament, self.management)
                 controllertournament.run()
