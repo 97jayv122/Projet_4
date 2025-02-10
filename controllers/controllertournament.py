@@ -21,7 +21,6 @@ class ControllerTournament:
 
     def run(self):
         while True:
-            Utils.clear()
             action = self.view.tournament_menu()
             match action:
 
@@ -32,7 +31,6 @@ class ControllerTournament:
                     self.end_tour()
 
                 case ConstantTournament.RETURN_TOURNAMENT_MANAGEMENT_MENU:
-                    
                     break
 
                 case _:

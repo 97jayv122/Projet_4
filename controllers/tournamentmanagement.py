@@ -21,6 +21,7 @@ class TournamentManagement:
         management = Management()
         self.management = management 
         self.tournament = None
+        self.player = Players.load()
 
     def get_tournament_name(self):
         if len(self.management.list_tournaments) > 1:    
@@ -44,7 +45,6 @@ class TournamentManagement:
   
     def run(self):
         while True:
-            Utils.clear()
             action = self.view.tournamament_management_menu()
             self.management.load()
             match action:
@@ -97,7 +97,7 @@ class TournamentManagement:
 
     def player_selection(self):
         if self.tournament is not None:
-            Players.instances_load()
+            Players.load()
             if Players.list_of_player:
                 prompt = "Liste des joueurs de la base de donnée"
                 data_players = [player.to_dict() for player in Players.list_of_player]

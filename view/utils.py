@@ -37,9 +37,9 @@ class Utils:
 
     @staticmethod
     def chess_identifier_existing(identifier):
-        datas = Players.load_file()
-        for data in datas:
-            if data["national_chess_identifier"] == identifier:
+        players = Players.load()
+        for p in players:
+            if p.national_chess_identifier == identifier:
                 return True
         return False
     

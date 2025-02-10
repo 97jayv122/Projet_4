@@ -6,7 +6,6 @@ FILE_PLAYER = "data/tournaments/players.json"
 
 
 class Players:
-    list_of_player = []
 
     def __init__(self, first_name, name, date_of_birth, national_chess_identifier, player_id=None):
         """
@@ -19,30 +18,38 @@ class Players:
         self.id = player_id if player_id else str(uuid.uuid4())  # Préserve l'ID existant si fourni
         self.create_at = datetime.now().isoformat()
         self.update_at = ""
-        Players.list_of_player.append(self)
 
     def __repr__(self):
         return str(self.first_name) + "." + str(
             self.name
-            ) + " ID : " + str(self.id)
+            )
 
     def to_dict(self):
         return self.__dict__
 
-    @classmethod
-    def instances_save(self):
+    def add(self):
+        players = Players.load()
+        players.append(self)
+        self.save(players)
+
+    def delete(self, player):
+        players = Players.load()
+        players.remove(player)
+        self.save(players)
+
+    def save(self, players):
         with open(FILE_PLAYER, "w") as file:
             json.dump(
-                [player.to_dict() for player in self.list_of_player],
+                [player.to_dict() for player in players],
                   file, indent=4
                 )
 
     @staticmethod
-    def load_file():
+    def load():
         try:
             with open(FILE_PLAYER, "r") as file:
                 data = json.load(file)
-                return data
+                return [Players.restore_from_json(player) for player in data]
         except json.JSONDecodeError:
             print("pas de données a charger")
         except FileNotFoundError:
@@ -50,13 +57,8 @@ class Players:
         return []
 
     @classmethod
-    def instances_load(cls):
-        data = Players.load_file()
-        return [cls.restore_from_json(player) for player in data]
-
-    @classmethod
     def from_dict(cls, data):
-        return cls(
+        return Players(
             first_name=data.get("first_name"),
             name=data.get("name"),
             date_of_birth=data.get("date_of_birth"),
@@ -90,26 +92,13 @@ class Players:
                 setattr(self, key, value)
         self.update_at = datetime.now().isoformat()
 
-    def delete(self):
-        Players.list_of_player.remove(self)
-
-    @classmethod
-    def get_player_by_id(cls, chess_id):
-        for player in cls.list_of_player:
-            if player.national_chess_identifier == chess_id:
-                return player
-        return None
-    
-    @staticmethod
     def load_info_players_by_id(*id):
         info_player = []
-        players_datas = Players.load_file()
-        for player_datas in players_datas:
-            if player_datas['id'] in id:
-                info_player.append([player_datas['first_name'], player_datas['name']])
-            
-
-    @classmethod
-    def clear_instances(cls):
-        cls.list_of_player = []
+        players = Players.load_file()
+        for player in players:
+            if player['id'] in id:
+                info_player.append([player['first_name'], player['name']])
+    
+    def clear_instances():
+        pass
 

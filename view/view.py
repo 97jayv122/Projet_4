@@ -12,6 +12,7 @@ PRESS_ENTER =  "\nAppuyer sur entrée pour continuer..."
 
 class View:
     def home_menu(self):
+        Utils.clear()
         print("-" * 10 + " Menu principal " + "-" * 10)
         print()
         print("\n" + Constant.PLAYER_MENU + ". pour entrer dans le menu joueurs.")
@@ -22,6 +23,7 @@ class View:
         return input(VALIDATE_CHOICE)
 
     def player_menu(self):
+        Utils.clear()
         print("-" * 10 + " Menu Joueurs " + "-" * 10)
         print()
         print("\n" + ConstantPlayer.ADD_PLAYER + ". pour entrer des joueur")
@@ -33,6 +35,7 @@ class View:
         return input(VALIDATE_CHOICE)
     
     def tournamament_management_menu(self):
+        Utils.clear()
         print("-" * 10 + " Menu Tournois " + "-" * 10)
         print()
         print("\n" + ConstantTournamentManagement.CREATE_A_TOURNAMENT + ". Nouveau tournoi")
@@ -46,6 +49,7 @@ class View:
         return input(VALIDATE_CHOICE)
 
     def tournament_menu(self):
+        Utils.clear()
         print("-" * 10 + " Menu Tournois " + "-" * 10)
         print()
         print(ConstantTournament.START_A_TOUR + ". Commencer un tour")

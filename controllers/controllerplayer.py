@@ -16,12 +16,12 @@ class ControllerPlayer:
     """    
     def __init__(self, view):
         self.view = view
+        self.players = Players.load()
 
     def run(self):
         
         while True:
-            Players.instances_load()
-            Utils.clear()
+            self.players = Players.load()
             action = self.view.player_menu()
             match action:
                 case ConstantPlayer.ADD_PLAYER:
@@ -37,12 +37,10 @@ class ControllerPlayer:
                     self.suppress_player()
 
                 case ConstantPlayer.RETURN_MAIN_MENU:
-                    Players.clear_instances()
                     break
 
                 case _:
                     self.view.display_string("Choix inconnue.")
-                    Players.clear_instances()
 
     def add_player(self):
         """
@@ -52,60 +50,57 @@ class ControllerPlayer:
         if number_player_add == 0:
             breakpoint
         for i in range(1, number_player_add + 1):
-            info_player = self.view.request_add_player()
-            player = Players.from_dict(info_player)
-            Players.instances_save()
-        Players.clear_instances()
+            input_player = self.view.request_add_player()
+            player = Players.from_dict(input_player)
+            player.add()
 
     def mofify_player(self):
         self.display_player()
-        Players.instances_load()
-        if Players.list_of_player:
+        if self.players:
             chess_id = self.view.request_player_id("modifier")
             if chess_id:
-                player = Players.get_player_by_id(chess_id)
+                player = self.load_by_id(chess_id)
                 if player:
                     data = self.view.request_modify_player()
                     player.update(**data)
-                    Players.instances_save()
+                    player.save()
                     self.display_player(f"\nLe joueur avec l'ID: {chess_id} a été correctement modifié.")
                 else:
                     self.view.display_string(f"\nLe joueur avecl'ID: {chess_id} n'as pas été trouvé.")
-                    Players.clear_instances()
+
             else:
-                Players.clear_instances()
-                breakpoint
+                self.display_string("Nous n'avons pas trouvez de jouer avec cette id ")
         else:
-            Players.clear_instances()
-            breakpoint
+            self.display_string("La base de donnée joueur est vide")
 
     def suppress_player(self):
         self.display_player()
-        Players.instances_load()
-        if Players.list_of_player:
+        if self.players:
             chess_id = self.view.request_player_id("supprimer")
             if chess_id:
-                player = Players.get_player_by_id(chess_id)
+                player = self.load_by_id(chess_id)
                 if player == None:
                     self.view.display_string("\nJoueur inexistant")
                     self.display_player()
 
                 else:
-                    player.delete()
-                    Players.instances_save()
+                    player.delete(player)
                     self.display_player(f"\nLe joueur avec l'ID: {chess_id} a été correctement supprimé.")
-                    Players.clear_instances()
             else:
-                Players.clear_instances()
-                breakpoint
+                self.display_string("Nous n'avons pas trouvez de jouer avec cette id ")   
         else:
-            Players.clear_instances()
-            breakpoint
+            self.display_string("La base de donnée joueur est vide")
 
     def display_player(self, prompt=""):
-        data_players = [player.to_dict() for player in Players.list_of_player]
-        if data_players:
-            self.view.display_table(data_players, prompt)
-            Players.clear_instances()
+        if self.players:
+            players_dict = [player.to_dict() for player in self.players]
+            self.view.display_table(players_dict, prompt)
         else:
             self.view.display_string("Pas de joueur dans la base de donnée")
+
+    def load_by_id(self, chess_id):
+        for player in self.players:
+            if player.national_chess_identifier == chess_id:
+                return player
+        return None
+    
