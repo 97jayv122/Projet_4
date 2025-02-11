@@ -27,22 +27,22 @@ class Players:
     def to_dict(self):
         return self.__dict__
 
-    def add(self):
+
+    def save(self):
+
         players = Players.load()
         players.append(self)
-        self.save(players)
 
-    def delete(self, player):
-        players = Players.load()
-        players.remove(player)
-        self.save(players)
-
-    def save(self, players):
         with open(FILE_PLAYER, "w") as file:
             json.dump(
                 [player.to_dict() for player in players],
                   file, indent=4
                 )
+
+    def clear_base(self):
+        players = Players.load()
+        players.set
+        
 
     @staticmethod
     def load():
@@ -102,3 +102,7 @@ class Players:
     def clear_instances():
         pass
 
+    @staticmethod
+    def clear_json():
+        with open(FILE_PLAYER, "w") as file:
+            json.dump([], file, indent=4)

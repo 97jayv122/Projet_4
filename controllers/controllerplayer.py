@@ -52,7 +52,7 @@ class ControllerPlayer:
         for i in range(1, number_player_add + 1):
             input_player = self.view.request_add_player()
             player = Players.from_dict(input_player)
-            player.add()
+            player.save()
 
     def mofify_player(self):
         self.display_player()
@@ -63,13 +63,14 @@ class ControllerPlayer:
                 if player:
                     data = self.view.request_modify_player()
                     player.update(**data)
-                    player.save()
+                    Players.clear_json()
+                    [player.save() for player in self.players]
                     self.display_player(f"\nLe joueur avec l'ID: {chess_id} a été correctement modifié.")
                 else:
                     self.view.display_string(f"\nLe joueur avecl'ID: {chess_id} n'as pas été trouvé.")
 
             else:
-                self.display_string("Nous n'avons pas trouvez de jouer avec cette id ")
+                self.display_string("Nous n'avons pas trouvez de joueur avec cette id ")
         else:
             self.display_string("La base de donnée joueur est vide")
 
@@ -84,7 +85,9 @@ class ControllerPlayer:
                     self.display_player()
 
                 else:
-                    player.delete(player)
+                    self.players.remove(player)
+                    Players.clear_json()
+                    [player.save() for player in self.players]
                     self.display_player(f"\nLe joueur avec l'ID: {chess_id} a été correctement supprimé.")
             else:
                 self.display_string("Nous n'avons pas trouvez de jouer avec cette id ")   
