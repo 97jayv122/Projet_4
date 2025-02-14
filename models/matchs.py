@@ -4,17 +4,15 @@ COLOR_BLACK = "noir"
 
 
 class Matchs:
-    list_of_matchs = []
 
     def __init__(self, player_1, player_2):
         self.player_1 = player_1
         self.player_2 = player_2
         self.info_match = ()
         self.color_of_player = {}
-        self.score_player_1 = 0
-        self.score_player_2 = 0
-        Matchs.list_of_matchs.append(self)
-        
+        self.score_player_1 = 0.0
+        self.score_player_2 = 0.0
+
     def score_update(self, score_player_1, score_player_2):
         """
         Met à jour les scores des joueurs pour ce match.

@@ -92,12 +92,13 @@ class Players:
                 setattr(self, key, value)
         self.update_at = datetime.now().isoformat()
 
+    @staticmethod
     def load_info_players_by_id(*id):
         info_player = []
-        players = Players.load_file()
+        players = Players.load()
         for player in players:
-            if player['id'] in id:
-                info_player.append([player['first_name'], player['name']])
+            if player.id in id:
+                info_player.append([player.first_name, player.name])
         return info_player
     
     def clear_instances():
