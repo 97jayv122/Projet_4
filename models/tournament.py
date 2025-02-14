@@ -2,8 +2,16 @@ import json
 from models.players import Players
 from models.tours import Tours
 from models.matchs import Matchs                                                                                                      
+FOLDER_TOURNAMENT = "data/tournaments/"
+FILE_TOURNAMENT = FOLDER_TOURNAMENT + "tournament.json"
 
-class Tournament:
+
+# class Tournaments:
+#     def __init__(self):
+#         # self.list_tournaments = []
+#         pass
+
+class Tournaments:
     def __init__(self, name, place, date_start, date_end,
                  number_of_turns=4):
         self.name = name
@@ -62,9 +70,9 @@ class Tournament:
             "description": self.description
         }
 
-    @classmethod
-    def load(cls, data):
-        return cls.from_dict(data)
+    # @classmethod
+    # def load(cls, data):
+    #     return cls.from_dict(data)
 
     
     def start_new_tour(self):
@@ -125,3 +133,36 @@ class Tournament:
         for player in self.list_player:
             tr = tr + f"\n{player}"
         return tr 
+    
+    def update(self, name, tournament_dict):
+        if len(self.tournaments) > 0:
+            for index, tournament in enumerate(self.tournaments):
+                if tournament.name== name:
+                    self.tournaments[index] = tournament_dict
+                    break
+
+    def save(self):
+        tournaments = Tournaments.load()
+        tournaments.append(self)
+
+        with open(FILE_TOURNAMENT, "w") as file:
+            json.dump([tournament.to_dict() for tournament in tournaments], file, indent=4)
+
+    @staticmethod
+    def load():
+        try:
+            with open(FILE_TOURNAMENT, "r") as file:
+                datas = json.load(file)
+                return [Tournaments.from_dict(data) for data in datas]
+        except json.JSONDecodeError as e:
+            print(f"pas de données a charger: {e}")
+        except FileNotFoundError:
+            print(f"Fichier introuvable : data/tournaments/tournaments")
+        except Exception as e:
+            print(f"Erreur inattendue : {e}")
+        return []
+    
+    @staticmethod
+    def clear_json_tournament():
+        with open(FILE_TOURNAMENT, "w") as file:
+            json.dump([], file, indent=4)

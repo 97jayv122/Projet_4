@@ -60,14 +60,13 @@ class View:
 
     def select_player(self, players):
         player_tournament = []
-        print("")
-        print("Sélectionnez les joueurs pour le tournoi\n")
-        players_enter = input(
-            "Entrer les numéros des joueurs séparés par une virgule : "
+        print("\nSélectionnez les joueurs pour le tournoi\n")
+        index_players = input(
+            "\nEntrer les numéros des joueurs séparés par une virgule : "
             )
-        split_players = players_enter.split(",")
-        for player in split_players:
-            player_tournament.append(players[int(player)])
+        index_players = index_players.split(",")
+        for index in index_players:
+            player_tournament.append(players[int(index)].id)
         return player_tournament
 
     def request_create_tournament(self):

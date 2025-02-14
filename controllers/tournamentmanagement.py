@@ -1,9 +1,9 @@
 from models.players import Players
 from controllers.controllertournament import ControllerTournament
-from models.management import Management, FOLDER_TOURNAMENT
-from models.tournament import Tournament
+from models.tournament import Tournaments, FOLDER_TOURNAMENT
 from view.utils import Utils
 import os
+
 
 
 class ConstantTournamentManagement:
@@ -18,63 +18,73 @@ class ConstantTournamentManagement:
 class TournamentManagement:
     def __init__(self, view):
         self.view = view
-        management = Management()
-        self.management = management 
+        tournaments = Tournaments.load()
+        self.tournaments = tournaments 
         self.tournament = None
-        self.player = Players.load()
+        self.players = Players.load()
 
     def get_tournament_name(self):
-        if len(self.management.list_tournaments) > 1:    
-            return [[tournament["name"]] for tournament in self.management.list_tournaments]
-        elif len(self.management.list_tournaments) == 1:
-            return [[self.management.list_tournaments[0]["name"]]]
+        if len(self.tournaments) > 1:    
+            return [[tournament.name, len(tournament.list_player)] for tournament in self.tournaments]
+        elif len(self.tournaments) == 1:
+            return [[self.tournaments[0].name, len(self.tournaments[0].list_player)]]
         else:
             self.view.display_string("Vous n'avez pas de tournoi enregistré")
             return None
 
-    def select_tournament(self, index):
-        tournament_dict = self.management.list_tournaments[index]
-        return Tournament.from_dict(tournament_dict)
 
     def delete_tournament(self, index):
+        """_summary_
+
+        Args:
+            index (_type_): _description_
+        """
         self.tournament = None
-        tournament_deleted = self.management.list_tournaments.pop(index)
+        tournament_deleted = self.tournaments.pop(index)
         self.view.display_string(
             f"Le tournoi: {tournament_deleted["name"]}, à été supprimé."
             )
-  
+
+    def select_tournament(self):
+        names_tournaments = self.get_tournament_name()
+        if names_tournaments is not None:
+            index = self.view.select_tournament(names_tournaments)
+            self.tournament = self.tournaments[index]
+        else:
+            self.view.display_string("Aucun tournoi disponible.")
+
     def run(self):
         while True:
             action = self.view.tournamament_management_menu()
-            self.management.load()
+            self.tournaments = Tournaments.load()
             match action:
                 case ConstantTournamentManagement.CREATE_A_TOURNAMENT:
                     self.create_tournament()
                     # self.player_selection()
 
                 case ConstantTournamentManagement.SELECT_TOURNAMENT:
-                    names_tournaments = self.get_tournament_name()
-                    if names_tournaments is not None:
-                        index = self.view.select_tournament(names_tournaments)
-                        self.tournament = self.select_tournament(index)
-                    else:
-                        self.view.display_string("Aucun tournoi disponible.")
+                    pass
 
                 case ConstantTournamentManagement.SELECT_PLAYER:
+                    self.select_tournament()
                     self.player_selection()
 
                 case ConstantTournamentManagement.DELETE_PLAYER:
+                    self.select_tournament()
                     self.remove_players_from_tournament()
 
                 case ConstantTournamentManagement.START_TOURNAMENT:
+                    self.select_tournament()
                     self.run_controller_tournament()
 
                 case ConstantTournamentManagement.DELETE_TOURNAMENT:
+                    self.select_tournament()
                     names_tournaments = self.get_tournament_name()
                     if names_tournaments is not None:
                         index = self.view.select_tournament(names_tournaments)
-                        self.delete_tournament(index)
-                        self.management.save()
+                        del self.tournaments[index]
+                        Tournaments.clear_json_tournament()
+                        [tournament.save() for tournament in self.tournaments]
                     else:
                         breakpoint
 
@@ -86,32 +96,35 @@ class TournamentManagement:
                     input("Appuyer sur entrée pour continuer...")
 
     def create_tournament(self):
+        """
+        Creates a new tournament based on user input.
+
+        This method requests tournament information from the view layer,
+        constructs a tournament instance using the provided data via the
+        Tournaments.from dict() method, and saves the new tournament to
+        persistant storeage
+        """
         info_tournament = self.view.request_create_tournament()
-        tournament = Tournament.from_dict(info_tournament)
-        self.tournament = tournament
-        tournament_dict = tournament.to_dict()
-        self.management.list_tournaments.append(tournament_dict)
-        self.management.save()
-        self.management.instance_clear()
-        tournament.instance_clear()
+        tournament = Tournaments.from_dict(info_tournament)
+        tournament.save()
 
     def player_selection(self):
         if self.tournament is not None:
-            Players.load()
-            if Players.list_of_player:
+            # Players.load()
+            if self.players:
                 prompt = "Liste des joueurs de la base de donnée"
-                data_players = [player.to_dict() for player in Players.list_of_player]
+                data_players = [player.to_dict() for player in self.players]
                 self.view.display_table(data_players, prompt)
                 try:
-                    self.tournament.list_player = self.view.select_player(Players.list_of_player)
-                    Players.clear_instances()
+                    self.tournament.list_player = self.view.select_player(self.players)
+                    # Players.clear_instances()
                 except ValueError:
                     self.view.display_string("Veuillez entrer un bon format.")
-                tournament_dict = self.tournament.to_dict()
-                self.management.update(self.tournament.name, tournament_dict)
-                self.management.save()
+                # self.tournament.update(self.tournament.name)
+                Tournaments.clear_json_tournament()
+                self.tournament.save()
                 self.tournament = None
-                Players.clear_instances()
+                # Players.clear_instances()
             else:
                 self.view.display_string("Pas de joueur rentré dans la base de donnée")
                 
@@ -153,11 +166,16 @@ class TournamentManagement:
         """
         Run the tournament controller.
         """
+
         if self.tournament is not None:
             if self.check_player_number():
-                controllertournament = ControllerTournament(self.view, self.tournament, self.management)
+                controllertournament = ControllerTournament(self.view, self.tournament)
                 controllertournament.run()
         else:
             self.view.display_string(
                 "Veuillez sélectiionner ou créer un nouveau tournoi"
                 )
+
+    def get_name_by_id(self):
+        if self.tournament.list_player:
+            

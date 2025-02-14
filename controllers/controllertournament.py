@@ -1,6 +1,6 @@
 from random import shuffle
 from models.players import Players
-from models.tournament import Tournament
+from models.tournament import Tournaments
 from models.tours import Tours
 from models.matchs import Matchs
 from view.utils import Utils
@@ -14,11 +14,10 @@ class ConstantTournament:
 
 class ControllerTournament:
 
-    def __init__(self, view, tournament, management):
+    def __init__(self, view, tournament):
         self.view = view
         self.tournament = tournament
-        self.management = management
-
+        
     def run(self):
         while True:
             action = self.view.tournament_menu()
@@ -26,7 +25,7 @@ class ControllerTournament:
 
                 case ConstantTournament.START_A_TOUR:
                     self.start_tour()
-
+                    self
                 case ConstantTournament.END_A_TOUR:
                     self.end_tour()
 
@@ -70,9 +69,9 @@ class ControllerTournament:
             self.generate_first_matchs(tour)
             self.tournament.list_of_tours.append(tour.__dict__)
             tournament_dict = self.tournament.__dict__
-            self.management.update(self.tournament.name, tournament_dict)
+            self.tournament.update(self.tournament.name, tournament_dict)
             print(tournament_dict)
-            self.management.save()
+            
             # tour.start()
         except UnboundLocalError:
             self.view.display_string("Pas de tournois créé")

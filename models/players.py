@@ -98,11 +98,9 @@ class Players:
         for player in players:
             if player['id'] in id:
                 info_player.append([player['first_name'], player['name']])
+        return info_player
     
     def clear_instances():
         pass
 
-    @staticmethod
-    def clear_json():
-        with open(FILE_PLAYER, "w") as file:
-            json.dump([], file, indent=4)
+
