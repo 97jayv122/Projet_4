@@ -10,7 +10,7 @@ class Tours:
         self.duration = 0
         self.time_start = None
         self.time_end = None
-        self.matchs = None
+        self.matchs = []
         self.stat = "not started"
 
     @classmethod

@@ -39,6 +39,15 @@ class Players:
                   file, indent=4
                 )
 
+    @staticmethod
+    def save_all(players):
+
+        with open(FILE_PLAYER, "w") as file:
+            json.dump(
+                [player.to_dict() for player in players],
+                  file, indent=4
+                )
+
     def clear_base(self):
         players = Players.load()
         players.set
@@ -104,4 +113,11 @@ class Players:
     def clear_instances():
         pass
 
+# id = [
+#     "28a1c764-66a5-4ba4-a122-3d85242fb088",
+#     "dbf7d6fd-ab9c-4a2d-950a-96730b63bad7",
+#     "2cb53db1-6ff2-4202-9feb-0ff677b03f4f",
+#     "ebc62e3a-1d72-4f17-b282-e3e0111f25a2"
+#     ]
 
+# print(Players.load_info_players_by_id(*id))

@@ -6,11 +6,6 @@ FOLDER_TOURNAMENT = "data/tournaments/"
 FILE_TOURNAMENT = FOLDER_TOURNAMENT + "tournament.json"
 
 
-# class Tournaments:
-#     def __init__(self):
-#         # self.list_tournaments = []
-#         pass
-
 class Tournaments:
     def __init__(self, name, place, date_start, date_end,
                  number_of_turns=4):
@@ -22,7 +17,7 @@ class Tournaments:
         self.list_player = []
         self.list_of_tours = []
         self.current_tour = 0
-        self.current_matchs = []
+        # self.current_matchs = []
         self.description = ""
 
     @classmethod
@@ -44,7 +39,7 @@ class Tournaments:
         tournament.list_player=list_player
         tournament.list_of_tours=list_of_tours
         tournament.current_tour=data.get("current_tour", 0)
-        tournament.current_matchs=data.get("current_matchs", [])
+        # tournament.current_matchs=data.get("current_matchs", [])
         tournament.description=data.get("description", "")
 
         return tournament
@@ -66,7 +61,7 @@ class Tournaments:
                 else tour for tour in self.list_of_tours
                 ],
             "current_tour": self.current_tour,
-            "current_matchs": self.current_matchs,
+            # "current_matchs": self.current_matchs,
             "description": self.description
         }
 
@@ -80,7 +75,7 @@ class Tournaments:
         Démarre un nouveau tour et initialise les matchs.
         """
         self.current_tour = Tours(self.list_player)
-        self.current_matchs = []  # Réinitialise les matchs pour le nouveau tour
+        # self.current_matchs = []  # Réinitialise les matchs pour le nouveau tour
         self.list_of_tours.append(self.current_tour)
 
     def add_1_to_current_tour(self):
@@ -99,7 +94,7 @@ class Tournaments:
         self.list_player = []
         self.list_of_tours = []
         self.current_tour = 0
-        self.current_matchs = []
+        # self.current_matchs = []
         self.description = ""
 
     def recovery_list_of_matchs(self, matchs):
@@ -120,13 +115,13 @@ class Tournaments:
         """
         self.list_of_tours.append(tour.to_dict())
 
-    def add_match_to_current_tour(self, match):
-        """
-        Ajoute un match au tour actuel.
-        """
-        if self.current_tour:
-            self.current_matchs.append(match)
-            self.current_tour.recovery_list_of_matchs(self.current_matchs)
+    # def add_match_to_current_tour(self, match):
+    #     """
+    #     Ajoute un match au tour actuel.
+    #     """
+        # if self.current_tour:
+            # self.current_matchs.append(match)
+            # self.current_tour.recovery_list_of_matchs(self.current_matchs)
 
     def __repr__(self):
         tr = f"Nom du tournoi : {self.name}, player: "  
@@ -148,6 +143,12 @@ class Tournaments:
         with open(FILE_TOURNAMENT, "w") as file:
             json.dump([tournament.to_dict() for tournament in tournaments], file, indent=4)
 
+    @staticmethod
+    def save_all(tournaments):
+
+        with open(FILE_TOURNAMENT, "w") as file:
+            json.dump([tournament.to_dict() for tournament in tournaments], file, indent=4)
+        
     @staticmethod
     def load():
         try:

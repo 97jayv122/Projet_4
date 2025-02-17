@@ -42,7 +42,6 @@ class Controller:
         the user to navigate between the different menus.
         """        
         while True:
-            Utils.clear()
             action = self.view.home_menu()
             match action:
                 case Constant.PLAYER_MENU:

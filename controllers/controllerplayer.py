@@ -1,5 +1,4 @@
 from models.players import Players
-from view.utils import Utils
 
 
 class ConstantPlayer:
@@ -63,8 +62,7 @@ class ControllerPlayer:
                 if player:
                     data = self.view.request_modify_player()
                     player.update(**data)
-                    Players.clear_json()
-                    [player.save() for player in self.players]
+                    Players.save_all(self.players)
                     self.display_player(f"\nLe joueur avec l'ID: {chess_id} a été correctement modifié.")
                 else:
                     self.view.display_string(f"\nLe joueur avecl'ID: {chess_id} n'as pas été trouvé.")
@@ -80,14 +78,14 @@ class ControllerPlayer:
             chess_id = self.view.request_player_id("supprimer")
             if chess_id:
                 player = self.load_by_id(chess_id)
+        
                 if player == None:
                     self.view.display_string("\nJoueur inexistant")
                     self.display_player()
 
                 else:
                     self.players.remove(player)
-                    Players.clear_json()
-                    [player.save() for player in self.players]
+                    Players.save_all(self.players)
                     self.display_player(f"\nLe joueur avec l'ID: {chess_id} a été correctement supprimé.")
             else:
                 self.display_string("Nous n'avons pas trouvez de jouer avec cette id ")   

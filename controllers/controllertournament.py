@@ -20,9 +20,9 @@ class ControllerTournament:
         self.tournament = tournament
         self.tournaments = tournaments
         self.players = Players.load()
-        self.tours = None
+        self.tours = []
         self.tour = None
-        self.matchs = None
+        self.matchs = []
         self.match =  None
 
     def run(self):
@@ -54,38 +54,35 @@ class ControllerTournament:
     def generate_first_matchs(self, tour):
         """
         Génère des paires de joueurs pour le tour et crée les matchs.
-        """
+        """ 
         shuffle(self.tournament.list_player)  # Mélange aléatoire des joueurs
         tour.matchs_list_by_round = []
         for i in range(0, len(self.tournament.list_player), 2):
             if i + 1 < len(self.tournament.list_player):
                 player_1 = self.tournament.list_player[i]
                 player_2 = self.tournament.list_player[i + 1]
-                self.match = Matchs(player_1, player_2)
-                self.match.assign_random_colors()
-                self.match.score_update(0, 0)
-                self.view.display_string(self.match.color_of_player)
-                self.matchs.append(self.match)
+                match = Matchs(player_1, player_2)
+                match.assign_random_colors()
+                match.score_update(0, 0)
+                self.view.display_string(match.color_of_player)
+                self.matchs.append(match)
 
     def start_tour(self):
-        try:
-            self.view.display_string(self.tournament)
-            print(self.tournament.current_tour)
-            input()
-            self.tournament.add_1_to_current_tour()
-            self.tour = Tours(self.tournament.current_tour)
-            self.generate_first_matchs(self.tour)
-            self.tournament.list_of_tours.append(self.tour.__dict__)
-            tournament_dict = self.tournament.__dict__
-            # self.tournament.update(self.tournament.name, tournament_dict)
-            Tournaments.clear_json_tournament
-            [tournament.save() for tournament in self.tournaments]
-            print(tournament_dict)
+        # try:
+        self.view.display_string(self.tournament)
+        print(self.tournament.current_tour)
+        input()
+        self.tournament.add_1_to_current_tour()
+        tour = Tours(self.tournament.current_tour)
+        self.generate_first_matchs(tour)
+        self.tournament.list_of_tours.append(tour)
+        # self.tournament.update(self.tournament.name, tournament_dict)
+        Tournaments.save_all(self.tournaments)
             # self.tour.start()
-        except UnboundLocalError:
-            self.view.display_string("Pas de tournois créé")
-        except AttributeError:
-            self.view.display_string("pas de tournoi créé")
+        # except UnboundLocalError:
+        #     self.view.display_string("Pas de tournois créé")
+        # except AttributeError:
+        #     self.view.display_string("pas de tournoi créé")
 
     def end_tour(self):
         """  """
@@ -95,8 +92,8 @@ class ControllerTournament:
                 for match in self.matchs]
         except UnboundLocalError:
             print("Pas de matchs commencé")
-        Tournaments.clear_json_tournament
-        [tournament.save() for tournament in self.tournaments]
+        Tournaments.save_all(self.tournaments)
+        
 
         # tour.recovery_list_of_matchs(Matchs.list_of_matchs)
         # tournament.add_tour(tour)
@@ -138,11 +135,10 @@ class ControllerTournament:
             self.tournament.list_of_tours.append(tour.__dict__)
             tournament_dict = self.tournament.__dict__
             # self.tournament.update(self.tournament.name, tournament_dict)
-            Tournaments.clear_json_tournament
-            [tournament.save() for tournament in self.tournaments]
+            Tournaments.save_all(self.tournaments)
             print(tournament_dict)
             
-            tour.start()
+            # tour.start()
         except UnboundLocalError:
             self.view.display_string("Pas de tournois créé")
         except AttributeError:

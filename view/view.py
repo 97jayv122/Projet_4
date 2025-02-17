@@ -3,6 +3,7 @@ from tabulate import tabulate
 from controllers.maincontroller import Constant
 from controllers.tournamentmanagement import ConstantTournamentManagement
 from controllers.controllertournament import ConstantTournament
+from controllers.controllerreport import ConstantReport
 from controllers.controllerplayer import ConstantPlayer
 from view.utils import Utils
 VALIDATE_CHOICE = "\nEntré votre choix : "
@@ -55,6 +56,16 @@ class View:
         print(ConstantTournament.NEXT_TOUR + ". Commencer le tour suivant")
         print(ConstantTournament.END_A_TOUR + ". Terminer un tour")
         print(ConstantTournament.RETURN_TOURNAMENT_MANAGEMENT_MENU + ". pour retourner au menu gestionnaire de tournoi.")
+        print()
+        return input("Entrer votre choix : ")
+    
+    def report_menu(self):
+        Utils.clear()
+        print("-" * 10 + " Menu Rapport " + "-" * 10)
+        print()
+        print(ConstantReport.TOURNAMENTS + ". Rapport tournoi")
+        print(ConstantReport.PLAYERS + ". Rapport joueur")
+        print(ConstantReport.RETURN_TOURNAMENT_MANAGEMENT_MENU + ". pour retourner au menu gestionnaire de tournoi.")
         print()
         return input("Entrer votre choix : ")
 
