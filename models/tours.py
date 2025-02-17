@@ -7,6 +7,7 @@ class Tours:
 
     def __init__(self, tour_number):
         self.tour_number = tour_number
+        self.name = "round" + str(tour_number)
         self.duration = 0
         self.time_start = None
         self.time_end = None
@@ -19,21 +20,24 @@ class Tours:
         Restaure un objet Tours depuis un dictionnaire.
         """
         tour = cls(data["tour_number"])
+        tour.name = data["tour_name"]
         tour.time_start = data["time_start"]
         tour.time_end = data["time_end"]
-        Tours.matchs = [
-            Matchs.from_dict(match) for match in data["matchs"]
+        tour.matchs = [
+            Matchs.from_dict(match) if isinstance(match, dict) 
+            else match for match in data["matchs_list"]
         ]
         tour.stat = data["stat"]
         return tour
     
     def to_dict(self):
         return {
-            "tour_name" : self.tour_number,
+            "tour_number" : self.tour_number,
+            "tour_name" : self.name,
             "duration": self.duration,
             "time_start": self.time_start,
             "time_end": self.time_end,
-            "matchs_list_by_round": [
+            "matchs_list": [
                 match.to_dict() if isinstance(match, Matchs)
                 else match for match in self.matchs
                 ],

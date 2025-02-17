@@ -1,4 +1,5 @@
 import json
+import uuid
 from models.players import Players
 from models.tours import Tours
 from models.matchs import Matchs                                                                                                      
@@ -8,12 +9,13 @@ FILE_TOURNAMENT = FOLDER_TOURNAMENT + "tournament.json"
 
 class Tournaments:
     def __init__(self, name, place, date_start, date_end,
-                 number_of_turns=4):
+                 number_of_turns=4, tournament_id=None):
         self.name = name
         self.place = place
         self.date_start = date_start
         self.date_end = date_end
         self.number_of_turns = number_of_turns
+        self.id = tournament_id if tournament_id else str(uuid.uuid4())
         self.list_player = []
         self.list_of_tours = []
         self.current_tour = 0
@@ -34,7 +36,8 @@ class Tournaments:
             name=data.get("name"),
             place=data.get("place"),
             date_start=data.get("date_start"),
-            date_end=data.get("date_end")
+            date_end=data.get("date_end"),
+            tournament_id=data.get("tournament_id")
         )
         tournament.list_player=list_player
         tournament.list_of_tours=list_of_tours
@@ -61,6 +64,7 @@ class Tournaments:
                 else tour for tour in self.list_of_tours
                 ],
             "current_tour": self.current_tour,
+            "tournament_id": self.id,
             # "current_matchs": self.current_matchs,
             "description": self.description
         }
@@ -97,15 +101,6 @@ class Tournaments:
         # self.current_matchs = []
         self.description = ""
 
-    def recovery_list_of_matchs(self, matchs):
-        """
-        Ajoute une liste de matchs au tour.
-
-        Args:
-            matchs (list): Liste d'instances de la classe Matchs.
-        """
-        self.matchs_list_by_round = [match.to_dict() for match in matchs]
-
     def add_tour(self, tour):
         """
         Ajoute un tour à la liste des tours du tournoi.
@@ -115,13 +110,6 @@ class Tournaments:
         """
         self.list_of_tours.append(tour.to_dict())
 
-    # def add_match_to_current_tour(self, match):
-    #     """
-    #     Ajoute un match au tour actuel.
-    #     """
-        # if self.current_tour:
-            # self.current_matchs.append(match)
-            # self.current_tour.recovery_list_of_matchs(self.current_matchs)
 
     def __repr__(self):
         tr = f"Nom du tournoi : {self.name}, player: "  
@@ -132,7 +120,7 @@ class Tournaments:
     def update(self, name, tournament_dict):
         if len(self.tournaments) > 0:
             for index, tournament in enumerate(self.tournaments):
-                if tournament.name== name:
+                if tournament.name == name:
                     self.tournaments[index] = tournament_dict
                     break
 
@@ -159,8 +147,8 @@ class Tournaments:
             print(f"pas de données a charger: {e}")
         except FileNotFoundError:
             print(f"Fichier introuvable : data/tournaments/tournaments")
-        except Exception as e:
-            print(f"Erreur inattendue : {e}")
+        # except Exception as e:
+        #     print(f"Erreur inattendue : {e}")
         return []
     
     @staticmethod

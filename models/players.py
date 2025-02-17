@@ -47,10 +47,6 @@ class Players:
                 [player.to_dict() for player in players],
                   file, indent=4
                 )
-
-    def clear_base(self):
-        players = Players.load()
-        players.set
         
 
     @staticmethod
@@ -64,15 +60,6 @@ class Players:
         except FileNotFoundError:
             print("pas de fichier a charger")
         return []
-
-    @classmethod
-    def from_dict(cls, data):
-        return Players(
-            first_name=data.get("first_name"),
-            name=data.get("name"),
-            date_of_birth=data.get("date_of_birth"),
-            national_chess_identifier=data.get("national_chess_identifier")
-        )
     
     @classmethod
     def restore_from_json(cls, data):
@@ -107,11 +94,9 @@ class Players:
         players = Players.load()
         for player in players:
             if player.id in id:
-                info_player.append([player.first_name, player.name])
+                info_player.append(player)
         return info_player
     
-    def clear_instances():
-        pass
 
 # id = [
 #     "28a1c764-66a5-4ba4-a122-3d85242fb088",

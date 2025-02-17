@@ -22,7 +22,6 @@ class TournamentManagement:
         self.tournament = None
         self.players = Players.load()
 
-
     def run(self):
         while True:
             action = self.view.tournamament_management_menu()
@@ -88,6 +87,7 @@ class TournamentManagement:
         if names_tournaments is not None:
             index = self.view.select_tournament(names_tournaments)
             self.tournament = self.tournaments[index]
+            # self.tournament.list_player = Players.load_players_by_ids(self.tournament.list_player)
         else:
             self.view.display_string("Aucun tournoi disponible.")
 

@@ -56,7 +56,7 @@ class ControllerTournament:
         Génère des paires de joueurs pour le tour et crée les matchs.
         """ 
         shuffle(self.tournament.list_player)  # Mélange aléatoire des joueurs
-        tour.matchs_list_by_round = []
+        tour.matchs = []
         for i in range(0, len(self.tournament.list_player), 2):
             if i + 1 < len(self.tournament.list_player):
                 player_1 = self.tournament.list_player[i]
@@ -65,7 +65,7 @@ class ControllerTournament:
                 match.assign_random_colors()
                 match.score_update(0, 0)
                 self.view.display_string(match.color_of_player)
-                self.matchs.append(match)
+                tour.matchs.append(match)
 
 
     def start_tour(self):
@@ -94,9 +94,6 @@ class ControllerTournament:
         except UnboundLocalError:
             print("Pas de matchs commencé")
         Tournaments.save_all(self.tournaments)
-        
-
-        # tour.recovery_list_of_matchs(Matchs.list_of_matchs)
         # tournament.add_tour(tour)
 
     def generate_pairs(players):
