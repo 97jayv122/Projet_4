@@ -67,6 +67,7 @@ class ControllerTournament:
                 self.view.display_string(match.color_of_player)
                 self.matchs.append(match)
 
+
     def start_tour(self):
         # try:
         self.view.display_string(self.tournament)

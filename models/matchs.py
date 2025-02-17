@@ -43,6 +43,7 @@ class Matchs:
             self.color_of_player = {self.player_1: COLOR_BLACK, self.player_2: COLOR_WHITE}
 
     def to_dict(self):
+        print(self)
         return {
             "info_match": self.info_match,
             "color_of_player": self.color_of_player
