@@ -87,7 +87,11 @@ class TournamentManagement:
         if names_tournaments is not None:
             index = self.view.select_tournament(names_tournaments)
             self.tournament = self.tournaments[index]
-            # self.tournament.list_player = Players.load_players_by_ids(self.tournament.list_player)
+            print(self.tournament.list_player)
+            input()
+            self.tournament.list_player = Players.load_by_ids(*self.tournament.list_player)
+            print(self.tournament.list_player)
+            input()
         else:
             self.view.display_string("Aucun tournoi disponible.")
 
@@ -132,16 +136,15 @@ class TournamentManagement:
 
     def remove_players_from_tournament(self):
         if self.tournament is not None:
-            tournament = self.tournament
-            if tournament.list_player:
-                players = Players.load_info_players_by_id(*tournament.list_player)
+            if self.tournament.list_player:
+                players = [[player.first_name, player.name] for player in self.tournament.list_player]
                 index = [range(1, len(players))]
                 print(players)
                 input()
                 prompt = "Liste des joueurs du tournoi"
                 self.view.display_table(players, prompt)
                 user_input = self.view.choose_player_to_remove()
-                tournament.list_player.pop(user_input)
+                self.tournament.list_player.pop(user_input)
             else:
                 self.view.display_string("Pas de joueur dans la liste du tournoi.")
                 

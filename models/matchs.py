@@ -8,7 +8,7 @@ class Matchs:
     def __init__(self, player_1, player_2):
         self.player_1 = player_1
         self.player_2 = player_2
-        self.info_match = ()
+        self.result = ()
         self.color_of_player = {}
         self.score_player_1 = 0.0
         self.score_player_2 = 0.0
@@ -24,11 +24,11 @@ class Matchs:
         Returns:
             tuple: deux listes contenant chacune le joueur et son score.
         """
-        self.info_match = (
+        self.result = (
             [self.player_1, score_player_1],
             [self.player_2, score_player_2]
         )
-        return self.info_match
+        return self.result
 
     def assign_random_colors(self):
         """
@@ -45,7 +45,7 @@ class Matchs:
     def to_dict(self):
         print(self)
         return {
-            "info_match": self.info_match,
+            "result": self.result,
             "color_of_player": self.color_of_player
         }
     @classmethod
@@ -53,28 +53,28 @@ class Matchs:
         """
         Recrée un objet Matchs à partir d'un dictionnaire.
         """
-        player_1, score_1 = data["info_match"][0]
-        player_2, score_2 = data["info_match"][1]
+        player_1, score_1 = data["result"][0]
+        player_2, score_2 = data["result"][1]
         match = cls(player_1, player_2)
-        match.info_match = data["info_match"]
+        match.result = data["result"]
         match.color_of_player = data["color_of_player"]
         return match
 
     def __repr__(self):
-        return f"Match: {self.player_1} vs {self.player_2} - Scores: {self.info_match}"
+        return f"Match: {self.player_1} vs {self.player_2} - Scores: {self.result}"
 
 # match = Matchs("jérémie", "pierre")
 # match.assign_random_colors()
 # match.score_update(0, 0)
 # # print(match.color_of_player)
-# # print(match.info_match)
+# # print(match.result)
 # print(match)
 # data = (match.to_dict())
 # print(data)
 # match1 = Matchs.from_dict(data)
 # print(match_2)
 # print(match1.to_dict())
-# # print(match.info_match)
+# # print(match.result)
 
 # data_2 = match1.__dict__
 # print(type(data_2))

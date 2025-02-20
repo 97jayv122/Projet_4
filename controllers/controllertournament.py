@@ -24,6 +24,7 @@ class ControllerTournament:
         self.tour = None
         self.matchs = []
         self.match =  None
+        self.previous_matches = set()
 
     def run(self):
         while True:
@@ -46,36 +47,60 @@ class ControllerTournament:
 
     def update_score(self, match, player_1, player_2):
         """ """
+        player_1, player_2 = Players.load_by_ids(player_1, player_2)
         score_player_1, score_player_2 = self.view.requests_score(
             player_1, player_2
             )
         match.score_update(score_player_1, score_player_2)
 
-    def generate_first_matchs(self, tour):
+    def generate_pairs(self, tour, players):
         """
         Génère des paires de joueurs pour le tour et crée les matchs.
         """ 
-        shuffle(self.tournament.list_player)  # Mélange aléatoire des joueurs
+        pairs = []
         tour.matchs = []
-        for i in range(0, len(self.tournament.list_player), 2):
-            if i + 1 < len(self.tournament.list_player):
-                player_1 = self.tournament.list_player[i]
-                player_2 = self.tournament.list_player[i + 1]
-                match = Matchs(player_1, player_2)
+        for i in range(0, len(players), 2):
+            if i + 1 < len(players):
+                player_1 = players[i]
+                player_2 = players[i + 1]
+                pair_ids = tuple(sorted([player_1.id, player_2.id]))
+                if pair_ids in self.previous_matches:
+                    input("pair detected : ")
+                    swapped = False
+                    for p in range(i + 2, len(players)):
+                        player_2_alt = players[p]
+                        pair_ids_alt = tuple(sorted([player_1.id, player_2_alt.id]))
+                        if pair_ids_alt not in self.previous_matches:
+                            players[i + 1], players[p] = players[p], players[i + 1]
+                            player_2 = players[i + 1]
+                            swapped = True
+                            break
+                pair_ids = tuple(sorted([player_1.id, player_2.id]))
+                print(pair_ids)
+                self.previous_matches.add(pair_ids)
+                match = Matchs(player_1.id, player_2.id)
                 match.assign_random_colors()
                 match.score_update(0, 0)
                 self.view.display_string(match.color_of_player)
                 tour.matchs.append(match)
+        self.matchs = tour.matchs
 
 
     def start_tour(self):
         # try:
         self.view.display_string(self.tournament)
-        print(self.tournament.current_tour)
-        input()
         self.tournament.add_1_to_current_tour()
+        if self.tournament.current_tour == 1:
+            players = self.tournament.list_player.copy()
+            shuffle(players)  # Mélange aléatoire des joueurs
+        else:
+            players = self.sorted_by_score()
+            print(players)
+            players = Players.load_by_ids(*players)
+            print(players)
+            input()
         tour = Tours(self.tournament.current_tour)
-        self.generate_first_matchs(tour)
+        self.generate_pairs(tour, players)
         self.tournament.list_of_tours.append(tour)
         # self.tournament.update(self.tournament.name, tournament_dict)
         Tournaments.save_all(self.tournaments)
@@ -89,55 +114,24 @@ class ControllerTournament:
         """  """
         try:
             # self.tour.end()
+            print(self.matchs)
+            input()
             [self.update_score(match, match.player_1, match.player_2)
                 for match in self.matchs]
+            input()
         except UnboundLocalError:
             print("Pas de matchs commencé")
         Tournaments.save_all(self.tournaments)
         # tournament.add_tour(tour)
 
-    def generate_pairs(players):
-        """
-        Generate pairs of players from a list, sorting them by descending points.
-
-        Args:
-            players (list): A list of player objects, each having a `points` attribute.
-
-        Returns:
-            list: Alist of tuples,where each tuple contains two paired players
-        """
-        players = sorted(players, key=lambda x: x.points, reverse=True)
-        pairs = []
-        while players: 
-            player1 = players.pop(0)
-            player2 = players.pop(0)
-            pairs.append((player1, player2))
-        return pairs
-    
-    def get_name_by_id(self):
-        if self.tournament.list_player:
-            players_name_list = Players.load_info_players_by_id(
-                self.tournament.list_player
-            )
-        return players_name_list
-    
-    def next_tour(self):
-        try:
-            self.view.display_string(self.tournament)
-            print(self.tournament.current_tour)
-            input()
-            self.tournament.add_1_to_current_tour()
-            tour = Tours(self.tournament.current_tour)
-            tour.rename_as_round()
-            self.generate_pairs(tour)
-            self.tournament.list_of_tours.append(tour.__dict__)
-            tournament_dict = self.tournament.__dict__
-            # self.tournament.update(self.tournament.name, tournament_dict)
-            Tournaments.save_all(self.tournaments)
-            print(tournament_dict)
-            
-            # tour.start()
-        except UnboundLocalError:
-            self.view.display_string("Pas de tournois créé")
-        except AttributeError:
-            self.view.display_string("pas de tournoi créé")
+    def sorted_by_score(self):
+        player_score = []
+        for match in self.matchs:
+            player_score.append(match.result)
+        player_score = [player for match in player_score for player in match]
+        player_score_sorted = sorted(player_score, key=lambda x: x[1])
+        print(player_score_sorted)
+        player_sorted = [player[0] for player in player_score_sorted]
+        print(player_sorted)
+        input()
+        return player_sorted

@@ -21,6 +21,7 @@ class Tournaments:
         self.current_tour = 0
         # self.current_matchs = []
         self.description = ""
+        self.player_scores = {}
 
     @classmethod
     def from_dict(cls, data):
@@ -56,8 +57,7 @@ class Tournaments:
             "date_end": self.date_end,
             "number_of_turns": self.number_of_turns,
             "list_player": [
-                player.to_dict() if isinstance(player, Players)
-                else player for player in self.list_player
+                player.id for player in self.list_player
                 ],
             "list_of_tours": [
                 tour.to_dict() if isinstance(tour, Tours)

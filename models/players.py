@@ -89,7 +89,7 @@ class Players:
         self.update_at = datetime.now().isoformat()
 
     @staticmethod
-    def load_info_players_by_id(*id):
+    def load_by_ids(*id):
         info_player = []
         players = Players.load()
         for player in players:

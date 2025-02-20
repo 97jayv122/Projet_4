@@ -218,5 +218,6 @@ class View:
         print(datas)
         input(PRESS_ENTER)
 
-    def choose_player_to_remove(self, players):
+    def choose_player_to_remove(self):
+        input("")
         pass
