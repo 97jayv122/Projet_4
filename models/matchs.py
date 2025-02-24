@@ -62,20 +62,3 @@ class Matchs:
 
     def __repr__(self):
         return f"Match: {self.player_1} vs {self.player_2} - Scores: {self.result}"
-
-# match = Matchs("jérémie", "pierre")
-# match.assign_random_colors()
-# match.score_update(0, 0)
-# # print(match.color_of_player)
-# # print(match.result)
-# print(match)
-# data = (match.to_dict())
-# print(data)
-# match1 = Matchs.from_dict(data)
-# print(match_2)
-# print(match1.to_dict())
-# # print(match.result)
-
-# data_2 = match1.__dict__
-# print(type(data_2))
-# match_2 = Matchs.from_dict(data_2)

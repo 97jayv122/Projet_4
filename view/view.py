@@ -3,9 +3,10 @@ from tabulate import tabulate
 from controllers.maincontroller import Constant
 from controllers.tournamentmanagement import ConstantTournamentManagement
 from controllers.controllertournament import ConstantTournament
-from controllers.controllerreport import ConstantReport
+from controllers.controllerrepport import ConstantReport
 from controllers.controllerplayer import ConstantPlayer
 from view.utils import Utils
+
 VALIDATE_CHOICE = "\nEntré votre choix : "
 WRONG_DATE = "\nVeuillez entrer un bon format de date"
 PRESS_ENTER =  "\nAppuyer sur entrée pour continuer..."
@@ -53,8 +54,8 @@ class View:
         print("-" * 10 + " Menu Tournois " + "-" * 10)
         print()
         print(ConstantTournament.START_A_TOUR + ". Commencer le premier tour")
-        print(ConstantTournament.NEXT_TOUR + ". Commencer le tour suivant")
         print(ConstantTournament.END_A_TOUR + ". Terminer un tour")
+        print(ConstantTournament.LOAD_PREVIOUS_TOUR + ". Charger les paires précédentes")
         print(ConstantTournament.RETURN_TOURNAMENT_MANAGEMENT_MENU + ". pour retourner au menu gestionnaire de tournoi.")
         print()
         return input("Entrer votre choix : ")
@@ -69,16 +70,13 @@ class View:
         print()
         return input("Entrer votre choix : ")
 
-    def select_player(self, players):
-        player_tournament = []
+    def select_player(self):
         print("\nSélectionnez les joueurs pour le tournoi\n")
         index_players = input(
             "\nEntrer les numéros des joueurs séparés par une virgule : "
             )
         index_players = index_players.split(",")
-        for index in index_players:
-            player_tournament.append(players[int(index)].id)
-        return player_tournament
+        return index_players
 
     def request_create_tournament(self):
         Utils.clear()

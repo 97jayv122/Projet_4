@@ -9,8 +9,8 @@ from view.utils import Utils
 class ConstantTournament:
 
     START_A_TOUR = "1"
-    NEXT_TOUR = "2"
-    END_A_TOUR = "3"
+    END_A_TOUR = "2"
+    LOAD_PREVIOUS_TOUR = "3"
     RETURN_TOURNAMENT_MANAGEMENT_MENU = "x"
 
 class ControllerTournament:
@@ -33,10 +33,10 @@ class ControllerTournament:
 
                 case ConstantTournament.START_A_TOUR:
                     self.start_tour()
-                case ConstantTournament.NEXT_TOUR:
-                    self.next_tour()
                 case ConstantTournament.END_A_TOUR:
                     self.end_tour()
+                case ConstantTournament.LOAD_PREVIOUS_TOUR:
+                    self.load_previous_pairs()
 
                 case ConstantTournament.RETURN_TOURNAMENT_MANAGEMENT_MENU:
                     break
@@ -52,6 +52,10 @@ class ControllerTournament:
             player_1, player_2
             )
         match.score_update(score_player_1, score_player_2)
+        # print(self.tournament)
+        # input()
+        for joueur, score in ((player_1, score_player_1), (player_2, score_player_2)):
+            self.tournament.update_player_score(joueur, score)
 
     def generate_pairs(self, tour, players):
         """
@@ -64,6 +68,8 @@ class ControllerTournament:
                 player_1 = players[i]
                 player_2 = players[i + 1]
                 pair_ids = tuple(sorted([player_1.id, player_2.id]))
+                print(pair_ids)
+                input()
                 if pair_ids in self.previous_matches:
                     input("pair detected : ")
                     swapped = False
@@ -125,13 +131,20 @@ class ControllerTournament:
         # tournament.add_tour(tour)
 
     def sorted_by_score(self):
-        player_score = []
-        for match in self.matchs:
-            player_score.append(match.result)
-        player_score = [player for match in player_score for player in match]
-        player_score_sorted = sorted(player_score, key=lambda x: x[1])
-        print(player_score_sorted)
-        player_sorted = [player[0] for player in player_score_sorted]
-        print(player_sorted)
-        input()
+        player_score_item = self.tournament.player_scores.items()
+        player_score_item_sorted = sorted(player_score_item, key=lambda x: x[1])
+        player_sorted = [player[0] for player in player_score_item_sorted]
         return player_sorted
+        
+    def load_previous_pairs(self):
+        if self.tournament.current_tour > 1:
+            test = [match.result for tour in self.tournament.list_of_tours for match in tour.matchs]
+            print(test)
+            input()
+
+            flat_test = [player for matchs in test for player in matchs]
+            print(flat_test)
+            input()
+            previous_pair = [tuple(sorted([flat_test[i][0], flat_test[1 + i][0]])) for i in range(0, len(flat_test), 2)]
+            print(previous_pair)
+            input()

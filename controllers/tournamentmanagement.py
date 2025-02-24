@@ -103,7 +103,9 @@ class TournamentManagement:
                 data_players = [player.to_dict() for player in self.players]
                 self.view.display_table(data_players, prompt)
                 try:
-                    self.tournament.list_player = self.view.select_player(self.players)
+                    index_players = self.view.select_player()
+                    for index in index_players:
+                        self.tournament.add_player_score(self.players[int(index)])
                     # Players.clear_instances()
                 except ValueError:
                     self.view.display_string("Veuillez entrer un bon format.")

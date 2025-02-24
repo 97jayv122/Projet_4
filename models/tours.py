@@ -74,18 +74,5 @@ class Tours:
         """
         Returns an official string representation of the Tours object.
         """
-        return f"<Tours: {self.tour_number}, status: {self.stat}>"
-
-    
-
-# round1 = Tours(["jay", "kérinah", "némi", "léti"])
-# round1.start()
-# round1.end()
-# print(round1.duration)
-# data = round1.to_dict()
-# print(data)
-# round2 = Tours.from_dict(data)
-# print(round2.to_dict())
-# round1.recovery_list_of_matchs()
-# print(round1.matchs_list_by_round)
+        return f"<Tours: {self.name}, durée: {self.duration}\nliste des matchs : {self.matchs}>"
 

@@ -27,9 +27,7 @@ class Players:
     def to_dict(self):
         return self.__dict__
 
-
     def save(self):
-
         players = Players.load()
         players.append(self)
 
@@ -47,7 +45,6 @@ class Players:
                 [player.to_dict() for player in players],
                   file, indent=4
                 )
-        
 
     @staticmethod
     def load():
@@ -60,6 +57,15 @@ class Players:
         except FileNotFoundError:
             print("pas de fichier a charger")
         return []
+
+    @classmethod
+    def from_dict(cls, data):
+        return Players(
+            first_name=data.get("first_name"),
+            name=data.get("name"),
+            date_of_birth=data.get("date_of_birth"),
+            national_chess_identifier=data.get("national_chess_identifier")
+        )
     
     @classmethod
     def restore_from_json(cls, data):
@@ -80,7 +86,6 @@ class Players:
         player.update_at = data.get("update_at", player.update_at)
         return player
                 
-
     def update(self, **new_values):
         allowed_keys = ["first_name", "name", "date_of_birth"]
         for key, value in new_values.items():
@@ -97,12 +102,5 @@ class Players:
                 info_player.append(player)
         return info_player
     
-
-# id = [
-#     "28a1c764-66a5-4ba4-a122-3d85242fb088",
-#     "dbf7d6fd-ab9c-4a2d-950a-96730b63bad7",
-#     "2cb53db1-6ff2-4202-9feb-0ff677b03f4f",
-#     "ebc62e3a-1d72-4f17-b282-e3e0111f25a2"
-#     ]
-
-# print(Players.load_info_players_by_id(*id))
+    def __lt__(self, other):
+        return self.name.capitalize() < other.name.capitalize()

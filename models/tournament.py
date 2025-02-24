@@ -19,7 +19,6 @@ class Tournaments:
         self.list_player = []
         self.list_of_tours = []
         self.current_tour = 0
-        # self.current_matchs = []
         self.description = ""
         self.player_scores = {}
 
@@ -43,8 +42,8 @@ class Tournaments:
         tournament.list_player=list_player
         tournament.list_of_tours=list_of_tours
         tournament.current_tour=data.get("current_tour", 0)
-        # tournament.current_matchs=data.get("current_matchs", [])
         tournament.description=data.get("description", "")
+        tournament.player_scores=data.get("player_scores", {})
 
         return tournament
         
@@ -57,7 +56,8 @@ class Tournaments:
             "date_end": self.date_end,
             "number_of_turns": self.number_of_turns,
             "list_player": [
-                player.id for player in self.list_player
+                player if isinstance(player, str) else player.id
+                for player in self.list_player
                 ],
             "list_of_tours": [
                 tour.to_dict() if isinstance(tour, Tours)
@@ -65,26 +65,9 @@ class Tournaments:
                 ],
             "current_tour": self.current_tour,
             "tournament_id": self.id,
-            # "current_matchs": self.current_matchs,
-            "description": self.description
+            "description": self.description,
+            "player_scores": self.player_scores
         }
-
-    # @classmethod
-    # def load(cls, data):
-    #     return cls.from_dict(data)
-
-    
-    def start_new_tour(self):
-        """
-        Démarre un nouveau tour et initialise les matchs.
-        """
-        self.current_tour = Tours(self.list_player)
-        # self.current_matchs = []  # Réinitialise les matchs pour le nouveau tour
-        self.list_of_tours.append(self.current_tour)
-
-    def add_1_to_current_tour(self):
-        self.current_tour += 1
-        
 
     def instance_clear(self):
         """
@@ -98,8 +81,10 @@ class Tournaments:
         self.list_player = []
         self.list_of_tours = []
         self.current_tour = 0
-        # self.current_matchs = []
         self.description = ""
+
+    def add_1_to_current_tour(self):
+        self.current_tour += 1
 
     def add_tour(self, tour):
         """
@@ -147,11 +132,31 @@ class Tournaments:
             print(f"pas de données a charger: {e}")
         except FileNotFoundError:
             print(f"Fichier introuvable : data/tournaments/tournaments")
-        # except Exception as e:
-        #     print(f"Erreur inattendue : {e}")
+        except Exception as e:
+            print(f"Erreur inattendue : {e}")
         return []
     
     @staticmethod
     def clear_json_tournament():
         with open(FILE_TOURNAMENT, "w") as file:
             json.dump([], file, indent=4)
+
+    def add_player_score(self, player):
+        """
+        Add a player to the tournament and initializes their score.
+
+        Args:
+            player (_type_): _description_
+        """
+        self.list_player.append(player)
+        self.player_scores[player.id] = 0.0
+
+    def update_player_score(self,player, score_delta):
+        """_summary_
+
+        Args:
+            player_id (_type_): _description_
+            score_delta (_type_): _description_
+        """
+        if player.id in self.player_scores:
+            self.player_scores[player.id] += score_delta
