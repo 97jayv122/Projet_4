@@ -3,9 +3,9 @@ from tabulate import tabulate
 from controllers.maincontroller import Constant
 from controllers.tournamentmanagement import ConstantTournamentManagement
 from controllers.controllertournament import ConstantTournament
-from controllers.controllerrepport import ConstantReport
+from controllers.controllerrepport import ConstantRepport
 from controllers.controllerplayer import ConstantPlayer
-from controllers.controllertournamentrepport import ConstantTournamentReport
+from controllers.controllertournamentrepport import ConstantTournamentRepport
 from view.utils import Utils
 
 VALIDATE_CHOICE = "\nEntré votre choix : "
@@ -61,24 +61,24 @@ class View:
         print()
         return input("Entrer votre choix : ")
     
-    def report_menu(self):
+    def repport_menu(self):
         Utils.clear()
         print("-" * 10 + " Menu Rapport " + "-" * 10)
         print()
-        print("\n" + ConstantReport.TOURNAMENTS + ". Afficher les tournois")
-        print("\n" + ConstantReport.TOURNAMENT_SELECT + ". Rapport d'un tournoi")
-        print("\n" + ConstantReport.PLAYERS + ". Rapport des joueurs de la base de donnée")
-        print("\n" + ConstantReport.RETURN_TOURNAMENT_MANAGEMENT_MENU + ". pour retourner au menu gestionnaire de tournoi.")
+        print("\n" + ConstantRepport.TOURNAMENTS + ". Afficher les tournois")
+        print("\n" + ConstantRepport.TOURNAMENT_SELECT + ". Rapport d'un tournoi")
+        print("\n" + ConstantRepport.PLAYERS + ". Rapport des joueurs de la base de donnée")
+        print("\n" + ConstantRepport.RETURN_TOURNAMENT_MANAGEMENT_MENU + ". pour retourner au menu gestionnaire de tournoi.")
         print()
         return input(VALIDATE_CHOICE)
 
-    def report_menu(self):
+    def repport_menu_tournament(self):
         Utils.clear()
         print("-" * 10 + " Menu Rapport tournoi" + "-" * 10)
         print()
-        print("\n" + ConstantTournamentReport.PLAYERS_TOURNAMENT + ". Rapport des joueurs du tournoi")
-        print("\n" + ConstantTournamentReport.TOURNAMENTS_INFO + ". Rapport du tournoi")
-        print("\n" + ConstantTournamentReport.RETURN_TOURNAMENT_MANAGEMENT_MENU + ". pour retourner au menu gestionnaire de tournoi.")
+        print("\n" + ConstantTournamentRepport.PLAYERS_TOURNAMENT + ". Rapport des joueurs du tournoi")
+        print("\n" + ConstantTournamentRepport.TOURNAMENT_INFO + ". Rapport du tournoi")
+        print("\n" + ConstantTournamentRepport.RETURN_TOURNAMENT_MANAGEMENT_MENU + ". pour retourner au menu gestionnaire de tournoi.")
         print()
         return input(VALIDATE_CHOICE)
 

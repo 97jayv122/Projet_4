@@ -6,11 +6,11 @@ from models.matchs import Matchs
 
 
 
-class ConstantReport:
+class ConstantRepport:
 
     TOURNAMENTS = "1"
-    TOURNAMENT_SELECT = "3"
-    PLAYERS = "2"
+    TOURNAMENT_SELECT = "2"
+    PLAYERS = "3"
     RETURN_TOURNAMENT_MANAGEMENT_MENU = "x"
 
 class ControllerRepport:
@@ -20,16 +20,17 @@ class ControllerRepport:
 
     def run(self):
         while True:
-            action = self.view.report_menu()
+            action = self.view.repport_menu()
             match action:
-                case ConstantReport.TOURNAMENTS:
+                case ConstantRepport.TOURNAMENTS:
                     self.get_tournaments_name()
 
-                case ConstantReport.TOURNAMENTS:
+                case ConstantRepport.TOURNAMENT_SELECT:
                     self.get_tournaments_name()
                     index =  self.view.select_tournament(self.tournaments)
                     self.run_tournament_repport(self.tournaments[int(index) - 1])
-                case ConstantReport.PLAYERS:
+
+                case ConstantRepport.PLAYERS:
                     self.get_player_sorted()
 
     def get_player_sorted(self):

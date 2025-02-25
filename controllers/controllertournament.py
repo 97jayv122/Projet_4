@@ -76,7 +76,6 @@ class ControllerTournament:
                             swapped = True
                             break
                 pair_ids = tuple(sorted([player_1.id, player_2.id]))
-                print(pair_ids)
                 self.previous_matches.add(pair_ids)
                 match = Matchs(player_1.id, player_2.id)
                 self.view.display_string(match)
@@ -105,11 +104,9 @@ class ControllerTournament:
             tour = Tours(self.tournament.current_tour)
             self.generate_pairs(tour, players)
             self.tournament.list_of_tours.append(tour)
-            self.tournament.update(self.tournament.id)
-            print(self.previous_matches)
-            input()
             self.view.display_string(f"Apres validation le {tour.name} va commencer.")
             tour.start()
+            self.tournament.update(self.tournament.id)
             self.tour = tour
 
     def end_tour(self):
@@ -143,3 +140,6 @@ class ControllerTournament:
                 ]
             self.previous_matches = set()
             [self.previous_matches.add(item) for item in previous_pair]
+            tour = self.tournament.list_of_tours[-1]
+            self.tour = tour
+            self.view.display_string(f"{tour.name} {tour.stat}")
