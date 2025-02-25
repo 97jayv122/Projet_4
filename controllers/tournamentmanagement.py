@@ -29,7 +29,6 @@ class TournamentManagement:
             match action:
                 case ConstantTournamentManagement.CREATE_A_TOURNAMENT:
                     self.create_tournament()
-                    # self.player_selection()
 
                 case ConstantTournamentManagement.SELECT_PLAYER:
                     self.select_tournament()
@@ -48,7 +47,7 @@ class TournamentManagement:
                     names_tournaments = self.get_tournament_name()
                     if names_tournaments is not None:
                         index = self.view.select_tournament(names_tournaments)
-                        del self.tournaments[index]
+                        del self.tournaments[index - 1]
                         Tournaments.save_all(self.tournaments)
                     else:
                         breakpoint
@@ -62,9 +61,9 @@ class TournamentManagement:
 
     def get_tournament_name(self):
         if len(self.tournaments) > 1:    
-            return [[tournament.name, len(tournament.list_player)] for tournament in self.tournaments]
+            return [{"Nom du tournoi": tournament.name, "Nombre de joueur": len(tournament.list_player)} for tournament in self.tournaments]
         elif len(self.tournaments) == 1:
-            return [[self.tournaments[0].name, len(self.tournaments[0].list_player)]]
+            return [{"Nom du tournoi": self.tournaments[0].name, "Nombre de joueur": len(self.tournaments[0].list_player)}]
         else:
             self.view.display_string("Vous n'avez pas de tournoi enregistré")
             return None
@@ -85,19 +84,15 @@ class TournamentManagement:
     def select_tournament(self):
         names_tournaments = self.get_tournament_name()
         if names_tournaments is not None:
+            self.view.display_table(names_tournaments)
             index = self.view.select_tournament(names_tournaments)
-            self.tournament = self.tournaments[index]
-            print(self.tournament.list_player)
-            input()
+            self.tournament = self.tournaments[index - 1]
             self.tournament.list_player = Players.load_by_ids(*self.tournament.list_player)
-            print(self.tournament.list_player)
-            input()
         else:
             self.view.display_string("Aucun tournoi disponible.")
 
     def player_selection(self):
         if self.tournament is not None:
-            # Players.load()
             if self.players:
                 prompt = "Liste des joueurs de la base de donnée"
                 data_players = [player.to_dict() for player in self.players]
@@ -105,14 +100,11 @@ class TournamentManagement:
                 try:
                     index_players = self.view.select_player()
                     for index in index_players:
-                        self.tournament.add_player_score(self.players[int(index)])
-                    # Players.clear_instances()
+                        self.tournament.add_player_score(self.players[int(index) - 1])
                 except ValueError:
                     self.view.display_string("Veuillez entrer un bon format.")
-                # self.tournament.update(self.tournament.name)
-                Tournaments.save_all(self.tournaments)
+                self.tournament.update(self.tournament.id)
                 self.tournament = None
-                # Players.clear_instances()
             else:
                 self.view.display_string("Pas de joueur rentré dans la base de donnée")
                 
@@ -157,10 +149,9 @@ class TournamentManagement:
         """
         Run the tournament controller.
         """
-
         if self.tournament is not None:
             if self.check_player_number():
-                controllertournament = ControllerTournament(self.view, self.tournament, self.tournaments)
+                controllertournament = ControllerTournament(self.view, self.tournament)
                 controllertournament.run()
         else:
             self.view.display_string(

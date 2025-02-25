@@ -1,4 +1,5 @@
 import random
+from models.players import Players
 COLOR_WHITE = "blanc"
 COLOR_BLACK = "noir"
 
@@ -43,7 +44,7 @@ class Matchs:
             self.color_of_player = {self.player_1: COLOR_BLACK, self.player_2: COLOR_WHITE}
 
     def to_dict(self):
-        print(self)
+        # print(self)
         return {
             "result": self.result,
             "color_of_player": self.color_of_player
@@ -61,4 +62,4 @@ class Matchs:
         return match
 
     def __repr__(self):
-        return f"Match: {self.player_1} vs {self.player_2} - Scores: {self.result}"
+        return f"Match: {Players.load_by_ids(self.player_1)[0]} vs {Players.load_by_ids(self.player_2)[0]}"

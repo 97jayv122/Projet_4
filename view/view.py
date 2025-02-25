@@ -5,6 +5,7 @@ from controllers.tournamentmanagement import ConstantTournamentManagement
 from controllers.controllertournament import ConstantTournament
 from controllers.controllerrepport import ConstantReport
 from controllers.controllerplayer import ConstantPlayer
+from controllers.controllertournamentrepport import ConstantTournamentReport
 from view.utils import Utils
 
 VALIDATE_CHOICE = "\nEntré votre choix : "
@@ -53,8 +54,8 @@ class View:
         Utils.clear()
         print("-" * 10 + " Menu Tournois " + "-" * 10)
         print()
-        print(ConstantTournament.START_A_TOUR + ". Commencer le premier tour")
-        print(ConstantTournament.END_A_TOUR + ". Terminer un tour")
+        print(ConstantTournament.START_A_TOUR + ". Commencer un tour")
+        print(ConstantTournament.END_A_TOUR + ". Terminer le tour")
         print(ConstantTournament.LOAD_PREVIOUS_TOUR + ". Charger les paires précédentes")
         print(ConstantTournament.RETURN_TOURNAMENT_MANAGEMENT_MENU + ". pour retourner au menu gestionnaire de tournoi.")
         print()
@@ -64,11 +65,22 @@ class View:
         Utils.clear()
         print("-" * 10 + " Menu Rapport " + "-" * 10)
         print()
-        print(ConstantReport.TOURNAMENTS + ". Rapport tournoi")
-        print(ConstantReport.PLAYERS + ". Rapport joueur")
-        print(ConstantReport.RETURN_TOURNAMENT_MANAGEMENT_MENU + ". pour retourner au menu gestionnaire de tournoi.")
+        print("\n" + ConstantReport.TOURNAMENTS + ". Afficher les tournois")
+        print("\n" + ConstantReport.TOURNAMENT_SELECT + ". Rapport d'un tournoi")
+        print("\n" + ConstantReport.PLAYERS + ". Rapport des joueurs de la base de donnée")
+        print("\n" + ConstantReport.RETURN_TOURNAMENT_MANAGEMENT_MENU + ". pour retourner au menu gestionnaire de tournoi.")
         print()
-        return input("Entrer votre choix : ")
+        return input(VALIDATE_CHOICE)
+
+    def report_menu(self):
+        Utils.clear()
+        print("-" * 10 + " Menu Rapport tournoi" + "-" * 10)
+        print()
+        print("\n" + ConstantTournamentReport.PLAYERS_TOURNAMENT + ". Rapport des joueurs du tournoi")
+        print("\n" + ConstantTournamentReport.TOURNAMENTS_INFO + ". Rapport du tournoi")
+        print("\n" + ConstantTournamentReport.RETURN_TOURNAMENT_MANAGEMENT_MENU + ". pour retourner au menu gestionnaire de tournoi.")
+        print()
+        return input(VALIDATE_CHOICE)
 
     def select_player(self):
         print("\nSélectionnez les joueurs pour le tournoi\n")
@@ -160,13 +172,10 @@ class View:
             print(data)
         input(PRESS_ENTER)
 
-    def display_json(self, datas):
-        print(json.dumps(datas, indent=4))
-        input(PRESS_ENTER)
-
-    def display_table(self, datas, prompt):
+    def display_table(self, datas, prompt=''):
         Utils.clear()
-        print(tabulate(datas, headers="keys", tablefmt="fancy_grid", showindex='always'))
+        index = [index for index in range(1, len(datas) + 1)]
+        print(tabulate(datas, headers="keys", tablefmt="fancy_grid", showindex=index))
         print(prompt)
         input(PRESS_ENTER)
 
@@ -195,16 +204,12 @@ class View:
             except ValueError:
                 print("Veuillez entrer un chiffre")
                 input(PRESS_ENTER)
-
-    def display_choice_color(self):
-        pass
     
     def select_tournament(self, datas):
-        print(tabulate(datas, showindex='always', tablefmt='grid'))
         while True:
             try:
                 user_input = int(input("\nEntrez l'index de l'élément que vous souhaitez sélectionner : "))
-                if 0 <= user_input <= len(datas) - 1:
+                if 1 <= user_input <= len(datas):
                     return user_input
                 else:
                     print(f"Index invalide. Veuillez entrer un nombre entre 1 et {len(datas)}.")

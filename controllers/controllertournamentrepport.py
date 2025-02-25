@@ -1,39 +1,31 @@
 from models.players import Players
 from models.tournament import Tournaments
 from models.tours import Tours
-from controllers.controllertournamentrepport import ControllerTournamentRepport
 from models.matchs import Matchs
 
 
+class ConstantTournamentReport:
 
-class ConstantReport:
-
-    TOURNAMENTS = "1"
-    TOURNAMENT_SELECT = "3"
-    PLAYERS = "2"
+    PLAYERS_TOURNAMENT = "1"
+    TOURNAMENT_INFO = "2"
     RETURN_TOURNAMENT_MANAGEMENT_MENU = "x"
 
-class ControllerRepport:
-    def __init__(self, view):
+class ControllerTournamentRepport:
+    def __init__(self, view, tournament):
         self.view = view
-        self.tournaments = None
-
+        self.tournament = tournament
     def run(self):
         while True:
             action = self.view.report_menu()
             match action:
-                case ConstantReport.TOURNAMENTS:
-                    self.get_tournaments_name()
+                case ConstantTournamentReport.TOURNAMENT_INFO:
+                    pass
 
-                case ConstantReport.TOURNAMENTS:
-                    self.get_tournaments_name()
-                    index =  self.view.select_tournament(self.tournaments)
-                    self.run_tournament_repport(self.tournaments[int(index) - 1])
-                case ConstantReport.PLAYERS:
-                    self.get_player_sorted()
+                case ConstantTournamentReport.PLAYERS_TOURNAMENT:
+                    self.get_player_tournament_sorted()
 
-    def get_player_sorted(self):
-        prompt = 'Liste des joueurs par ordre alphabétique(nom).'
+    def get_player_Tournament_sorted(self):
+        prompt = 'Liste des joueurs du tournoi par ordre alphabétique(nom).'
         players =  Players.load()
         players_sorted = sorted(players, key=lambda x: (x.name).capitalize())
         players_dict_sorted = [player.to_dict() for player in players_sorted]
@@ -42,7 +34,6 @@ class ControllerRepport:
     def get_tournaments_name(self):
         prompt = "Liste des tournois."
         tournaments = Tournaments.load()
-        self.tournaments = tournaments
         tournaments_dict = [
             {
                 "Nom du tournoi": tournament.name,
@@ -52,7 +43,3 @@ class ControllerRepport:
                 for tournament in tournaments
                 ]
         self.view.display_table(tournaments_dict, prompt)
-
-    def run_tournament_repport(self, tournament):
-        controllertournamentrepport = ControllerTournamentRepport(self.view, tournament)
-        controllertournamentrepport.run()

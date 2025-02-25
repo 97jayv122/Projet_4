@@ -1,4 +1,3 @@
-import random
 import time
 from models.matchs import Matchs
 
@@ -8,7 +7,7 @@ class Tours:
     def __init__(self, tour_number):
         self.tour_number = tour_number
         self.name = "round" + str(tour_number)
-        self.duration = 0
+        self.duration = 0.0
         self.time_start = None
         self.time_end = None
         self.matchs = []
@@ -60,15 +59,6 @@ class Tours:
         self.duration = self.time_end - self.time_start
         self.stat = "finished"
         self.duration = self.time_end - self.time_start
-
-    def rename_as_round(self):
-        """
-        Renames this tour instance by updating its tour_number attribute to a string in the format "Round X".
-
-        Example:
-            If tour_number is 1, after calling this method it will become "Round 1".
-        """
-        self.tour_number = f"Round {self.tour_number}"
 
     def __repr__(self):
         """

@@ -86,27 +86,19 @@ class Tournaments:
     def add_1_to_current_tour(self):
         self.current_tour += 1
 
-    def add_tour(self, tour):
-        """
-        Ajoute un tour à la liste des tours du tournoi.
-
-        Args:
-            tour (Tours): Instance de la classe Tours. 
-        """
-        self.list_of_tours.append(tour.to_dict())
-
-
     def __repr__(self):
         tr = f"Nom du tournoi : {self.name}, player: "  
         for player in self.list_player:
             tr = tr + f"\n{player}"
         return tr 
     
-    def update(self, name, tournament_dict):
-        if len(self.tournaments) > 0:
-            for index, tournament in enumerate(self.tournaments):
-                if tournament.name == name:
-                    self.tournaments[index] = tournament_dict
+    def update(self, id):
+        tournaments = Tournaments.load()
+        if len(tournaments) > 0:
+            for index, tournament in enumerate(tournaments):
+                if tournament.id == id:
+                    tournaments[index] = self
+                    Tournaments.save_all(tournaments)
                     break
 
     def save(self):
