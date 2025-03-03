@@ -1,13 +1,20 @@
-
 import json
 import uuid
 from datetime import datetime
+
 FILE_PLAYER = "data/tournaments/players.json"
 
 
 class Players:
 
-    def __init__(self, first_name, last_name, date_of_birth, national_chess_identifier, player_id=None):
+    def __init__(
+        self,
+        first_name,
+        last_name,
+        date_of_birth,
+        national_chess_identifier,
+        player_id=None,
+    ):
         """
         Initializes a new instance of the Players class.
         """
@@ -15,7 +22,9 @@ class Players:
         self.last_name = last_name
         self.date_of_birth = date_of_birth
         self.national_chess_identifier = national_chess_identifier
-        self.id = player_id if player_id else str(uuid.uuid4())  # Préserve l'ID existant si fourni
+        self.id = (
+            player_id if player_id else str(uuid.uuid4())
+        )  # Préserve l'ID existant si fourni
         self.create_at = datetime.now().isoformat()
         self.update_at = ""
 
@@ -26,9 +35,7 @@ class Players:
         Returns:
             str: A string in the format "FirstName.LastName"
         """
-        return str(self.first_name) + "." + str(
-            self.last_name
-            )
+        return str(self.first_name) + "." + str(self.last_name)
 
     def to_dict(self):
         return self.__dict__
@@ -38,19 +45,13 @@ class Players:
         players.append(self)
 
         with open(FILE_PLAYER, "w") as file:
-            json.dump(
-                [player.to_dict() for player in players],
-                  file, indent=4
-                )
+            json.dump([player.to_dict() for player in players], file, indent=4)
 
     @staticmethod
     def save_all(players):
 
         with open(FILE_PLAYER, "w") as file:
-            json.dump(
-                [player.to_dict() for player in players],
-                  file, indent=4
-                )
+            json.dump([player.to_dict() for player in players], file, indent=4)
 
     @staticmethod
     def load():
@@ -96,9 +97,9 @@ class Players:
             first_name=data.get("first_name"),
             last_name=data.get("last_name"),
             date_of_birth=data.get("date_of_birth"),
-            national_chess_identifier=data.get("national_chess_identifier")
+            national_chess_identifier=data.get("national_chess_identifier"),
         )
-    
+
     @classmethod
     def restore_from_json(cls, data):
         """
@@ -122,13 +123,13 @@ class Players:
             last_name=data.get("last_name"),
             date_of_birth=data.get("date_of_birth"),
             national_chess_identifier=data.get("national_chess_identifier"),
-            player_id=data.get("id")  # Restaurer l'ID existant
+            player_id=data.get("id"),  # Restaurer l'ID existant
         )
         # Restauration des dates de création et modification
         player.create_at = data.get("create_at", player.create_at)
         player.update_at = data.get("update_at", player.update_at)
         return player
-                
+
     def update(self, **new_values):
         allowed_keys = ["first_name", "last_name", "date_of_birth"]
         for key, value in new_values.items():
@@ -147,7 +148,7 @@ class Players:
 
         Args:
             *id: A variable number player IDs nto filter by.
-    
+
         Returns:
             List: A list of player instances with matching IDs.
         """
@@ -157,6 +158,6 @@ class Players:
             if player.id in id:
                 players_load.append(player)
         return players_load
-    
+
     def __lt__(self, other):
         return self.last_name.capitalize() < other.last_name.capitalize()

@@ -4,6 +4,8 @@ from view.utils import Utils
 from controllers.controllerplayer import ControllerPlayer
 from controllers.tournamentmanagement import TournamentManagement
 from controllers.controllerreport import ControllerReport
+
+
 class Constant:
 
     PLAYER_MENU = "1"
@@ -11,9 +13,10 @@ class Constant:
     DISPLAY_REPORTS = "3"
     EXIT_PROGRAM = "x"
 
+
 class Controller:
     """
-    Main controller of the application that allows 
+    Main controller of the application that allows
     to navigate between the different menus.
     """
 
@@ -22,7 +25,7 @@ class Controller:
     def make_folder_data(self):
         """
         Create the data folder if it does not exist.
-        """        
+        """
         if not os.path.exists(FOLDER_TOURNAMENT):
             os.makedirs(FOLDER_TOURNAMENT)
 
@@ -32,15 +35,15 @@ class Controller:
 
         Args:
             view (_type_): _description_
-        """        
+        """
         self.view = view
-        self.make_folder_data() 
+        self.make_folder_data()
 
     def run(self):
         """
         Main method of the main controller that allows
         the user to navigate between the different menus.
-        """        
+        """
         while True:
             action = self.view.home_menu()
             match action:
@@ -62,7 +65,7 @@ class Controller:
     def run_controller_player(self):
         """
         Run the player controller.
-        """        
+        """
         controllerplayer = ControllerPlayer(self.view)
         controllerplayer.run()
 
@@ -72,7 +75,7 @@ class Controller:
         """
         tounamentmanagement = TournamentManagement(self.view)
         tounamentmanagement.run()
-        
+
     def run_controller_report(self):
         controllerreport = ControllerReport(self.view)
         controllerreport.run()
@@ -80,12 +83,12 @@ class Controller:
     def exit_program(self):
         """
         Exit the program.
-        """        
+        """
         print("Merci et à bientôt.")
         exit()
 
     def unknown_choice(self):
         """
         Display a message when the choice is unknown.
-        """        
+        """
         self.view.display_string("Choix inconnue.")

@@ -23,24 +23,25 @@ class Tours:
         tour.time_start = data["time_start"]
         tour.time_end = data["time_end"]
         tour.matchs = [
-            Matchs.from_dict(match) if isinstance(match, dict) 
-            else match for match in data["matchs_list"]
+            Matchs.from_dict(match) if isinstance(match, dict) else match
+            for match in data["matchs_list"]
         ]
         tour.stat = data["stat"]
         return tour
-    
+
     def to_dict(self):
         return {
-            "tour_number" : self.tour_number,
-            "tour_name" : self.name,
+            "tour_number": self.tour_number,
+            "tour_name": self.name,
             "duration": self.duration,
             "time_start": self.time_start,
             "time_end": self.time_end,
             "matchs_list": [
-                match.to_dict() if isinstance(match, Matchs)
-                else match for match in self.matchs
-                ],
-            "stat": self.stat}
+                match.to_dict() if isinstance(match, Matchs) else match
+                for match in self.matchs
+            ],
+            "stat": self.stat,
+        }
 
     def start(self):
         """
@@ -65,4 +66,3 @@ class Tours:
         Returns an official string representation of the Tours object.
         """
         return f"<Tours: {self.name}, durée: {self.duration}\nliste des matchs : {self.matchs}>"
-

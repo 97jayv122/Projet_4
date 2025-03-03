@@ -1,4 +1,3 @@
-
 import os
 import re
 from datetime import datetime
@@ -19,7 +18,7 @@ class Utils:
         """
         pattern = r"^[A-Z]{2}[0-9]{5}$"
         return bool(re.match(pattern, identifier))
-    
+
     @staticmethod
     def valide_date(date, date_format="%d/%m/%Y"):
         """
@@ -39,14 +38,14 @@ class Utils:
                 return True
             except ValueError:
                 return False
-            
+
     @staticmethod
     def get_valid_date(prompt, error_message):
         """
         Prompt the user to enter a valid date and ensures it follows the expected format.
 
         Args:
-            prompt (str): The message displayed to request input from the user. 
+            prompt (str): The message displayed to request input from the user.
             error_message (str): The message displayed when the input does not match the expected format.
 
         Returns:
@@ -59,12 +58,12 @@ class Utils:
             elif date_input == "":
                 return date_input
             print(error_message)
-    
+
     @staticmethod
     def clear():
         """
         Clear the console screen
-        """        
+        """
         os.system("cls" if os.name == "nt" else "clear")
 
     @staticmethod
@@ -83,7 +82,7 @@ class Utils:
             if p.national_chess_identifier == identifier:
                 return True
         return False
-    
+
     @staticmethod
     def get_chess_identifier(prompt, invert=True):
         """
@@ -101,10 +100,11 @@ class Utils:
         while True:
             national_chess_identifier = input(prompt)
             if Utils.valide_national_chess_identifier(national_chess_identifier):
-                if (not Utils.chess_identifier_existing(
-                    national_chess_identifier
-                    ) if invert else Utils.chess_identifier_existing(
-                        national_chess_identifier)):                        
+                if (
+                    not Utils.chess_identifier_existing(national_chess_identifier)
+                    if invert
+                    else Utils.chess_identifier_existing(national_chess_identifier)
+                ):
                     return national_chess_identifier
                 else:
                     print("Identifiant existe déjà")
@@ -120,7 +120,7 @@ class Utils:
             score_1 (float): The score of the first player.
 
         Returns:
-            float: The score of the second player, determined based on the first player's score. 
+            float: The score of the second player, determined based on the first player's score.
         """
         if score_1 == 1:
             score_2 = 0
@@ -128,14 +128,14 @@ class Utils:
         elif score_1 == 0.5:
             score_2 = 0.5
             return score_2
-        
+
         elif score_1 == 0:
             score_2 = 1
             return score_2
 
         else:
             return None
-    
+
     @staticmethod
     def is_integrer(number):
         try:
