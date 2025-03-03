@@ -32,15 +32,3 @@ class Management:
         except Exception as e:
             print(f"Erreur inattendue : {e}")
             raise
-    
-    # def instance_clear(self):
-    #     self.list_tournaments = []
-        
-# management = Management()
-# management.instance_clear()
-# management.load()
-# management.create_or_update("Home", {"name": "Home"})
-# management.save()
-# management.instance_clear()
-# management.load()
-# management.save()

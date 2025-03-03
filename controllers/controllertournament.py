@@ -1,3 +1,4 @@
+import random
 from random import shuffle
 from models.players import Players
 from models.tournament import Tournaments
@@ -5,6 +6,8 @@ from models.tours import Tours
 from models.matchs import Matchs
 from view.utils import Utils
 
+COLOR_WHITE = "blanc"
+COLOR_BLACK = "noir"
 
 class ConstantTournament:
 
@@ -79,47 +82,52 @@ class ControllerTournament:
                 self.previous_matches.add(pair_ids)
                 match = Matchs(player_1.id, player_2.id)
                 self.view.display_string(match)
-                match.assign_random_colors()
-                match.score_update(0, 0)
-                color_of_player = {
-                    Players.load_by_ids(key)[0]: value
-                    for key, value in match.color_of_player.items()}
+                color_of_player = ControllerTournament.assign_random_colors(
+                    player_1, player_2
+                    )
+                # match.score_update(0, 0)
                 self.view.display_string(f"Répartition des couleurs\n{color_of_player}")
                 tour.matchs.append(match)
         self.matchs = tour.matchs
 
 
     def start_tour(self):
-        if self.tournament.current_tour == 4:
-            self.view.display_string("")
-        else:
-            self.view.display_string(self.tournament)
-            self.tournament.add_1_to_current_tour()
-            if self.tournament.current_tour == 1:
-                players = self.tournament.list_player.copy()
-                shuffle(players)  # Mélange aléatoire des joueurs
-            else:
-                players = self.sorted_by_score()
-                players = Players.load_by_ids(*players)
-            tour = Tours(self.tournament.current_tour)
-            self.generate_pairs(tour, players)
-            self.tournament.list_of_tours.append(tour)
-            self.view.display_string(f"Apres validation le {tour.name} va commencer.")
-            tour.start()
-            self.tournament.update(self.tournament.id)
-            self.tour = tour
+        # Vérifier s'il reste des tours à jouer
+        if self.tournament.current_tour == self.tournament.number_of_turns:
+            self.view.display_string("Tournoi terminé.")
+            return
 
-    def end_tour(self):
-        """  """
-        try:
-            self.tour.end()
-            [self.update_score(match, match.player_1, match.player_2)
-                for match in self.matchs]
-        except UnboundLocalError:
-            self.view.display_string("Pas de matchs commencé")
+        # --- Début du tour ---
+        self.tournament.start()
+        self.view.display_string(self.tournament)
+        self.tournament.add_1_to_current_tour()
+
+        # Définir l'ordre des joueurs
+        if self.tournament.current_tour == 1:
+            players = self.tournament.list_player.copy()
+            shuffle(players)
+        else:
+            players = self.sorted_by_score()
+            players = Players.load_by_ids(*players)
+
+        # Création du tour et génération des paires
+        tour = Tours(self.tournament.current_tour)
+        self.generate_pairs(tour, players)
+        self.tournament.list_of_tours.append(tour)
+        self.view.display_string(f"Après validation, le {tour.name} va commencer.")
+        tour.start()
         self.tournament.update(self.tournament.id)
-        if self.tournament.current_tour == 4:
-            self.view.display_string("Fin du toutnoi")
+        self.tour = tour
+
+        # --- Fin du tour ---
+        self.tour.end()
+        # Mise à jour des scores pour chaque match
+        for match in self.matchs:
+            self.update_score(match, match.player_1, match.player_2)
+        if self.tournament.current_tour == self.tournament.number_of_turns:
+            self.view.display_string("Fin du tournoi")
+            self.tournament.end()
+        self.tournament.update(self.tournament.id)
 
     def sorted_by_score(self):
         player_score_item = self.tournament.player_scores.items()
@@ -138,8 +146,24 @@ class ControllerTournament:
                 tuple(sorted([flat_previous_list_matchs[i][0], flat_previous_list_matchs[1 + i][0]]))
                 for i in range(0, len(flat_previous_list_matchs), 2)
                 ]
+            print(previous_pair)
+            input()
             self.previous_matches = set()
             [self.previous_matches.add(item) for item in previous_pair]
             tour = self.tournament.list_of_tours[-1]
             self.tour = tour
             self.view.display_string(f"{tour.name} {tour.stat}")
+
+    @staticmethod
+    def assign_random_colors(player_1, player_2):
+        """
+        Attribue aléatoirement des couleurs aux joueurs.
+
+        Returns:
+            dict: Dictionnaire associant chaque joueur à une couleur.
+        """
+        if random.choice([True, False]):
+            color_of_player = {player_1: COLOR_WHITE, player_2: COLOR_BLACK}
+        else:
+            color_of_player = {player_1: COLOR_BLACK, player_2: COLOR_WHITE}
+        return color_of_player

@@ -8,6 +8,8 @@ class ConstantPlayer:
     MODIFY_PLAYER = "3"
     SUPPRESS_PLAYER = "4"
     RETURN_MAIN_MENU = "x"
+    PLAYER_BASE = "\nJoueur de la base de donnée"
+    PLAYER_ADD = "\nJoueur ajouté à la base de donnée"
 
 class ControllerPlayer:
     """
@@ -28,6 +30,7 @@ class ControllerPlayer:
 
                 case ConstantPlayer.DISPLAY_PLAYER:
                     self.display_player()
+                    self.view.press_enter()
 
                 case ConstantPlayer.MODIFY_PLAYER:
                     self.mofify_player()
@@ -52,6 +55,9 @@ class ControllerPlayer:
             input_player = self.view.request_add_player()
             player = Players.from_dict(input_player)
             player.save()
+        prompt = "liste des joueurs ajoutés."
+        self.display_new_player(number_player_add, prompt)
+        self.view.press_enter()
 
     def mofify_player(self):
         self.display_player()
@@ -64,6 +70,8 @@ class ControllerPlayer:
                     player.update(**data)
                     Players.save_all(self.players)
                     self.display_player(f"\nLe joueur avec l'ID: {chess_id} a été correctement modifié.")
+                    self.view.press_enter()
+
                 else:
                     self.view.display_string(f"\nLe joueur avecl'ID: {chess_id} n'as pas été trouvé.")
 
@@ -82,11 +90,13 @@ class ControllerPlayer:
                 if player == None:
                     self.view.display_string("\nJoueur inexistant")
                     self.display_player()
+                    self.view.press_enter()
 
                 else:
                     self.players.remove(player)
                     Players.save_all(self.players)
-                    self.display_player(f"\nLe joueur avec l'ID: {chess_id} a été correctement supprimé.")
+                    self.display_player(f"\nLe joueur avec l'ID: {chess_id} a été correctement supprimé.", )
+                    self.view.press_enter()
             else:
                 self.display_string("Nous n'avons pas trouvez de jouer avec cette id ")   
         else:
@@ -105,3 +115,12 @@ class ControllerPlayer:
                 return player
         return None
     
+    def display_new_player(self, number=1, prompt=""):
+        self.players = Players.load()
+        if self.players:
+            new_players = self.players[- number:]
+            new_players_sorted = sorted(new_players, key=lambda x: (x.last_name, x.first_name))
+            players_dict = [player.to_dict() for player in new_players_sorted]
+            self.view.display_table(players_dict, prompt)
+        else:
+            self.view.display_string("Pas de joueur dans la base de donnée")

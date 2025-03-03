@@ -3,7 +3,7 @@ from models.management import FOLDER_TOURNAMENT
 from view.utils import Utils
 from controllers.controllerplayer import ControllerPlayer
 from controllers.tournamentmanagement import TournamentManagement
-from controllers.controllerrepport import ControllerRepport
+from controllers.controllerreport import ControllerReport
 class Constant:
 
     PLAYER_MENU = "1"
@@ -51,7 +51,7 @@ class Controller:
                     self.run_tournament_management()
 
                 case Constant.DISPLAY_REPORTS:
-                    self.run_controller_repport()
+                    self.run_controller_report()
 
                 case Constant.EXIT_PROGRAM:
                     self.exit_program()
@@ -73,9 +73,9 @@ class Controller:
         tounamentmanagement = TournamentManagement(self.view)
         tounamentmanagement.run()
         
-    def run_controller_repport(self):
-        controllerrepport = ControllerRepport(self.view)
-        controllerrepport.run()
+    def run_controller_report(self):
+        controllerreport = ControllerReport(self.view)
+        controllerreport.run()
 
     def exit_program(self):
         """

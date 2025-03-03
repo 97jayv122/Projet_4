@@ -56,6 +56,8 @@ class Utils:
             date_input = input(prompt)
             if Utils.valide_date(date_input):
                 return date_input
+            elif date_input == "":
+                return date_input
             print(error_message)
     
     @staticmethod
@@ -133,4 +135,17 @@ class Utils:
 
         else:
             return None
-        
+    
+    @staticmethod
+    def is_integrer(number):
+        try:
+            int(number)
+            return True
+        except ValueError:
+            return False
+
+    @staticmethod
+    def get_number_integrer(prompt, number=""):
+        while not Utils.is_integrer(number):
+            number = input(prompt)
+        return int(number)

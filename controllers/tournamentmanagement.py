@@ -113,16 +113,16 @@ class TournamentManagement:
 
     def check_player_number(self):
         tournament = self.tournament
-        if len(tournament.list_player) == 4:
+        if len(tournament.list_player) == tournament.number_player:
             return True
         
-        elif len(tournament.list_player) < 4:
-            missing = 4 - len(tournament.list_player)
+        elif len(tournament.list_player) < tournament.number_player:
+            missing = tournament.number_player - len(tournament.list_player)
             self.view.display_string(f"Veuillez ajouter {missing} joueurs")
             return False
         
-        elif len(tournament.list_player) > 4:
-            extra = len(tournament.list_player) - 4
+        elif len(tournament.list_player) > tournament.number_player:
+            extra = len(tournament.list_player) - tournament.number_player
             self.view.display_string(f"Veuillez retirer {extra} joueurs")
             return False
         else:
@@ -159,7 +159,8 @@ class TournamentManagement:
                 )
 
     def delete_tournament(self, index):
-        """_summary_
+        """
+        Delete an instance tournament
 
         Args:
             index (_type_): _description_

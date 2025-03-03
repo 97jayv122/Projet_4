@@ -1,11 +1,12 @@
 import json
 from tabulate import tabulate
+from datetime import datetime
 from controllers.maincontroller import Constant
 from controllers.tournamentmanagement import ConstantTournamentManagement
 from controllers.controllertournament import ConstantTournament
-from controllers.controllerrepport import ConstantRepport
+from controllers.controllerreport import ConstantReport
 from controllers.controllerplayer import ConstantPlayer
-from controllers.controllertournamentrepport import ConstantTournamentRepport
+from controllers.controllertournamentreport import ConstantTournamentReport
 from view.utils import Utils
 
 VALIDATE_CHOICE = "\nEntré votre choix : "
@@ -15,71 +16,211 @@ PRESS_ENTER =  "\nAppuyer sur entrée pour continuer..."
 
 class View:
     def home_menu(self):
+        """
+        Display the main menu of the application and prompts the useer to make a choice.
+
+        The main menu contains the following options:
+            - Enter the player menu.
+            - Enter the tournament manager.
+            - View reports.
+            - Exit program.
+
+        Returns:
+            str: The validated user choice.
+        """
         Utils.clear()
         print("-" * 10 + " Menu principal " + "-" * 10)
-        print()
-        print("\n" + Constant.PLAYER_MENU + ". pour entrer dans le menu joueurs.")
-        print("\n" + Constant.TOURNAMENT_MENU + ". pour entrer dans le gestionnaire de tournoi.")
-        print("\n" + Constant.DISPLAY_REPORTS + ". pour voir les rapports.")
-        print("\n" + Constant.EXIT_PROGRAM + ". pour quitter le programme.")
-        print()
+        print(
+            "\n" + Constant.PLAYER_MENU +
+            ". pour entrer dans le menu joueurs."
+            )
+        print(
+            "\n" + Constant.TOURNAMENT_MENU +
+            ". pour entrer dans le gestionnaire de tournoi."
+            )
+        print(
+            "\n" + Constant.DISPLAY_REPORTS +
+            ". pour voir les rapports."
+            )
+        print(
+            "\n" + Constant.EXIT_PROGRAM +
+            ". pour quitter le programme."
+            )
         return input(VALIDATE_CHOICE)
 
     def player_menu(self):
+        """
+        Display the player menu of the application and prompts the user to make a choice.        
+
+        The player menu contains the following options:
+            - Add a player.
+            - List players.
+            - Modify player.
+            - Delete a player.
+            - Return to the main menu.
+
+        Returns:
+            str: The validated user choice.
+        """
         Utils.clear()
         print("-" * 10 + " Menu Joueurs " + "-" * 10)
-        print()
-        print("\n" + ConstantPlayer.ADD_PLAYER + ". pour entrer des joueur")
-        print("\n" + ConstantPlayer.DISPLAY_PLAYER + ". pour lister les joueurs")
-        print("\n" + ConstantPlayer.MODIFY_PLAYER + ". pour modifier un joueur.")
-        print("\n" + ConstantPlayer.SUPPRESS_PLAYER + ". pour supprimer un joueur.")
-        print("\n" + ConstantPlayer.RETURN_MAIN_MENU + ". pour retourner au menu principal.")
-        print()
+        print(
+            "\n" + ConstantPlayer.ADD_PLAYER +
+            ". pour entrer des joueur"
+            )
+        print(
+            "\n" + ConstantPlayer.DISPLAY_PLAYER +
+            ". pour lister les joueurs"
+            )
+        print(
+            "\n" + ConstantPlayer.MODIFY_PLAYER +
+            ". pour modifier un joueur."
+            )
+        print(
+            "\n" + ConstantPlayer.SUPPRESS_PLAYER +
+            ". pour supprimer un joueur."
+            )
+        print(
+            "\n" + ConstantPlayer.RETURN_MAIN_MENU +
+            ". pour retourner au menu principal."
+            )
         return input(VALIDATE_CHOICE)
     
     def tournamament_management_menu(self):
+        """
+        Displays the tournament management menu of the application and prompts the user to make a
+
+        The tournament menu contains the followinng options:
+            - Create a new tournament.
+            - Selecet players.
+            - Remove players.
+            - Start the tournament.
+            - Delete the tournament.
+            - Return to the main menu. 
+        
+        Returns:
+            str: The valadated user choice.
+        """
         Utils.clear()
         print("-" * 10 + " Menu Tournois " + "-" * 10)
-        print()
-        print("\n" + ConstantTournamentManagement.CREATE_A_TOURNAMENT + ". Nouveau tournoi")
-        print("\n" + ConstantTournamentManagement.SELECT_PLAYER + ". Sélection des joueurs")
-        print("\n" + ConstantTournamentManagement.DELETE_PLAYER + ". Retirer des joueurs")
-        print("\n" + ConstantTournamentManagement.START_TOURNAMENT + ". Commencé le tournoi")
-        print("\n" + ConstantTournamentManagement.DELETE_TOURNAMENT + ". Supprimer un tournoi")
-        print("\n" + ConstantTournamentManagement.RETURN_MAIN_MENU + ". pour retourner au menu principal.")
-        print()
+        print(
+            "\n" + ConstantTournamentManagement.CREATE_A_TOURNAMENT +
+            ". Nouveau tournoi"
+            )
+        print(
+            "\n" + ConstantTournamentManagement.SELECT_PLAYER +
+            ". Sélection des joueurs"
+            )
+        print(
+            "\n" + ConstantTournamentManagement.DELETE_PLAYER +
+            ". Retirer des joueurs"
+            )
+        print(
+            "\n" + ConstantTournamentManagement.START_TOURNAMENT +
+            ". Commencé le tournoi"
+            )
+        print(
+            "\n" + ConstantTournamentManagement.DELETE_TOURNAMENT +
+            ". Supprimer un tournoi"
+            )
+        print(
+            "\n" + ConstantTournamentManagement.RETURN_MAIN_MENU +
+            ". pour retourner au menu principal."
+            )
         return input(VALIDATE_CHOICE)
 
     def tournament_menu(self):
+        """
+        Display the tournament menu of the application and prompts the user to make a choice.
+
+        The tournament menu contains the following options:
+            - Start a round.
+            - End a round.
+            -Load previous pairs.
+            -Return to the tournament management menu.
+
+        Returns:
+            str: The validated user choice.
+        """
         Utils.clear()
         print("-" * 10 + " Menu Tournois " + "-" * 10)
-        print()
-        print(ConstantTournament.START_A_TOUR + ". Commencer un tour")
-        print(ConstantTournament.END_A_TOUR + ". Terminer le tour")
-        print(ConstantTournament.LOAD_PREVIOUS_TOUR + ". Charger les paires précédentes")
-        print(ConstantTournament.RETURN_TOURNAMENT_MANAGEMENT_MENU + ". pour retourner au menu gestionnaire de tournoi.")
-        print()
-        return input("Entrer votre choix : ")
+        print(
+            "\n" + ConstantTournament.START_A_TOUR +
+            ". Commencer un tour"
+            )
+        print(
+            "\n" + ConstantTournament.END_A_TOUR +
+            ". Terminer le tour"
+            )
+        print(
+            "\n" + ConstantTournament.LOAD_PREVIOUS_TOUR +
+            ". Charger les paires précédentes"
+            )
+        print(
+            "\n" + ConstantTournament.RETURN_TOURNAMENT_MANAGEMENT_MENU +
+            ". pour retourner au menu gestionnaire de tournoi."
+            )
+        return input(VALIDATE_CHOICE)
     
-    def repport_menu(self):
+    def report_menu(self):
+        """
+        Displays the report menu of the application and proompts the user to make a choice.
+
+        The report menu contains the following options:
+            - Display tournaments.
+            - Tournament report.
+            - Report of players in the database.
+            - Return to the main menu.
+
+        Returns:
+            str: The validate user choice.
+        """
         Utils.clear()
         print("-" * 10 + " Menu Rapport " + "-" * 10)
-        print()
-        print("\n" + ConstantRepport.TOURNAMENTS + ". Afficher les tournois")
-        print("\n" + ConstantRepport.TOURNAMENT_SELECT + ". Rapport d'un tournoi")
-        print("\n" + ConstantRepport.PLAYERS + ". Rapport des joueurs de la base de donnée")
-        print("\n" + ConstantRepport.RETURN_TOURNAMENT_MANAGEMENT_MENU + ". pour retourner au menu gestionnaire de tournoi.")
-        print()
+        print(
+            "\n" + ConstantReport.TOURNAMENTS +
+            ". Afficher les tournois"
+            )
+        print(
+            "\n" + ConstantReport.TOURNAMENT_SELECT +
+            ". Rapport d'un tournoi"
+            )
+        print(
+            "\n" + ConstantReport.PLAYERS +
+            ". Rapport des joueurs de la base de donnée"
+            )
+        print(
+            "\n" + ConstantReport.RETURN_MAIN_MENU +
+            ". pour retourner au menu principal."
+            )
         return input(VALIDATE_CHOICE)
 
-    def repport_menu_tournament(self):
+    def report_menu_tournament(self):
+        """
+        Displays the report tournament menu of the application and prompts the user to make a choice.
+
+        The report tournament menu contains the following options:
+            - Report tournament players.
+            - Report of tournament.
+            - Return to main menu report.
+
+        Returns:
+            str: The validate user choice.
+        """
         Utils.clear()
         print("-" * 10 + " Menu Rapport tournoi" + "-" * 10)
-        print()
-        print("\n" + ConstantTournamentRepport.PLAYERS_TOURNAMENT + ". Rapport des joueurs du tournoi")
-        print("\n" + ConstantTournamentRepport.TOURNAMENT_INFO + ". Rapport du tournoi")
-        print("\n" + ConstantTournamentRepport.RETURN_TOURNAMENT_MANAGEMENT_MENU + ". pour retourner au menu gestionnaire de tournoi.")
-        print()
+        print(
+            "\n" + ConstantTournamentReport.PLAYERS_TOURNAMENT +
+            ". Rapport des joueurs du tournoi"
+            )
+        print(
+            "\n" + ConstantTournamentReport.TOURNAMENT_INFO +
+            ". Rapport du tournoi"
+            )
+        print(
+            "\n" + ConstantTournamentReport.RETURN_REPORT_MAIN_MENU +
+            ". pour retourner au menu gestionnaire de tournoi."
+            )
         return input(VALIDATE_CHOICE)
 
     def select_player(self):
@@ -95,14 +236,34 @@ class View:
         file_tournament = {}
         file_tournament["name"] = input("Entrer le nom du tournoi : ")
         file_tournament["location"] = input("\nEntrer le lieu du tournoi : ")
-        file_tournament["date_start"] = Utils.get_valid_date(
-            "\nEntrer la date de début du tournoi(ex:01/02/2022) : ",
-            WRONG_DATE
+        # Récupération et stockage de la date de début
+        date_start = Utils.get_valid_date(
+        "\nEntrer la date de début du tournoi (ex: 01/02/2022) : ",
+        WRONG_DATE
         )
-        file_tournament["date_end"] = Utils.get_valid_date(
-            "\nEntrer la date de fin du tournoi(ex:01/02/2022) : ",
-            WRONG_DATE
-        )
+        file_tournament["date_start"] = date_start
+        while True:
+            date_end = Utils.get_valid_date(
+                "\nEntrer la date de fin du tournoi (ex: 01/02/2022) : ",
+                WRONG_DATE
+            )
+            if date_end == "":
+                # Autoriser une date vide si c'est souhaité
+                file_tournament["date_end"] = date_end
+                break
+
+            # Conversion des dates en objets datetime pour la comparaison
+            start_dt = datetime.strptime(date_start, "%d/%m/%Y")
+            end_dt = datetime.strptime(date_end, "%d/%m/%Y")
+            if end_dt > start_dt:
+                file_tournament["date_end"] = date_end
+                break
+            else:
+                print("La date de fin doit être supérieure à la date de début. Veuillez réessayer.")
+        
+        file_tournament["number_player"] = Utils.get_number_integrer(
+            "\nEntrer le nombre de joueur du tournoi :"
+            )
         return file_tournament
 
     def number_add_player(self):
@@ -131,7 +292,7 @@ class View:
     def request_add_player(self):
         file_player = {}
         file_player["first_name"] = input("Entrer le prénom du joueur : ")
-        file_player["name"] = input("Entrer le nom du joueur : ")
+        file_player["last_name"] = input("Entrer le nom du joueur : ")
         file_player["date_of_birth"] = Utils.get_valid_date(
             "Entrer la date de naissance du joueur(01/12/2003) : ",
             WRONG_DATE
@@ -159,7 +320,7 @@ class View:
     def request_modify_player(self):
         player_data = {}
         player_data["first_name"] = input("Entrer le prénom du joueur : ")
-        player_data["name"] = input("Entrer le nom du joueur : ")
+        player_data["last_name"] = input("Entrer le nom du joueur : ")
         player_data["date_of_birth"] = Utils.get_valid_date(
             "Entrer la date de naissance du joueur(01/12/2003) : ",
             WRONG_DATE
@@ -177,7 +338,6 @@ class View:
         index = [index for index in range(1, len(datas) + 1)]
         print(tabulate(datas, headers="keys", tablefmt="fancy_grid", showindex=index))
         print(prompt)
-        input(PRESS_ENTER)
 
     def requests_score(self, player_1, player_2):
         """
@@ -224,3 +384,9 @@ class View:
     def choose_player_to_remove(self):
         input("")
         pass
+
+    def press_enter(self):
+        input(PRESS_ENTER)
+
+    def display_report(self, datas):
+        print(datas)

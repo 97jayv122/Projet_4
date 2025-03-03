@@ -8,19 +8,22 @@ FILE_TOURNAMENT = FOLDER_TOURNAMENT + "tournament.json"
 
 
 class Tournaments:
-    def __init__(self, name, place, date_start, date_end,
-                 number_of_turns=4, tournament_id=None):
+    def __init__(self, name, place, date_start, date_end, number_player,
+                 number_of_turns=4, tournament_id=None
+                 ):
         self.name = name
         self.place = place
         self.date_start = date_start
         self.date_end = date_end
-        self.number_of_turns = number_of_turns
+        self.number_player = number_player
+        self.number_of_turns = number_player if number_player != number_of_turns else number_of_turns
         self.id = tournament_id if tournament_id else str(uuid.uuid4())
         self.list_player = []
         self.list_of_tours = []
         self.current_tour = 0
         self.description = ""
         self.player_scores = {}
+        self.stat = "unstarted"
 
     @classmethod
     def from_dict(cls, data):
@@ -37,13 +40,15 @@ class Tournaments:
             place=data.get("place"),
             date_start=data.get("date_start"),
             date_end=data.get("date_end"),
-            tournament_id=data.get("tournament_id")
+            tournament_id=data.get("tournament_id"),
+            number_player=data.get("number_player")
         )
         tournament.list_player=list_player
         tournament.list_of_tours=list_of_tours
         tournament.current_tour=data.get("current_tour", 0)
         tournament.description=data.get("description", "")
         tournament.player_scores=data.get("player_scores", {})
+        tournament.stat=data.get("stat", "")
 
         return tournament
         
@@ -55,6 +60,7 @@ class Tournaments:
             "date_start": self.date_start,
             "date_end": self.date_end,
             "number_of_turns": self.number_of_turns,
+            "number_player": self.number_player,
             "list_player": [
                 player if isinstance(player, str) else player.id
                 for player in self.list_player
@@ -66,23 +72,16 @@ class Tournaments:
             "current_tour": self.current_tour,
             "tournament_id": self.id,
             "description": self.description,
-            "player_scores": self.player_scores
+            "player_scores": self.player_scores,
+            "stat": self.stat
         }
 
-    def instance_clear(self):
-        """
-        Réinitialise tous les attributs de l'instance aux valeurs par défaut.
-        """
-        self.name = ""
-        self.place = ""
-        self.date_start = ""
-        self.date_end = ""
-        self.number_of_turns = 4
-        self.list_player = []
-        self.list_of_tours = []
-        self.current_tour = 0
-        self.description = ""
+    def start(self):
+        self.stat = "started"
 
+    def end(self):
+        self.stat = "finished"
+        
     def add_1_to_current_tour(self):
         self.current_tour += 1
 
