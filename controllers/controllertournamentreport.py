@@ -1,7 +1,4 @@
 from models.players import Players
-from models.tournament import Tournaments
-from models.tours import Tours
-from models.matchs import Matchs
 
 
 class ConstantTournamentReport:
@@ -29,7 +26,6 @@ class ControllerTournamentReport:
                 case ConstantTournamentReport.RETURN_REPORT_MAIN_MENU:
                     break
 
-
     def get_player_tournament_sorted(self):
         message = "Liste des joueurs du tournoi par ordre alphabétique(nom)."
         players = Players.load_by_ids(*self.tournament.list_player)
@@ -41,9 +37,9 @@ class ControllerTournamentReport:
     def get_tournament_info_dict(self):
         # Création d'un dictionnaire principal regroupant les infos du tournoi
         tournament_info = {
+            "Nom du tournoi": self.tournament.name,
             "Lieu du tournoi": self.tournament.place,
             "Nombre de joueurs": self.tournament.number_player,
-            "Nom du tournoi": self.tournament.name,
             "Date de début": self.tournament.date_start,
             "Date de fin": self.tournament.date_end,
             "Nombre de tours": self.tournament.number_of_turns,

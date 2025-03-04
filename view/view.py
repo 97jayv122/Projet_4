@@ -1,4 +1,3 @@
-import json
 from tabulate import tabulate
 from datetime import datetime
 from controllers.maincontroller import Constant
@@ -109,6 +108,11 @@ class View:
         )
         print(
             "\n"
+            + ConstantTournamentManagement.ADD_DESCRIPTION
+            + ". Ajouter une description à un tournoi."
+        )
+        print(
+            "\n"
             + ConstantTournamentManagement.RETURN_MAIN_MENU
             + ". pour retourner au menu principal."
         )
@@ -212,7 +216,7 @@ class View:
         Utils.clear()
         file_tournament = {}
         file_tournament["name"] = input("Entrer le nom du tournoi : ")
-        file_tournament["location"] = input("\nEntrer le lieu du tournoi : ")
+        file_tournament["place"] = input("\nEntrer le lieu du tournoi : ")
         # Récupération et stockage de la date de début
         date_start = Utils.get_valid_date(
             "\nEntrer la date de début du tournoi (ex: 01/02/2022) : ", WRONG_DATE
@@ -333,7 +337,7 @@ class View:
             try:
                 score_player_1 = float(input(f"Entrer le score de {player_1} : "))
                 score_player_2 = Utils.check_score(score_player_1)
-                if score_player_2 != None:
+                if score_player_2 is not None:
                     return score_player_1, score_player_2
                 else:
                     print("Score invalide. Veuillez entrer 1, 0.5 ou 0.")
@@ -374,7 +378,7 @@ class View:
         Utils.clear()
         # Affichage des infos générales du tournoi
         general_keys = [
-            "Lieu du tournoi", "Nombre de joueurs", "Nom du tournoi",
+            "Nom du tournoi", "Lieu du tournoi", "Nombre de joueurs",
             "Date de début", "Date de fin", "Nombre de tours",
             "Description", "Statut"
         ]
@@ -382,9 +386,9 @@ class View:
         for key in general_keys:
             value = tournament_info.get(key, "")
             general_table.append([key, value])
-        
+
         print(tabulate(general_table, headers=["Champ", "Valeur"], tablefmt="fancy_grid"))
-        
+
         # Affichage des infos de chaque tour
         tours = tournament_info.get("Tours", [])
         for tour in tours:
@@ -394,7 +398,7 @@ class View:
             date_end = tour.get("Date de fin")
             date_start = datetime.fromtimestamp(date_start).strftime('%Y-%m-%d %H:%M:%S')
             date_end = datetime.fromtimestamp(date_end).strftime('%Y-%m-%d %H:%M:%S')
-                
+
             tour_table = [
                 ["Tour", tour.get("Tour", "")],
                 ["Date de début", date_start],
@@ -402,7 +406,7 @@ class View:
                 ["Statut", tour.get("Statut", "")]
             ]
             print(tabulate(tour_table, headers=["Champ", "Valeur"], tablefmt="fancy_grid"))
-            
+
             # Affichage des matchs pour ce tour
             print("Matchs:")
             match_table = []
@@ -419,3 +423,9 @@ class View:
                 print(tabulate(match_table, headers=["Joueur 1", "Joueur 2"], tablefmt="fancy_grid"))
             else:
                 print("Aucun match enregistré pour ce tour.")
+
+    def request_enter_description(self, name):
+        Utils.clear()
+        print("*"*10 + "Description" + "*"*10 + "\n")
+        contents_description = input(f"Veuillez saisir une description pour le tournoi ({name}): ")
+        return contents_description

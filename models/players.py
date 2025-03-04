@@ -60,7 +60,8 @@ class Players:
 
         This method attempts to open a JSON file defined by the FILE_PLAYER constant, parse its content,
         and create a list of Players instances using the restore_from_json class method.
-        If the JSON data is invalid or the file is not found, an error message is printed and an empty list is returned.
+        If the JSON data is invalid or the file is not found, an error message is printed and an empty list
+        is returned.
 
         Returns:
             List: A list of Players instances if the file is loaded successfully; otherwise, an empty list.

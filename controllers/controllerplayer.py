@@ -1,4 +1,5 @@
 from models.players import Players
+from models.tournament import Tournaments
 
 
 class ConstantPlayer:
@@ -92,17 +93,22 @@ class ControllerPlayer:
             if chess_id:
                 player = self.load_by_id(chess_id)
 
-                if player == None:
+                if player is not None:
+                    if not self.check_player_in_tournament(player.id):
+
+                        self.players.remove(player)
+                        Players.save_all(self.players)
+                        self.display_player(
+                            f"\nLe joueur avec l'ID: {chess_id} a été correctement supprimé.",
+                        )
+                        self.view.press_enter()
+                    else:
+                        self.view.display_string(
+                            "Impossibilité de supprimer un joueur inscrit dans un tournoi"
+                            )
+                else:
                     self.view.display_string("\nJoueur inexistant")
                     self.display_player()
-                    self.view.press_enter()
-
-                else:
-                    self.players.remove(player)
-                    Players.save_all(self.players)
-                    self.display_player(
-                        f"\nLe joueur avec l'ID: {chess_id} a été correctement supprimé.",
-                    )
                     self.view.press_enter()
             else:
                 self.display_string("Nous n'avons pas trouvez de jouer avec cette id ")
@@ -133,3 +139,12 @@ class ControllerPlayer:
             self.view.display_table(players_dict, prompt)
         else:
             self.view.display_string("Pas de joueur dans la base de donnée")
+
+    def check_player_in_tournament(self, player_id):
+        tournaments = Tournaments.load()
+        for tournament in tournaments:
+            for player in tournament.list_player:
+
+                if player == player_id:
+                    return True
+        return False

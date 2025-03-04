@@ -1,8 +1,6 @@
 from models.players import Players
 from models.tournament import Tournaments
-from models.tours import Tours
 from controllers.controllertournamentreport import ControllerTournamentReport
-from models.matchs import Matchs
 
 
 class ConstantReport:

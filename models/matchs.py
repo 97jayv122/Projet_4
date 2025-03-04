@@ -37,4 +37,8 @@ class Matchs:
         return match
 
     def __repr__(self):
-        return f"Match: {Players.load_by_ids(self.player_1)[0]} vs {Players.load_by_ids(self.player_2)[0]}"
+        return f"Match: {
+            Players.load_by_ids(self.player_1)[0]
+            } vs {
+                Players.load_by_ids(self.player_2)[0]
+                }"

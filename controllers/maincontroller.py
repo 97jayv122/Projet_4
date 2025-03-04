@@ -1,6 +1,5 @@
 import os
-from models.management import FOLDER_TOURNAMENT
-from view.utils import Utils
+from models.tournament import FOLDER_TOURNAMENT
 from controllers.controllerplayer import ControllerPlayer
 from controllers.tournamentmanagement import TournamentManagement
 from controllers.controllerreport import ControllerReport

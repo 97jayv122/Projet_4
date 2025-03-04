@@ -2,7 +2,6 @@ import json
 import uuid
 from models.players import Players
 from models.tours import Tours
-from models.matchs import Matchs
 
 FOLDER_TOURNAMENT = "data/tournaments/"
 FILE_TOURNAMENT = FOLDER_TOURNAMENT + "tournament.json"
@@ -82,7 +81,7 @@ class Tournaments:
             "tournament_id": self.id,
             "description": self.description,
             "player_scores": self.player_scores,
-            "stat": self.stat,
+            "stat": self.stat
         }
 
     def start(self):
@@ -135,7 +134,7 @@ class Tournaments:
         except json.JSONDecodeError as e:
             print(f"pas de données a charger: {e}")
         except FileNotFoundError:
-            print(f"Fichier introuvable : data/tournaments/tournaments")
+            print("Fichier introuvable : data/tournaments/tournament.json")
         except Exception as e:
             print(f"Erreur inattendue : {e}")
         return []
@@ -164,3 +163,6 @@ class Tournaments:
         """
         if player.id in self.player_scores:
             self.player_scores[player.id] += score_delta
+
+    def add_description(self, datas):
+        self.description = datas

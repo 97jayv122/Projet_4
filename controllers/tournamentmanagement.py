@@ -1,8 +1,6 @@
 from models.players import Players
 from controllers.controllertournament import ControllerTournament
-from models.tournament import Tournaments, FOLDER_TOURNAMENT
-from view.utils import Utils
-import os
+from models.tournament import Tournaments
 
 
 class ConstantTournamentManagement:
@@ -11,6 +9,7 @@ class ConstantTournamentManagement:
     DELETE_PLAYER = "3"
     START_TOURNAMENT = "4"
     DELETE_TOURNAMENT = "5"
+    ADD_DESCRIPTION = "6"
     RETURN_MAIN_MENU = "x"
 
 
@@ -52,6 +51,10 @@ class TournamentManagement:
                     else:
                         breakpoint
 
+                case ConstantTournamentManagement.ADD_DESCRIPTION:
+                    self.select_tournament()
+                    self.make_description()
+
                 case ConstantTournamentManagement.RETURN_MAIN_MENU:
                     break
 
@@ -91,6 +94,8 @@ class TournamentManagement:
         info_tournament = self.view.request_create_tournament()
         tournament = Tournaments.from_dict(info_tournament)
         tournament.save()
+        self.tournament = tournament
+        self.player_selection()
 
     def select_tournament(self):
         names_tournaments = self.get_tournament_name()
@@ -107,20 +112,21 @@ class TournamentManagement:
     def player_selection(self):
         if self.tournament is not None:
             if self.players:
-                prompt = "Liste des joueurs de la base de donnée"
-                data_players = [player.to_dict() for player in self.players]
-                self.view.display_table(data_players, prompt)
-                try:
-                    index_players = self.view.select_player()
-                    for index in index_players:
-                        self.tournament.add_player_score(self.players[int(index) - 1])
-                except ValueError:
-                    self.view.display_string("Veuillez entrer un bon format.")
-                self.tournament.update(self.tournament.id)
-                self.tournament = None
+                if len(self.tournament.list_player) < self.tournament.number_player:
+                    prompt = "Liste des joueurs de la base de donnée"
+                    data_players = [player.to_dict() for player in self.players]
+                    self.view.display_table(data_players, prompt)
+                    try:
+                        index_players = self.view.select_player()
+                        for index in index_players:
+                            self.tournament.add_player_score(self.players[int(index) - 1])
+                    except ValueError:
+                        self.view.display_string("Veuillez entrer un bon format.")
+                    self.tournament.update(self.tournament.id)
+                else:
+                    self.view.display_string("tournoi ayant le nombre de joueur requis")
             else:
                 self.view.display_string("Pas de joueur rentré dans la base de donnée")
-
         else:
             self.view.display_string("Pas de tournoi sélectionner")
 
@@ -148,9 +154,6 @@ class TournamentManagement:
                     [player.first_name, player.name]
                     for player in self.tournament.list_player
                 ]
-                index = [range(1, len(players))]
-                print(players)
-                input()
                 prompt = "Liste des joueurs du tournoi"
                 self.view.display_table(players, prompt)
                 user_input = self.view.choose_player_to_remove()
@@ -186,3 +189,8 @@ class TournamentManagement:
         self.view.display_string(
             f"Le tournoi: {tournament_deleted["name"]}, à été supprimé."
         )
+
+    def make_description(self):
+        data_entered = self.view.request_enter_description(self.tournament.name)
+        self.tournament.add_description(data_entered)
+        self.tournament.update(self.tournament.id)

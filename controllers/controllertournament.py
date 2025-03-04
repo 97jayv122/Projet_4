@@ -1,10 +1,8 @@
 import random
 from random import shuffle
 from models.players import Players
-from models.tournament import Tournaments
 from models.tours import Tours
 from models.matchs import Matchs
-from view.utils import Utils
 
 COLOR_WHITE = "blanc"
 COLOR_BLACK = "noir"
@@ -13,8 +11,7 @@ COLOR_BLACK = "noir"
 class ConstantTournament:
 
     START_A_TOUR = "1"
-    END_A_TOUR = "2"
-    LOAD_PREVIOUS_TOUR = "3"
+    LOAD_PREVIOUS_TOUR = "2"
     RETURN_TOURNAMENT_MANAGEMENT_MENU = "x"
 
 
@@ -70,14 +67,12 @@ class ControllerTournament:
                 pair_ids = tuple(sorted([player_1.id, player_2.id]))
                 if pair_ids in self.previous_matches:
                     input("pair detected : ")
-                    swapped = False
                     for p in range(i + 2, len(players)):
                         player_2_alt = players[p]
                         pair_ids_alt = tuple(sorted([player_1.id, player_2_alt.id]))
                         if pair_ids_alt not in self.previous_matches:
                             players[i + 1], players[p] = players[p], players[i + 1]
                             player_2 = players[i + 1]
-                            swapped = True
                             break
                 pair_ids = tuple(sorted([player_1.id, player_2.id]))
                 self.previous_matches.add(pair_ids)
@@ -165,7 +160,6 @@ class ControllerTournament:
                 self.view.display_string("Les précédentes paires de matchs on déjas été chargé.")
         else:
             self.view.display_string("Veuillez commencer un tournoi.")
-
 
     @staticmethod
     def assign_random_colors(player_1, player_2):
