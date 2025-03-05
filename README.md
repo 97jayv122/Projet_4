@@ -27,6 +27,7 @@ The application follows an MVC (Model-View-Controller) structure, ensuring a cle
 `python -m venv env`
 
 3. **Activate the Virtual Environment:**
+   
 On Windows:
     
 `env\Scripts\activate`
