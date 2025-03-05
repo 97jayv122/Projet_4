@@ -4,7 +4,9 @@ from controllers.controllertournamentreport import ControllerTournamentReport
 
 
 class ConstantReport:
-
+    """
+    Constants representing the report menu options.
+    """
     TOURNAMENTS = "1"
     TOURNAMENT_SELECT = "2"
     PLAYERS = "3"
@@ -12,11 +14,28 @@ class ConstantReport:
 
 
 class ControllerReport:
+    """
+    Controller for generating reports.
+
+    Provides functionality for viewing tournaments, selecting a tournament report,
+    and displaying sorted player lists.
+    """
     def __init__(self, view):
+        """
+        Initialize the report controller with a view.
+
+        Parameters:
+            view: The view instance used for displaying menus and tables.
+        """
         self.view = view
         self.tournaments = None
 
     def run(self):
+        """
+        Run the report menu loop.
+
+        Processes user actions to view tournaments, tournament reports, or players.
+        """
         while True:
             action = self.view.report_menu()
             match action:
@@ -27,6 +46,7 @@ class ControllerReport:
                 case ConstantReport.TOURNAMENT_SELECT:
                     self.get_tournaments_name()
                     index = self.view.select_tournament(self.tournaments)
+                    # Subtract 1 from index because list indices start at 0
                     self.run_tournament_report(self.tournaments[int(index) - 1])
 
                 case ConstantReport.PLAYERS:
@@ -37,13 +57,19 @@ class ControllerReport:
                     break
 
     def get_player_sorted(self):
-        prompt = "Liste des joueurs par ordre alphabétique(nom)."
+        """
+        Display a sorted list of players alphabetically.
+        """
+        prompt = "Liste des joueurs par ordre alphabétique."
         players = Players.load()
-        players_sorted = sorted(players, key=lambda x: (x.last_name).capitalize())
+        players_sorted = sorted(players, key=lambda x: (x.last_name.capitalize(), x.first_name.capitalize()))
         players_dict_sorted = [player.to_dict() for player in players_sorted]
         self.view.display_table(players_dict_sorted, prompt)
 
     def get_tournaments_name(self):
+        """
+        Display a list of tournaments.
+        """
         prompt = "Liste des tournois."
         tournaments = Tournaments.load()
         self.tournaments = tournaments
@@ -58,5 +84,11 @@ class ControllerReport:
         self.view.display_table(tournaments_dict, prompt)
 
     def run_tournament_report(self, tournament):
+        """
+        Launch the tournament report for the given tournament.
+
+        Parameters:
+            tournament: The tournament object for which to run the report.
+        """
         controllertournamentreport = ControllerTournamentReport(self.view, tournament)
         controllertournamentreport.run()

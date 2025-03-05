@@ -138,6 +138,15 @@ class Utils:
 
     @staticmethod
     def is_integrer(number):
+        """
+        Check if the provided input can be converted to an integer.
+
+        Args:
+            number: The value to check.
+
+        Returns:
+            bool: True if the input can be converted to an integer, False otherwise.
+        """
         try:
             int(number)
             return True
@@ -146,6 +155,16 @@ class Utils:
 
     @staticmethod
     def get_number_integrer(prompt, number=""):
+        """
+        Prompt the user to enter an integer value.
+
+        Args:
+            prompt (str): The prompt message for the user.
+            number (str, optional): Initial value to check; defaults to an empty string.
+
+        Returns:
+            int: The integer value entered by the user.
+        """
         while not Utils.is_integrer(number):
             number = input(prompt)
         return int(number)

@@ -9,15 +9,29 @@ COLOR_BLACK = "noir"
 
 
 class ConstantTournament:
-
+    """
+    Constants representing tournament menu options.
+    """
     START_A_TOUR = "1"
     LOAD_PREVIOUS_TOUR = "2"
     RETURN_TOURNAMENT_MANAGEMENT_MENU = "x"
 
 
 class ControllerTournament:
+    """
+    Controller for managing tournament rounds.
 
+    Handles the creation of rounds, pairing players, updating scores,
+    and loading previous match pairings.
+    """
     def __init__(self, view, tournament):
+        """
+        Initialize the tournament controller.
+
+        Parameters:
+            view: The view instance for user interactions.
+            tournament: The tournament object being managed.
+        """
         self.view = view
         self.tournament = tournament
         self.players = Players.load()
@@ -28,15 +42,19 @@ class ControllerTournament:
         self.previous_matches = set()
 
     def run(self):
+        """
+        Run the tournament management loop.
+
+        Processes user actions for starting rounds, loading previous pairings,
+        or returning to the management menu.
+        """
         while True:
             action = self.view.tournament_menu()
             match action:
 
                 case ConstantTournament.START_A_TOUR:
                     self.start_tour()
-                case ConstantTournament.END_A_TOUR:
-                    # self.end_tour()
-                    pass
+
                 case ConstantTournament.LOAD_PREVIOUS_TOUR:
                     self.load_previous_pairs()
 
@@ -44,20 +62,34 @@ class ControllerTournament:
                     break
 
                 case _:
-                    print("Choix inconnue.")
-                    input("Appuyer sur entrée pour continuer...")
+                    self.view.display_string("Choix inconnue.")
 
     def update_score(self, match, player_1, player_2):
-        """ """
+        """
+        Update the score for a match based on user input.
+
+        Parameters:
+            match: The match object to update.
+            player_1: ID of the first player.
+            player_2: ID of the second player.
+        """
+        # Reload player objects by their IDs
         player_1, player_2 = Players.load_by_ids(player_1, player_2)
+        # Request scores from the view
         score_player_1, score_player_2 = self.view.requests_score(player_1, player_2)
+        # Update the match with the provided scores
         match.score_update(score_player_1, score_player_2)
+        # Update the tournament's score records for each player
         for joueur, score in ((player_1, score_player_1), (player_2, score_player_2)):
             self.tournament.update_player_score(joueur, score)
 
     def generate_pairs(self, tour, players):
         """
-        Génère des paires de joueurs pour le tour et crée les matchs.
+        Generate player pairs for the round and create the matches.
+
+        Parameters:
+            tour: The current round (Tours object).
+            players: The list of players to be paired.
         """
         tour.matchs = []
         for i in range(0, len(players), 2):
@@ -65,18 +97,21 @@ class ControllerTournament:
                 player_1 = players[i]
                 player_2 = players[i + 1]
                 pair_ids = tuple(sorted([player_1.id, player_2.id]))
+                # If this pair has already played, try to find an alternative pairing
                 if pair_ids in self.previous_matches:
                     input("pair detected : ")
                     for p in range(i + 2, len(players)):
                         player_2_alt = players[p]
                         pair_ids_alt = tuple(sorted([player_1.id, player_2_alt.id]))
                         if pair_ids_alt not in self.previous_matches:
+                            # Swap the players to get a new pairing
                             players[i + 1], players[p] = players[p], players[i + 1]
                             player_2 = players[i + 1]
                             break
                 pair_ids = tuple(sorted([player_1.id, player_2.id]))
                 self.previous_matches.add(pair_ids)
                 match = Matchs(player_1.id, player_2.id)
+                # Assign random colors to the players for this match
                 color_of_player = ControllerTournament.assign_random_colors(
                     player_1, player_2
                 )
@@ -85,17 +120,22 @@ class ControllerTournament:
         self.matchs = tour.matchs
 
     def start_tour(self):
-        """_summary_"""
-        # Vérifier s'il reste des tours à jouer
+        """
+        Start a new round (tour) in the tournament.
+
+        Checks if any rounds remain, shuffles or sorts players, generates pairs,
+        updates scores, and ends the round.
+        """
+        # Check if all rounds have been played
         if self.tournament.current_tour == self.tournament.number_of_turns:
             self.view.display_string("Tournoi terminé.")
             return
 
-        # --- Début du tour ---
+        # --- Start of the round ---
         self.tournament.start()
         self.tournament.add_1_to_current_tour()
 
-        # Définir l'ordre des joueurs
+        # Determine the order of players
         if self.tournament.current_tour == 1:
             players = self.tournament.list_player.copy()
             shuffle(players)
@@ -103,7 +143,7 @@ class ControllerTournament:
             players = self.sorted_by_score()
             players = Players.load_by_ids(*players)
 
-        # Création du tour et génération des paires
+        # Create the round and generate player pairs
         tour = Tours(self.tournament.current_tour)
         self.view.display_string(f"Début du {tour.name}")
         self.generate_pairs(tour, players)
@@ -112,10 +152,10 @@ class ControllerTournament:
         self.tournament.update(self.tournament.id)
         self.tour = tour
 
-        # --- Fin du tour ---
+        # --- End of the round ---
         self.tour.end()
 
-        # Mise à jour des scores pour chaque match
+        # Update scores for each match in the round
         for match in self.matchs:
             self.update_score(match, match.player_1, match.player_2)
         if self.tournament.current_tour == self.tournament.number_of_turns:
@@ -124,12 +164,22 @@ class ControllerTournament:
         self.tournament.update(self.tournament.id)
 
     def sorted_by_score(self):
+        """
+        Sort players based on their scores.
+
+        Returns:
+            list: List of player IDs sorted by score.
+        """
         player_score_item = self.tournament.player_scores.items()
+        # Sort by score
         player_score_item_sorted = sorted(player_score_item, key=lambda x: x[1])
         player_sorted = [player[0] for player in player_score_item_sorted]
         return player_sorted
 
     def load_previous_pairs(self):
+        """
+        Load and display previous match pairings if available.
+        """
         if self.tournament.current_tour > 0:
             if not self.previous_matches:
                 previous_list_matchs = [
@@ -164,10 +214,14 @@ class ControllerTournament:
     @staticmethod
     def assign_random_colors(player_1, player_2):
         """
-        Attribue aléatoirement des couleurs aux joueurs.
+        Randomly assign colors to the players.
+
+        Parameters:
+            player_1: The first player.
+            player_2: The second player.
 
         Returns:
-            dict: Dictionnaire associant chaque joueur à une couleur.
+            dict: A dictionary mapping each player to a color.
         """
         if random.choice([True, False]):
             color_of_player = {player_1: COLOR_WHITE, player_2: COLOR_BLACK}

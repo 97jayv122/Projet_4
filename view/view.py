@@ -21,7 +21,7 @@ class View:
         The main menu contains the following options:
             - Enter the player menu.
             - Enter the tournament manager.
-            - View reports.
+            - Reports.
             - Exit program.
 
         Returns:
@@ -73,9 +73,10 @@ class View:
         The tournament menu contains the followinng options:
             - Create a new tournament.
             - Selecet players.
-            - Remove players.
+            - Remove player.
             - Start the tournament.
             - Delete the tournament.
+            - Add a description to a tournament.
             - Return to the main menu.
 
         Returns:
@@ -94,7 +95,7 @@ class View:
             + ". Sélection des joueurs"
         )
         print(
-            "\n" + ConstantTournamentManagement.DELETE_PLAYER + ". Retirer des joueurs"
+            "\n" + ConstantTournamentManagement.DELETE_PLAYER + ". Retirer un joueur"
         )
         print(
             "\n"
@@ -124,8 +125,7 @@ class View:
 
         The tournament menu contains the following options:
             - Start a round.
-            - End a round.
-            -Load previous pairs.
+            -Load previous pairings.
             -Return to the tournament management menu.
 
         Returns:
@@ -134,10 +134,6 @@ class View:
         Utils.clear()
         print("-" * 10 + " Menu Tournois " + "-" * 10)
         print("\n" + ConstantTournament.START_A_TOUR + ". Commencer un tour")
-        # print(
-        #     "\n" + ConstantTournament.END_A_TOUR +
-        #     ". Terminer le tour"
-        #     )
         print(
             "\n"
             + ConstantTournament.LOAD_PREVIOUS_TOUR
@@ -182,8 +178,8 @@ class View:
         Displays the report tournament menu of the application and prompts the user to make a choice.
 
         The report tournament menu contains the following options:
-            - Report tournament players.
-            - Report of tournament.
+            - Tournament players report.
+            - Tournament details report.
             - Return to main menu report.
 
         Returns:
@@ -205,6 +201,12 @@ class View:
         return input(VALIDATE_CHOICE)
 
     def select_player(self):
+        """
+        Prompt the user to select players for the tournament.
+
+        Returns:
+            list: A list of selected player indices.
+        """
         print("\nSélectionnez les joueurs pour le tournoi\n")
         index_players = input(
             "\nEntrer les numéros des joueurs séparés par une virgule : "
@@ -213,6 +215,12 @@ class View:
         return index_players
 
     def request_create_tournament(self):
+        """
+        Request tournament details from the user to create a new tournament.
+
+        Returns:
+            dict: A dictionary with tournament details.
+        """
         Utils.clear()
         file_tournament = {}
         file_tournament["name"] = input("Entrer le nom du tournoi : ")
@@ -249,11 +257,10 @@ class View:
 
     def number_add_player(self):
         """
-        Prompts the user to enter the number of participants to add.
+        Prompt the user to enter the number of players to add.
 
         Returns:
-            int: _The number of participants entered by the user,
-              which must be a positive integer.
+            int: The number of players entered by the user.
         """
         while True:
             Utils.clear()
@@ -269,6 +276,12 @@ class View:
                 input(PRESS_ENTER)
 
     def request_add_player(self):
+        """
+        Request player details from the user to add a new player.
+
+        Returns:
+            dict: A dictionary with the player's details.
+        """
         file_player = {}
         file_player["first_name"] = input("Entrer le prénom du joueur : ")
         file_player["last_name"] = input("Entrer le nom du joueur : ")
@@ -281,6 +294,15 @@ class View:
         return file_player
 
     def request_player_id(self, action):
+        """
+        Request a player's chess identifier for a specified action.
+
+        Args:
+            action (str): The action to perform (e.g., modify or delete).
+
+        Returns:
+            str or None: The player's chess identifier if valid, otherwise None.
+        """
         while True:
             chess_id = input(
                 f"\nEntrez l'identifiant national d'échecs du joueur à {action}"
@@ -296,6 +318,12 @@ class View:
                 input(PRESS_ENTER)
 
     def request_modify_player(self):
+        """
+        Request new details for modifying a player's information.
+
+        Returns:
+            dict: A dictionary containing updated player details.
+        """
         player_data = {}
         player_data["first_name"] = input("Entrer le prénom du joueur : ")
         player_data["last_name"] = input("Entrer le nom du joueur : ")
@@ -306,12 +334,25 @@ class View:
         return player_data
 
     def display_table(self, datas, prompt=""):
+        """
+        Display a table of data.
+
+        Parameters:
+            datas (list of dict): A list of dictionaries representing table rows.
+            prompt (str, optional): A prompt message to display after the table.
+        """
         Utils.clear()
         index = [index for index in range(1, len(datas) + 1)]
         print(tabulate(datas, headers="keys", tablefmt="fancy_grid", showindex=index))
         print(prompt)
 
     def display_color_player(self, color_player):
+        """
+        Display the color assignments for players in a match.
+
+        Parameters:
+            color_player (dict): A dictionary mapping players to their assigned colors.
+        """
         Utils.clear()
         table = []
         for player, color in color_player.items():
@@ -321,14 +362,14 @@ class View:
 
     def requests_score(self, player_1, player_2):
         """
-        Requests the scores for a match between two players with validation.
+        Request the scores for a match between two players with validation.
 
         Args:
-            player_1 (str): The name of the first player
-            player_2 (str): The name of the second player
+            player_1 (str): The name of the first player.
+            player_2 (str): The name of the second player.
 
         Returns:
-            tuple: The scores of player_1 and player_2
+            tuple: The scores of player_1 and player_2.
         """
         while True:
             Utils.clear()
@@ -347,6 +388,15 @@ class View:
                 input(PRESS_ENTER)
 
     def select_tournament(self, datas):
+        """
+        Prompt the user to select a tournament from a displayed list.
+
+        Parameters:
+            datas (list): A list of tournament data.
+
+        Returns:
+            int: The index of the selected tournament.
+        """
         while True:
             try:
                 user_input = int(
@@ -364,19 +414,31 @@ class View:
                 print("Veuillez entrer un nombre valide.")
 
     def display_string(self, datas):
+        """
+        Display a message to the user.
+
+        Parameters:
+            message (str): The message to display.
+        """
         Utils.clear()
         print(datas)
         input(PRESS_ENTER)
 
-    def choose_player_to_remove(self):
-        input("")
-
     def press_enter(self):
+        """
+        Prompt the user to press enter to continue.
+        """
         input(PRESS_ENTER)
 
     def display_tournament_info_table(self, tournament_info):
+        """
+        Display detailed tournament information in a tabulated format.
+
+        Parameters:
+            tournament_info (dict): A dictionary containing tournament details.
+        """
         Utils.clear()
-        # Affichage des infos générales du tournoi
+        # Display general tournament info
         general_keys = [
             "Nom du tournoi", "Lieu du tournoi", "Nombre de joueurs",
             "Date de début", "Date de fin", "Nombre de tours",
@@ -389,11 +451,11 @@ class View:
 
         print(tabulate(general_table, headers=["Champ", "Valeur"], tablefmt="fancy_grid"))
 
-        # Affichage des infos de chaque tour
+        # Display info for each round
         tours = tournament_info.get("Tours", [])
         for tour in tours:
             print("\nTour n°", tour.get("Tour"))
-            # Conversion des timestamps en dates lisibles
+            # Convert timestamps to readable dates
             date_start = tour.get("Date de début")
             date_end = tour.get("Date de fin")
             date_start = datetime.fromtimestamp(date_start).strftime('%Y-%m-%d %H:%M:%S')
@@ -407,7 +469,7 @@ class View:
             ]
             print(tabulate(tour_table, headers=["Champ", "Valeur"], tablefmt="fancy_grid"))
 
-            # Affichage des matchs pour ce tour
+            # Display matches for this round
             print("Matchs:")
             match_table = []
             matchs = tour.get("Matchs", [])
@@ -425,7 +487,42 @@ class View:
                 print("Aucun match enregistré pour ce tour.")
 
     def request_enter_description(self, name):
+        """
+        Request a description for a tournament.
+
+        Parameters:
+            name (str): The name of the tournament.
+
+        Returns:
+            str: The entered description.
+        """
         Utils.clear()
         print("*"*10 + "Description" + "*"*10 + "\n")
         contents_description = input(f"Veuillez saisir une description pour le tournoi ({name}): ")
         return contents_description
+
+    def choose_player_to_remove(self, datas):
+        """
+        Prompt the user to select a player from a displayed list.
+
+        Parameters:
+            datas (list): A list of players from tournament.
+
+        Returns:
+            int: The index of the selected player.
+        """
+        while True:
+            try:
+                user_input = int(
+                    input(
+                        "\nSelectionner l'index du jouer à retirer: "
+                    )
+                )
+                if 1 <= user_input <= len(datas):
+                    return user_input
+                else:
+                    print(
+                        f"Index invalide. Veuillez entrer un nombre entre 1 et {len(datas)}."
+                    )
+            except ValueError:
+                print("Veuillez entrer un nombre valide.")

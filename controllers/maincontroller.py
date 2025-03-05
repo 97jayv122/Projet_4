@@ -6,7 +6,9 @@ from controllers.controllerreport import ControllerReport
 
 
 class Constant:
-
+    """
+    Constants representing the main menu options.
+    """
     PLAYER_MENU = "1"
     TOURNAMENT_MENU = "2"
     DISPLAY_REPORTS = "3"
@@ -15,11 +17,11 @@ class Constant:
 
 class Controller:
     """
-    Main controller of the application that allows
-    to navigate between the different menus.
-    """
+    Main controller of the application.
 
-    # Définition des numéros d'action comme variables de classe
+    Facilitates navigation between different menus such as the player,
+    tournament, and reports menus.
+    """
 
     def make_folder_data(self):
         """
@@ -30,18 +32,18 @@ class Controller:
 
     def __init__(self, view):
         """
-        Constructor of the main controller.
+        Initialize the main controller with the given view.
 
-        Args:
-            view (_type_): _description_
+        Parameters:
+            view: The view instance used for user interactions.
         """
         self.view = view
         self.make_folder_data()
 
     def run(self):
         """
-        Main method of the main controller that allows
-        the user to navigate between the different menus.
+        Main method of the controller that displays the home menu and
+        navigates to the selected sub-menu.
         """
         while True:
             action = self.view.home_menu()
@@ -76,6 +78,9 @@ class Controller:
         tounamentmanagement.run()
 
     def run_controller_report(self):
+        """
+        Run the reports controller.
+        """
         controllerreport = ControllerReport(self.view)
         controllerreport.run()
 

@@ -3,8 +3,18 @@ from models.matchs import Matchs
 
 
 class Tours:
+    """
+    Class representing a round (tour) in a tournament.
 
+    Manages round details including round number, name, duration, start/end times, matches, and status.
+    """
     def __init__(self, tour_number):
+        """
+        Initialize a new round.
+
+        Parameters:
+            tour_number (int): The round number.
+        """
         self.tour_number = tour_number
         self.name = "round" + str(tour_number)
         self.duration = 0.0
@@ -16,7 +26,13 @@ class Tours:
     @classmethod
     def from_dict(cls, data):
         """
-        Restaure un objet Tours depuis un dictionnaire.
+        Restore a Tours object from a dictionary.
+
+        Parameters:
+            data (dict): Dictionary containing round data.
+
+        Returns:
+            Tours: A new Tours instance populated with the provided data.
         """
         tour = cls(data["tour_number"])
         tour.name = data["tour_name"]
@@ -30,6 +46,12 @@ class Tours:
         return tour
 
     def to_dict(self):
+        """
+        Convert the round instance to a dictionary.
+
+        Returns:
+            dict: Dictionary representation of the round.
+        """
         return {
             "tour_number": self.tour_number,
             "tour_name": self.name,
@@ -45,16 +67,19 @@ class Tours:
 
     def start(self):
         """
-        Starts the tour by recording the current time as the start time and updating
-        the status to "started".
+        Start the round.
+
+        Records the current time as the start time and updates the status to "started".
         """
         self.time_start = time.time()
         self.stat = "started"
 
     def end(self):
         """
-        Ends the tour by recording the current time as the end time, calculating the duration
-        and updating the status to "finished".
+        End the round.
+
+        Records the current time as the end time, calculates the duration,
+        and updates the status to "finished".
         """
         self.time_end = time.time()
         self.duration = self.time_end - self.time_start
@@ -63,6 +88,9 @@ class Tours:
 
     def __repr__(self):
         """
-        Returns an official string representation of the Tours object.
+        Return a string representation of the round.
+
+        Returns:
+            str: Information about the round including its name, duration, and match list.
         """
         return f"<Tours: {self.name}, durée: {self.duration}\nliste des matchs : {self.matchs}>"
