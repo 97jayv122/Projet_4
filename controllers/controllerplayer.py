@@ -4,15 +4,17 @@ from models.tournament import Tournaments
 
 class ConstantPlayer:
     """
-    A class to hold constant options for player management menu.
+    A class to hold constant options for player management menu and
+    player modification options.
+
     """
     ADD_PLAYER = "1"
     DISPLAY_PLAYER = "2"
     MODIFY_PLAYER = "3"
     SUPPRESS_PLAYER = "4"
     RETURN_MAIN_MENU = "x"
-    PLAYER_BASE = "\nJoueur de la base de donnée"
-    PLAYER_ADD = "\nJoueur ajouté à la base de donnée"
+    MODIFY_PLAYER_ID = "modifier"
+    DELETE_PLAYER_ID = "supprimer"
 
 
 class ControllerPlayer:
@@ -59,7 +61,7 @@ class ControllerPlayer:
                     break
 
                 case _:
-                    self.view.display_string("Choix inconnue.")
+                    self.view.display_unknow_choice_message()
 
     def add_player(self):
         """
@@ -77,8 +79,8 @@ class ControllerPlayer:
             input_player = self.view.request_add_player()
             player = Players.from_dict(input_player)
             player.save()
-        message = "liste des joueurs ajoutés."
-        self.display_new_player(number_player_add, message)
+        self.display_new_player(number_player_add)
+        self.view.display_player_add_list_message()
         self.view.press_enter()
 
     def modify_player(self):
@@ -91,7 +93,7 @@ class ControllerPlayer:
         """
         self.display_player()
         if self.players:
-            chess_id = self.view.request_player_id("modifier")
+            chess_id = self.view.request_player_id(ConstantPlayer.MODIFY_PLAYER_ID)
             if chess_id:
                 player = self.load_by_id(chess_id)
                 if player:
@@ -99,20 +101,16 @@ class ControllerPlayer:
                     data = self.view.request_modify_player()
                     player.update(**data)
                     Players.save_all(self.players)
-                    self.display_player(
-                        f"\nLe joueur avec l'ID: {chess_id} a été correctement modifié."
-                    )
+                    self.display_player()
+                    self.view.display_player_update_message(chess_id)
                     self.view.press_enter()
 
                 else:
-                    self.view.display_string(
-                        f"\nLe joueur avecl'ID: {chess_id} n'as pas été trouvé."
-                    )
-
+                    self.view.display_id_chess_not_find_message(chess_id)
             else:
-                self.display_string("Nous n'avons pas trouvez de joueur avec cette id ")
+                self.view.display_id_chess_not_find_message(chess_id)
         else:
-            self.display_string("La base de donnée joueur est vide")
+            self.view.display_empty_player_database_message()
 
     def suppress_player(self):
         """
@@ -124,7 +122,7 @@ class ControllerPlayer:
         """
         self.display_player()
         if self.players:
-            chess_id = self.view.request_player_id("supprimer")
+            chess_id = self.view.request_player_id(ConstantPlayer.DELETE_PLAYER_ID)
             if chess_id:
                 player = self.load_by_id(chess_id)
 
@@ -133,24 +131,21 @@ class ControllerPlayer:
 
                         self.players.remove(player)
                         Players.save_all(self.players)
-                        self.display_player(
-                            f"\nLe joueur avec l'ID: {chess_id} a été correctement supprimé.",
-                        )
+                        self.display_player()
+                        self.view.display_player_deleted_message(chess_id)
                         self.view.press_enter()
                     else:
-                        self.view.display_string(
-                            "Impossibilité de supprimer un joueur inscrit dans un tournoi"
-                            )
+                        self.display_impossible_to_remove_player_message()
                 else:
-                    self.view.display_string("\nJoueur inexistant")
+                    self.view.display_id_chess_not_find_message(chess_id)
                     self.display_player()
                     self.view.press_enter()
             else:
-                self.view.display_string("Nous n'avons pas trouvez de jouer avec cette id ")
+                self.view.display_id_chess_not_find_message(chess_id)
         else:
-            self.view.display_string("La base de donnée joueur est vide")
+            self.view.display_empty_player_database_message()
 
-    def display_player(self, message=""):
+    def display_player(self):
         """
         Display the list of players.
 
@@ -162,9 +157,9 @@ class ControllerPlayer:
         """
         if self.players:
             players_dict = [player.to_dict() for player in self.players]
-            self.view.display_table(players_dict, message)
+            self.view.display_table(players_dict)
         else:
-            self.view.display_string("Pas de joueur dans la base de donnée")
+            self.view.display_empty_player_database_message()
 
     def load_by_id(self, chess_id):
         """
@@ -181,7 +176,7 @@ class ControllerPlayer:
                 return player
         return None
 
-    def display_new_player(self, number=1, message=""):
+    def display_new_player(self, number=1):
         """
         Display the newly added players.
 
@@ -196,9 +191,9 @@ class ControllerPlayer:
                 new_players, key=lambda x: (x.last_name, x.first_name)
             )
             players_dict = [player.to_dict() for player in new_players_sorted]
-            self.view.display_table(players_dict, message)
+            self.view.display_table(players_dict)
         else:
-            self.view.display_string("Pas de joueur dans la base de donnée")
+            self.view.display_empty_player_database_message()
 
     def check_player_in_tournament(self, player_id):
         """

@@ -9,8 +9,30 @@ from controllers.controllertournamentreport import ConstantTournamentReport
 from view.utils import Utils
 
 VALIDATE_CHOICE = "\nEntré votre choix : "
-WRONG_DATE = "\nVeuillez entrer un bon format de date"
 PRESS_ENTER = "\nAppuyer sur entrée pour continuer..."
+
+
+def display_message(func):
+    """
+    A decorator that clears the screen before displaying a message and
+    waits for user input after the message is displayed.
+
+    This decorator ensures that all decorated functions follow a consistent
+    format where the screen is cleared before displaying a message, and the
+    program pauses to wait for user confirmation.
+
+    Args:
+        func (function): The function to be wrapped, which should display a message.
+
+    Returns:
+        function: The wrapped function that includes screen clearing
+                  and user input before proceeding.
+    """
+    def wrapper(self, *args, **kwargs):
+        Utils.clear()
+        func(self, *args, **kwargs)
+        input(PRESS_ENTER)
+    return wrapper
 
 
 class View:
@@ -227,12 +249,12 @@ class View:
         file_tournament["place"] = input("\nEntrer le lieu du tournoi : ")
         # Récupération et stockage de la date de début
         date_start = Utils.get_valid_date(
-            "\nEntrer la date de début du tournoi (ex: 01/02/2022) : ", WRONG_DATE
+            "\nEntrer la date de début du tournoi (ex: 01/02/2022) : "
         )
         file_tournament["date_start"] = date_start
         while True:
             date_end = Utils.get_valid_date(
-                "\nEntrer la date de fin du tournoi (ex: 01/02/2022) : ", WRONG_DATE
+                "\nEntrer la date de fin du tournoi (ex: 01/02/2022) : "
             )
             if date_end == "":
                 # Autoriser une date vide si c'est souhaité
@@ -286,7 +308,7 @@ class View:
         file_player["first_name"] = input("Entrer le prénom du joueur : ")
         file_player["last_name"] = input("Entrer le nom du joueur : ")
         file_player["date_of_birth"] = Utils.get_valid_date(
-            "Entrer la date de naissance du joueur(01/12/2003) : ", WRONG_DATE
+            "Entrer la date de naissance du joueur(01/12/2003) : "
         )
         file_player["national_chess_identifier"] = Utils.get_chess_identifier(
             "Enter l'identiant national d' échecs : "
@@ -328,12 +350,12 @@ class View:
         player_data["first_name"] = input("Entrer le prénom du joueur : ")
         player_data["last_name"] = input("Entrer le nom du joueur : ")
         player_data["date_of_birth"] = Utils.get_valid_date(
-            "Entrer la date de naissance du joueur(01/12/2003) : ", WRONG_DATE
+            "Entrer la date de naissance du joueur(01/12/2003) : "
         )
 
         return player_data
 
-    def display_table(self, datas, prompt=""):
+    def display_table(self, datas):
         """
         Display a table of data.
 
@@ -344,7 +366,6 @@ class View:
         Utils.clear()
         index = [index for index in range(1, len(datas) + 1)]
         print(tabulate(datas, headers="keys", tablefmt="fancy_grid", showindex=index))
-        print(prompt)
 
     def display_color_player(self, color_player):
         """
@@ -412,17 +433,6 @@ class View:
                     )
             except ValueError:
                 print("Veuillez entrer un nombre valide.")
-
-    def display_string(self, datas):
-        """
-        Display a message to the user.
-
-        Parameters:
-            message (str): The message to display.
-        """
-        Utils.clear()
-        print(datas)
-        input(PRESS_ENTER)
 
     def press_enter(self):
         """
@@ -526,3 +536,224 @@ class View:
                     )
             except ValueError:
                 print("Veuillez entrer un nombre valide.")
+
+    @display_message
+    def display_unknow_choice_message(self):
+        """
+        Display a message when the user enters an unknown choice
+        """
+        print("\nChoix inconnue.")
+
+    @display_message
+    def display_end_tournament_message(self):
+        """
+        Display a message when the tournament is over.
+        """
+        print("\nTournoi terminé.")
+
+    @display_message
+    def display_not_tournament_selected_message(self):
+        """
+        Display a message when no tournament is selected.
+        """
+        print("\nPas de tournoi sélectionner")
+
+    @display_message
+    def display_empty_player_database_message(self):
+        """
+        Display a message when the player database is empty.
+        """
+        print("\nPas de joueur dans la base de donnée")
+
+    @display_message
+    def display_empty_tournament_database_message(self):
+        """
+        Display a message when the tournament database is empty.
+        """
+        print("\nAucun tournoi disponible.")
+
+    @display_message
+    def display_request_start_tournament_message(self):
+        """
+        Display a message requesting the user to start the tournament.
+        """
+        print("\nVeuillez commencer un tournoi.")
+
+    @display_message
+    def display_id_chess_not_find_message(self, chess_id):
+        """
+        Displays a message when a chess player with a specific ID
+        is not found.
+
+        Args:
+            chess_id (str): The chess player ID that was not found
+        """
+        print(f"\nLe joueur avecl'ID: {chess_id} n'as pas été trouvé.")
+
+    @display_message
+    def display_impossible_to_remove_player_message(self):
+        """
+        Display a message when it is impossible to remove a player
+        registered in a tournament.
+        """
+        print(
+            "Impossibilité de supprimer un joueur inscrit dans un tournoi"
+            )
+
+    @display_message
+    def display_start_round_message(self, round_name):
+        """
+        Display a message when starting a new round.
+
+        Args:
+            round_name (str): The name of the round.
+        """
+        print(f"Début du {round_name}")
+
+    @display_message
+    def display_matchs_pairs_already_load_message(self):
+        """
+        Display a message when the previous match pairs
+        have already been loaded.
+        """
+        print("Les précédentes paires de matchs on déjas été chargé.")
+
+    @display_message
+    def display_matchs_pairs_properly_loaded_message(self, round_name):
+        """
+        Displays a message indicating that the previous match pairs
+        have been properly loaded.
+
+        Args:
+            round_name (str): The name of the round.
+        """
+        print(f"Les précédentes paire de match\n{round_name} terminé")
+
+    @display_message
+    def request_select_or_create_tournament(self):
+        """Prompts the user to select or create a new tournament."""
+        print("Veuillez sélectionner ou créer un nouveau tournoi")
+
+    @display_message
+    def display_tournament_deleted_message(self, tournament_name):
+        """
+        Display a message when a tournament is deleted.
+
+        Args:
+            tournament_name (str): The name of the deleted tournament.
+        """
+        print(f"Le tournoi: {tournament_name}, à été supprimé.")
+
+    @display_message
+    def prompt_add_player_tournament(self, number_player):
+        """
+        Prompts the user to add a specific number of players to a tournament.
+
+        Args:
+            number_player (int): The number of players to add.
+        """
+        print(f"Veuillez ajouter {number_player} joueurs")
+
+    @display_message
+    def prompt_retrieve_player_tournament(self, number_player):
+        """
+        Prompts the user to remove a specific number of players from a tournament.
+
+        Args:
+            number_player (int): The number of players to remove.
+        """
+        print(f"Veuillez retirer {number_player} joueurs")
+
+    @display_message
+    def display_number_of_player_full_message(self):
+        """
+        Display a message when the tournament has the required number of players.
+        """
+        print("tournoi ayant le nombre de joueur requis")
+
+    @display_message
+    def display_player_tournament_empty_message(self):
+        """
+        Display a message when there are no players in the tournament.
+        """
+        print("Pas de joueur dans la liste du tournoi.")
+
+    @display_message
+    def prompt_correct_format(self):
+        """
+        Display a message prompting the user to enter the correct format.
+        """
+        print("Veuillez entrer un bon format.")
+
+    @staticmethod
+    def display_wrond_date_format_message():
+        """
+        Display a message when the date format is incorrect.
+        """
+        print("\nVeuillez entrer un bon format de date valide.")
+
+    def display_alphabetical_sorted_players_message(self):
+        """
+        Display a message when the players are sorted alphabetically.
+        """
+        print("Liste des joueurs par ordre alphabétique.")
+
+    def display_tournaments_list_message(self):
+        """
+        Display a message when the list of tournaments is displayed.
+        """
+        print("Liste des tournois.")
+
+    def display_player_list_message(self):
+        """Display a message when the list of players is displayed."""
+        print("Liste des joueurs de la base de donnée")
+
+    def display_player_add_list_message(self):
+        """Display a message when the list of players added is displayed."""
+        print("liste des joueurs ajoutés.")
+
+    def display_player_update_message(self, chess_id):
+        """
+        Display a message when a player is correctly updated.
+
+        Args:
+            chess_id (str): The chess player ID that was updated.
+        """
+        print(f"\nLe joueur avec l'ID: {chess_id} a été correctement modifié.")
+
+    def display_player_deleted_message(self, chess_id):
+        """
+        Display a message when a player is correctly deleted
+
+        Args:
+            chess_id (str): The chess player ID that was deleted.
+        """
+        print(f"\nLe joueur avec l'ID: {chess_id} a été correctement supprimé.")
+
+    def display_player_tournament_list_message(self):
+        """
+        Display a message when the list of players in the tournament is displayed.
+        """
+        print("Liste des joueurs du tournoi")
+
+    def display_alphabetical_sorted_players_tournament_message(self):
+        """
+        Display a message when the players in the tournament are sorted alphabetically.
+        """
+        print("Liste des joueurs du tournoi par ordre alphabétique.")
+
+    def display_farewell_message(self):
+        """Display a farewell message when the user exits the program."""
+        print("Merci et à bientôt.")
+
+    @staticmethod
+    def dispalay_id_already_exists_message():
+        """Displays a message when the identifier already exists."""
+        print("\nIdentifiant existe déjà.")
+        input(PRESS_ENTER)
+
+    @staticmethod
+    def display_id_invalid_message():
+        """Displays a message when the identifier is invalid."""
+        print("\nIdentifiant est invalide.")
+        input(PRESS_ENTER)

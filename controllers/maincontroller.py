@@ -61,7 +61,7 @@ class Controller:
                     self.exit_program()
 
                 case _:
-                    self.unknown_choice
+                    self.unknown_choice()
 
     def run_controller_player(self):
         """
@@ -88,11 +88,11 @@ class Controller:
         """
         Exit the program.
         """
-        print("Merci et à bientôt.")
+        self.view.display_farewell_message()
         exit()
 
     def unknown_choice(self):
         """
         Display a message when the choice is unknown.
         """
-        self.view.display_string("Choix inconnue.")
+        self.view.display_unknow_choice_message()

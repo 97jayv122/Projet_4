@@ -2,6 +2,7 @@ import os
 import re
 from datetime import datetime
 from models.players import Players
+import view.view
 
 
 class Utils:
@@ -40,7 +41,7 @@ class Utils:
                 return False
 
     @staticmethod
-    def get_valid_date(prompt, error_message):
+    def get_valid_date(prompt):
         """
         Prompt the user to enter a valid date and ensures it follows the expected format.
 
@@ -57,7 +58,7 @@ class Utils:
                 return date_input
             elif date_input == "":
                 return date_input
-            print(error_message)
+            view.view.View.display_wrond_date_format_message()
 
     @staticmethod
     def clear():
@@ -107,9 +108,9 @@ class Utils:
                 ):
                     return national_chess_identifier
                 else:
-                    print("Identifiant existe déjà")
+                    view.view.View.dispalay_id_already_exists_message()
             else:
-                print("Identifiant est invalide")
+                view.view.View.display_id_invalid_message()
 
     @staticmethod
     def check_score(score_1):

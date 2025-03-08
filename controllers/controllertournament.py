@@ -62,7 +62,7 @@ class ControllerTournament:
                     break
 
                 case _:
-                    self.view.display_string("Choix inconnue.")
+                    self.view.display_unknow_choice_message()
 
     def update_score(self, match, player_1, player_2):
         """
@@ -99,7 +99,6 @@ class ControllerTournament:
                 pair_ids = tuple(sorted([player_1.id, player_2.id]))
                 # If this pair has already played, try to find an alternative pairing
                 if pair_ids in self.previous_matches:
-                    input("pair detected : ")
                     for p in range(i + 2, len(players)):
                         player_2_alt = players[p]
                         pair_ids_alt = tuple(sorted([player_1.id, player_2_alt.id]))
@@ -128,7 +127,7 @@ class ControllerTournament:
         """
         # Check if all rounds have been played
         if self.tournament.current_tour == self.tournament.number_of_turns:
-            self.view.display_string("Tournoi terminé.")
+            self.view.display_end_tournament_message()
             return
 
         # --- Start of the round ---
@@ -145,7 +144,7 @@ class ControllerTournament:
 
         # Create the round and generate player pairs
         tour = Tours(self.tournament.current_tour)
-        self.view.display_string(f"Début du {tour.name}")
+        self.view.display_start_round_message(tour.name)
         self.generate_pairs(tour, players)
         self.tournament.list_of_tours.append(tour)
         tour.start()
@@ -159,7 +158,7 @@ class ControllerTournament:
         for match in self.matchs:
             self.update_score(match, match.player_1, match.player_2)
         if self.tournament.current_tour == self.tournament.number_of_turns:
-            self.view.display_string("Fin du tournoi")
+            self.view.display_end_tournament_message()
             self.tournament.end()
         self.tournament.update(self.tournament.id)
 
@@ -205,11 +204,11 @@ class ControllerTournament:
                 [self.previous_matches.add(item) for item in previous_pair]
                 tour = self.tournament.list_of_tours[-1]
                 self.tour = tour
-                self.view.display_string(f"Les précédentes paire de match\n{tour.name} terminé")
+                self.view.display_matchs_pairs_properly_loaded_message(tour.name)
             else:
-                self.view.display_string("Les précédentes paires de matchs on déjas été chargé.")
+                self.view.display_matchs_pairs_already_load_message()
         else:
-            self.view.display_string("Veuillez commencer un tournoi.")
+            self.view.display_request_start_tournament_message()
 
     @staticmethod
     def assign_random_colors(player_1, player_2):

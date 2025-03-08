@@ -80,7 +80,7 @@ class TournamentManagement:
                     break
 
                 case _:
-                    self.view.display_string("Choix inconnue.")
+                    self.view.display_unknow_choice_message()
 
     def get_tournament_name(self):
         """
@@ -106,7 +106,7 @@ class TournamentManagement:
                 }
             ]
         else:
-            self.view.display_string("Vous n'avez pas de tournoi enregistré")
+            self.view.display_empty_tournament_database_message()
             return None
 
     def create_tournament(self):
@@ -135,7 +135,7 @@ class TournamentManagement:
                 *self.tournament.list_player
             )
         else:
-            self.view.display_string("Aucun tournoi disponible.")
+            self.view.display_empty_tournament_database_message()
 
     def player_selection(self):
         """
@@ -147,22 +147,22 @@ class TournamentManagement:
         if self.tournament is not None:
             if self.players:
                 if len(self.tournament.list_player) < self.tournament.number_player:
-                    prompt = "Liste des joueurs de la base de donnée"
                     data_players = [player.to_dict() for player in self.players]
-                    self.view.display_table(data_players, prompt)
+                    self.view.display_table(data_players)
+                    self.view.display_player_list_message()
                     try:
                         index_players = self.view.select_player()
                         for index in index_players:
                             self.tournament.add_player_score(self.players[int(index) - 1])
                     except ValueError:
-                        self.view.display_string("Veuillez entrer un bon format.")
+                        self.view.prompt_correct_format()
                     self.tournament.update(self.tournament.id)
                 else:
-                    self.view.display_string("tournoi ayant le nombre de joueur requis")
+                    self.view.display_number_of_player_full_message()
             else:
-                self.view.display_string("Pas de joueur rentré dans la base de donnée")
+                self.view.display_empty_player_database_message()
         else:
-            self.view.display_string("Pas de tournoi sélectionner")
+            self.view.display_not_tournament_selected_message()
 
     def check_player_number(self):
         """
@@ -177,12 +177,12 @@ class TournamentManagement:
 
         elif len(tournament.list_player) < tournament.number_player:
             missing = tournament.number_player - len(tournament.list_player)
-            self.view.display_string(f"Veuillez ajouter {missing} joueurs")
+            self.view.prompt_add_player_tournament(missing)
             return False
 
         elif len(tournament.list_player) > tournament.number_player:
             extra = len(tournament.list_player) - tournament.number_player
-            self.view.display_string(f"Veuillez retirer {extra} joueurs")
+            self.view.prompt_retrieve_player_tournament(extra)
             return False
         else:
             return False
@@ -197,16 +197,16 @@ class TournamentManagement:
                     [player.first_name, player.last_name]
                     for player in self.tournament.list_player
                 ]
-                message = "Liste des joueurs du tournoi"
-                self.view.display_table(players, message)
+                self.view.display_table(players)
+                self.view.display_player_tournament_list_message()
                 user_input = self.view.choose_player_to_remove(players)
                 self.tournament.list_player.pop(user_input - 1)
                 self.tournament.update(self.tournament.id)
             else:
-                self.view.display_string("Pas de joueur dans la liste du tournoi.")
+                self.view.display_player_tournament_empty_message()
 
         else:
-            self.view.display_string("Pas de tournoi sélectionner")
+            self.view.display_not_tournament_selected_message()
 
     def run_controller_tournament(self):
         """
@@ -217,9 +217,7 @@ class TournamentManagement:
                 controllertournament = ControllerTournament(self.view, self.tournament)
                 controllertournament.run()
         else:
-            self.view.display_string(
-                "Veuillez sélectiionner ou créer un nouveau tournoi"
-            )
+            self.view.request_select_or_create_tournament()
 
     def delete_tournament(self, index):
         """
@@ -228,11 +226,9 @@ class TournamentManagement:
         Parameters:
             index (int): The index of the tournament to delete.
         """
-        self.view.display_string(
-            f"Le tournoi: {self.tournament.name}, à été supprimé."
-        )
+        self.view.display_tournament_deleted_message(self.tournament.name)
         self.tournament = None
-        # tournament_deleted = self.tournaments.pop(index)
+        # display_tournament_deleted_message = self.tournaments.pop(index)
 
     def make_description(self):
         """

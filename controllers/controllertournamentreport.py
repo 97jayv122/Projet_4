@@ -51,11 +51,11 @@ class ControllerTournamentReport:
         """
         Display a list of tournament players sorted alphabetically.
         """
-        message = "Liste des joueurs du tournoi par ordre alphabétique."
         players = Players.load_by_ids(*self.tournament.list_player)
         players_sorted = sorted(players, key=lambda x: (x.last_name.capitalize(), x.first_name.capitalize()))
         players_dict_sorted = [player.to_dict() for player in players_sorted]
-        self.view.display_table(players_dict_sorted, message)
+        self.view.display_table(players_dict_sorted)
+        self.view.display_alphabetical_sorted_players_tournament_message()
         self.view.press_enter()
 
     def get_tournament_info_dict(self):

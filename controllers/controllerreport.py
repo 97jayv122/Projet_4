@@ -60,17 +60,16 @@ class ControllerReport:
         """
         Display a sorted list of players alphabetically.
         """
-        prompt = "Liste des joueurs par ordre alphabétique."
         players = Players.load()
         players_sorted = sorted(players, key=lambda x: (x.last_name.capitalize(), x.first_name.capitalize()))
         players_dict_sorted = [player.to_dict() for player in players_sorted]
-        self.view.display_table(players_dict_sorted, prompt)
+        self.view.display_table(players_dict_sorted)
+        self.view.display_alphabetical_sorted_players_message()
 
     def get_tournaments_name(self):
         """
         Display a list of tournaments.
         """
-        prompt = "Liste des tournois."
         tournaments = Tournaments.load()
         self.tournaments = tournaments
         tournaments_dict = [
@@ -81,7 +80,8 @@ class ControllerReport:
             }
             for tournament in tournaments
         ]
-        self.view.display_table(tournaments_dict, prompt)
+        self.view.display_table(tournaments_dict)
+        self.view.display_tournaments_list_message()
 
     def run_tournament_report(self, tournament):
         """

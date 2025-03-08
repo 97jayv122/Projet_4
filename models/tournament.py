@@ -131,13 +131,12 @@ class Tournaments:
             with open(FILE_TOURNAMENT, "r") as file:
                 datas = json.load(file)
                 return [Tournaments.from_dict(data) for data in datas]
-        except json.JSONDecodeError as e:
-            print(f"pas de données a charger: {e}")
+        except json.JSONDecodeError:
+            return []
         except FileNotFoundError:
-            print("Fichier introuvable : data/tournaments/tournament.json")
-        except Exception as e:
-            print(f"Erreur inattendue : {e}")
-        return []
+            return []
+        except Exception:
+            return []
 
     @staticmethod
     def clear_json_tournament():

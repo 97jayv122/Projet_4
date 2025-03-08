@@ -96,10 +96,9 @@ class Players:
                 data = json.load(file)
                 return [Players.restore_from_json(player) for player in data]
         except json.JSONDecodeError:
-            print("pas de données a charger")
+            return []
         except FileNotFoundError:
-            print("pas de fichier a charger")
-        return []
+            return []
 
     @classmethod
     def from_dict(cls, data):
